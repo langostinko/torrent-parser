@@ -19,9 +19,9 @@
         $result = json_decode($result, true);
         if (array_key_exists('response', $result)) {
             $result = $result["response"][0];
-            $fname = mysqli_real_escape_string($result['first_name']);
-            $lname = mysqli_real_escape_string($result['last_name']);
-            $photo = mysqli_real_escape_string($result['photo_100']);
+            $fname = mysqli_real_escape_string($GLOBALS['mysqli'], $result['first_name']);
+            $lname = mysqli_real_escape_string($GLOBALS['mysqli'], $result['last_name']);
+            $photo = mysqli_real_escape_string($GLOBALS['mysqli'], $result['photo_100']);
             mysql_query("UPDATE users SET login='$fname', lastName='$lname', photo='$photo' WHERE vkid=$vkid");
             return $fname;
         }
@@ -160,7 +160,7 @@
     	$base = \pass\SQL::$base;
     	$mysqli = mysqli_connect($host, $user, $pwd);
     	if (!$mysqli) 
-    		die("Connection error: " . mysqli_error());
+    		die("Connection error: " . mysqli_error($GLOBALS['mysqli']));
     	// переменные для работы базы данных
     	mysqli_select_db ($mysqli, $base) or die ("Не могу соединиться с базой данных. Ошибка: " . mysql_error());
     	mysqli_set_charset($mysqli, 'utf8');
@@ -244,7 +244,7 @@
     }
     
     function trySkipMovie($movie) {
-        $imdbid=mysqli_real_escape_string($movie['imdbid']);
+        $imdbid=mysqli_real_escape_string($GLOBALS['mysqli'], $movie['imdbid']);
         $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies WHERE imdbid='$imdbid' AND updated > date_add(current_timestamp, interval -1 day)");
         if (!mysqli_num_rows($sqlresult))
             return false;
@@ -264,14 +264,14 @@
             return false;
         if (trySkipMovie($movie))
             return true;
-        $imdbid=mysqli_real_escape_string($movie['imdbid']);
+        $imdbid=mysqli_real_escape_string($GLOBALS['mysqli'], $movie['imdbid']);
         $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies WHERE imdbid='$imdbid'");
-        echo mysqli_error();
+        echo mysqli_error($GLOBALS['mysqli']);
         if (!mysqli_num_rows($sqlresult)) {
-            mysqli_query($GLOBALS['mysqli'], $mysqli, "INSERT INTO movies(imdbid) VALUES('$imdbid')");
-            echo mysqli_error();
+            mysqli_query($GLOBALS['mysqli'], "INSERT INTO movies(imdbid) VALUES('$imdbid')");
+            echo mysqli_error($GLOBALS['mysqli']);
         }
-        $title = mysqli_real_escape_string($movie['title']);
+        $title = mysqli_real_escape_string($GLOBALS['mysqli'], $movie['title']);
 
         $movie['description'] = file_get_contents("http://www.omdbapi.com/?i=" . urlencode($movie['imdbid']));           
         $json = json_decode($movie['description'], true);
@@ -289,11 +289,11 @@
         } else
             unset($json['Poster']);
         $movie['description'] = json_encode($json);
-        $description = mysqli_real_escape_string($movie['description']);
+        $description = mysqli_real_escape_string($GLOBALS['mysqli'], $movie['description']);
 
         //$year = (int)$movie['year'];
         mysqli_query($GLOBALS['mysqli'], "UPDATE movies SET title='$title', description='$description',updated=now() WHERE imdbid='$imdbid'");
-        echo mysqli_error();
+        echo mysqli_error($GLOBALS['mysqli']);
         return true;
     }
     
@@ -315,25 +315,25 @@
         if (!addMovie($cur['movie']))
             return false;
         $hash = md5($cur['link']);
-        $link = mysqli_real_escape_string($cur['link']);
-        $imdbid = mysqli_real_escape_string($cur['movie']['imdbid']);
+        $link = mysqli_real_escape_string($GLOBALS['mysqli'], $cur['link']);
+        $imdbid = mysqli_real_escape_string($GLOBALS['mysqli'], $cur['movie']['imdbid']);
 
         $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE md5 = '$hash'");
-        echo mysqli_error();
+        echo mysqli_error($GLOBALS['mysqli']);
         if (!mysqli_num_rows($sqlresult)) {
             $sqlresult = mysqli_query($GLOBALS['mysqli'], "INSERT INTO links(link,md5) VALUES('$link', '$hash')");
-            echo mysqli_error();
+            echo mysqli_error($GLOBALS['mysqli']);
         }
         $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT id FROM movies WHERE imdbid='$imdbid'");
-        echo mysqli_error();
+        echo mysqli_error($GLOBALS['mysqli']);
         $id = mysqli_fetch_assoc($sqlresult);$id = (int)$id['id'];
-        $description = mysqli_real_escape_string($cur['description']);
-        $quality = mysqli_real_escape_string($cur['quality']);
+        $description = mysqli_real_escape_string($GLOBALS['mysqli'], $cur['description']);
+        $quality = mysqli_real_escape_string($GLOBALS['mysqli'], $cur['quality']);
         $translateQuality = array_key_exists('translateQuality',$cur)?$cur['translateQuality']:"";
         $size = (float)$cur['size'];
         $seed = (int)$cur['seed'];
         $leech = (int)$cur['leech'];
         mysqli_query($GLOBALS['mysqli'], "UPDATE links SET movieId=$id, description='$description', quality='$quality', translateQuality='$translateQuality', size=$size, seed=$seed, leech=$leech, updated=now() WHERE md5 = '$hash'");
-        echo mysqli_error();
+        echo mysqli_error($GLOBALS['mysqli']);
     }
 ?>
