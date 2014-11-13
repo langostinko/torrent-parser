@@ -1,1 +1,4 @@
+#movie posters
 img/posters/
+#passwords
+lib/pass.php
