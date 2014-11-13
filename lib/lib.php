@@ -19,9 +19,9 @@
         $result = json_decode($result, true);
         if (array_key_exists('response', $result)) {
             $result = $result["response"][0];
-            $fname = mysql_escape_string($result['first_name']);
-            $lname = mysql_escape_string($result['last_name']);
-            $photo = mysql_escape_string($result['photo_100']);
+            $fname = mysqli_real_escape_string($result['first_name']);
+            $lname = mysqli_real_escape_string($result['last_name']);
+            $photo = mysqli_real_escape_string($result['photo_100']);
             mysql_query("UPDATE users SET login='$fname', lastName='$lname', photo='$photo' WHERE vkid=$vkid");
             return $fname;
         }
@@ -49,14 +49,14 @@
             $result = file_get_contents("https://oauth.vk.com/access_token?".http_build_query($data));
             $result = json_decode($result, true);
             if (array_key_exists('access_token', $result)) {
-                $sqlresult = mysql_query("SELECT * FROM users WHERE vkid=" . $result['user_id']);
-                if (!mysql_num_rows($sqlresult))
-                    mysql_query("INSERT INTO users (vkid) VALUES(" . $result['user_id'] . ")");
+                $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM users WHERE vkid=" . $result['user_id']);
+                if (!mysqli_num_rows($sqlresult))
+                    mysqli_query($GLOBALS['mysqli'], "INSERT INTO users (vkid) VALUES(" . $result['user_id'] . ")");
                 $expires = time() + $result['expires_in'];
-                mysql_query("UPDATE users SET expires=FROM_UNIXTIME($expires), token='" . $result['access_token'] . "' WHERE vkid=" . $result['user_id']);
+                mysqli_query($GLOBALS['mysqli'], "UPDATE users SET expires=FROM_UNIXTIME($expires), token='" . $result['access_token'] . "' WHERE vkid=" . $result['user_id']);
 
-                $sqlresult = mysql_query("SELECT * FROM users WHERE vkid=" . $result['user_id']);
-                $user = mysql_fetch_assoc($sqlresult);
+                $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM users WHERE vkid=" . $result['user_id']);
+                $user = mysqli_fetch_assoc($sqlresult);
                 if (!$user['login']) {
                     $user['login'] = getVKName($result['user_id'], $result['access_token']);
                 }
@@ -77,34 +77,34 @@
         $minVotes = $user['minVotes'] = $settings['minVotes'];
         $translateQuality = $user['translateQuality'] = $settings['translateQuality'];
         if ($userId != 3)
-            mysql_query("UPDATE users SET quality=$quality, minRating=$minRating, maxDaysDif=$maxDaysDif, minVotes=$minVotes, translateQuality=$translateQuality WHERE id=$userId");
+            mysqli_query($GLOBALS['mysqli'], "UPDATE users SET quality=$quality, minRating=$minRating, maxDaysDif=$maxDaysDif, minVotes=$minVotes, translateQuality=$translateQuality WHERE id=$userId");
         $_SESSION["user"] = $user;
     }
 
     function ignoreMovie($userId, $movieId) {
         if ($userId == 2 || $userId == 3)
             return false;
-        $sqlresult = mysql_query("SELECT id FROM userignore WHERE userId=$userId AND movieId=$movieId");
-        if (!mysql_num_rows($sqlresult))
-            mysql_query("INSERT INTO userignore(userId,movieId) VALUES($userId, $movieId)");
+        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT id FROM userignore WHERE userId=$userId AND movieId=$movieId");
+        if (!mysqli_num_rows($sqlresult))
+            mysqli_query($GLOBALS['mysqli'], "INSERT INTO userignore(userId,movieId) VALUES($userId, $movieId)");
     }
     
     function unIgnoreMovie($userId, $movieId) {
         if ($userId == 2 || $userId == 3)
             return false;
-        $sqlresult = mysql_query("DELETE FROM userignore WHERE userId=$userId AND movieId=$movieId");
+        $sqlresult = mysqli_query($GLOBALS['mysqli'], "DELETE FROM userignore WHERE userId=$userId AND movieId=$movieId");
     }
 
 
     function Login($guestLogin = "wise guest")
     {
         //check if logined already
-        if (!empty($_SESSION["user"]) && ($_SESSION["expires"] > time()) )
+        if (!empty($_SESSION["user"]) && array_key_exists("expires", $_SESSION) && ($_SESSION["expires"] > time()) )
             return true;
         
         //login as guest by default
-        $sqlresult = mysql_query("SELECT * FROM users WHERE login='$guestLogin'" );
-        $_SESSION['user'] = mysql_fetch_assoc($sqlresult);
+        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM users WHERE login='$guestLogin'" );
+        $_SESSION['user'] = mysqli_fetch_assoc($sqlresult);
         return false;
     }
 
@@ -113,9 +113,9 @@
         if (!isset($_SERVER['PHP_AUTH_USER'])) {
             header('WWW-Authenticate: Basic realm="use guest:guest"');
         } else {
-            $sqlresult = mysql_query("SELECT * FROM users WHERE login='".$_SERVER['PHP_AUTH_USER']."'" );
-            if ($sqlresult && mysql_num_rows($sqlresult)) {
-                $row = mysql_fetch_assoc($sqlresult);
+            $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM users WHERE login='".$_SERVER['PHP_AUTH_USER']."'" );
+            if ($sqlresult && mysqli_num_rows($sqlresult)) {
+                $row = mysqli_fetch_assoc($sqlresult);
                 if (md5($_SERVER['PHP_AUTH_PW']) == $row['pass'])
                     $result = $row;
             }
@@ -153,16 +153,17 @@
     }
     
     function connect(){
+        global $mysqli;
     	$host = \pass\SQL::$host;
     	$user = \pass\SQL::$user;
     	$pwd = \pass\SQL::$pwd;
     	$base = \pass\SQL::$base;
-    	$MySQLHost = mysql_connect($host, $user, $pwd);
-    	if (!$MySQLHost) 
-    		die("Connection error: " . mysql_error());
+    	$mysqli = mysqli_connect($host, $user, $pwd);
+    	if (!$mysqli) 
+    		die("Connection error: " . mysqli_error());
     	// переменные для работы базы данных
-    	mysql_select_db ($base, $MySQLHost) or die ("Не могу соединиться с базой данных. Ошибка: " . mysql_error());
-    	mysql_set_charset('utf8');
+    	mysqli_select_db ($mysqli, $base) or die ("Не могу соединиться с базой данных. Ошибка: " . mysql_error());
+    	mysqli_set_charset($mysqli, 'utf8');
     }
 
     function suggestIMDB($title) {
@@ -243,11 +244,11 @@
     }
     
     function trySkipMovie($movie) {
-        $imdbid=mysql_escape_string($movie['imdbid']);
-        $sqlresult = mysql_query("SELECT * FROM movies WHERE imdbid='$imdbid' AND updated > date_add(current_timestamp, interval -1 day)");
-        if (!mysql_num_rows($sqlresult))
+        $imdbid=mysqli_real_escape_string($movie['imdbid']);
+        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies WHERE imdbid='$imdbid' AND updated > date_add(current_timestamp, interval -1 day)");
+        if (!mysqli_num_rows($sqlresult))
             return false;
-        $row = mysql_fetch_assoc($sqlresult);
+        $row = mysqli_fetch_assoc($sqlresult);
         $json = json_decode($row['description'], true);
         if (!$json or $json['Response'] == "False")
             return false;
@@ -263,14 +264,14 @@
             return false;
         if (trySkipMovie($movie))
             return true;
-        $imdbid=mysql_escape_string($movie['imdbid']);
-        $sqlresult = mysql_query("SELECT * FROM movies WHERE imdbid='$imdbid'");
-        echo mysql_error();
-        if (!mysql_num_rows($sqlresult)) {
-            mysql_query("INSERT INTO movies(imdbid) VALUES('$imdbid')");
-            echo mysql_error();
+        $imdbid=mysqli_real_escape_string($movie['imdbid']);
+        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies WHERE imdbid='$imdbid'");
+        echo mysqli_error();
+        if (!mysqli_num_rows($sqlresult)) {
+            mysqli_query($GLOBALS['mysqli'], $mysqli, "INSERT INTO movies(imdbid) VALUES('$imdbid')");
+            echo mysqli_error();
         }
-        $title = mysql_escape_string($movie['title']);
+        $title = mysqli_real_escape_string($movie['title']);
 
         $movie['description'] = file_get_contents("http://www.omdbapi.com/?i=" . urlencode($movie['imdbid']));           
         $json = json_decode($movie['description'], true);
@@ -288,51 +289,51 @@
         } else
             unset($json['Poster']);
         $movie['description'] = json_encode($json);
-        $description = mysql_escape_string($movie['description']);
+        $description = mysqli_real_escape_string($movie['description']);
 
         //$year = (int)$movie['year'];
-        mysql_query("UPDATE movies SET title='$title', description='$description',updated=now() WHERE imdbid='$imdbid'");
-        echo mysql_error();
+        mysqli_query($GLOBALS['mysqli'], "UPDATE movies SET title='$title', description='$description',updated=now() WHERE imdbid='$imdbid'");
+        echo mysqli_error();
         return true;
     }
     
     function trySkip($cur) {
         static $cache = false;
         if (!$cache) {
-            $sqlresult = mysql_query("SELECT md5 FROM links WHERE updated > date_add(current_timestamp, interval -1 day)");
-            while ($row = mysql_fetch_assoc($sqlresult))
+            $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT md5 FROM links WHERE updated > date_add(current_timestamp, interval -1 day)");
+            while ($row = mysqli_fetch_assoc($sqlresult))
                 $cache[$row['md5']] = true;
         }
         return array_key_exists(md5($cur['link']), $cache);
         
         $hash = md5($cur['link']);
-        $sqlresult = mysql_query("SELECT * FROM links WHERE md5 = '$hash' AND updated > date_add(current_timestamp, interval -1 day)");
-        return mysql_num_rows($sqlresult);
+        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE md5 = '$hash' AND updated > date_add(current_timestamp, interval -1 day)");
+        return mysqli_num_rows($sqlresult);
     }
     
     function addLink($cur) {
         if (!addMovie($cur['movie']))
             return false;
         $hash = md5($cur['link']);
-        $link = mysql_escape_string($cur['link']);
-        $imdbid = mysql_escape_string($cur['movie']['imdbid']);
+        $link = mysqli_real_escape_string($cur['link']);
+        $imdbid = mysqli_real_escape_string($cur['movie']['imdbid']);
 
-        $sqlresult = mysql_query("SELECT * FROM links WHERE md5 = '$hash'");
-        echo mysql_error();
-        if (!mysql_num_rows($sqlresult)) {
-            $sqlresult = mysql_query("INSERT INTO links(link,md5) VALUES('$link', '$hash')");
-            echo mysql_error();
+        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE md5 = '$hash'");
+        echo mysqli_error();
+        if (!mysqli_num_rows($sqlresult)) {
+            $sqlresult = mysqli_query($GLOBALS['mysqli'], "INSERT INTO links(link,md5) VALUES('$link', '$hash')");
+            echo mysqli_error();
         }
-        $sqlresult = mysql_query("SELECT id FROM movies WHERE imdbid='$imdbid'");
-        echo mysql_error();
-        $id = mysql_fetch_assoc($sqlresult);$id = (int)$id['id'];
-        $description = mysql_escape_string($cur['description']);
-        $quality = mysql_escape_string($cur['quality']);
+        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT id FROM movies WHERE imdbid='$imdbid'");
+        echo mysqli_error();
+        $id = mysqli_fetch_assoc($sqlresult);$id = (int)$id['id'];
+        $description = mysqli_real_escape_string($cur['description']);
+        $quality = mysqli_real_escape_string($cur['quality']);
         $translateQuality = array_key_exists('translateQuality',$cur)?$cur['translateQuality']:"";
         $size = (float)$cur['size'];
         $seed = (int)$cur['seed'];
         $leech = (int)$cur['leech'];
-        mysql_query("UPDATE links SET movieId=$id, description='$description', quality='$quality', translateQuality='$translateQuality', size=$size, seed=$seed, leech=$leech, updated=now() WHERE md5 = '$hash'");
-        echo mysql_error();
+        mysqli_query($GLOBALS['mysqli'], "UPDATE links SET movieId=$id, description='$description', quality='$quality', translateQuality='$translateQuality', size=$size, seed=$seed, leech=$leech, updated=now() WHERE md5 = '$hash'");
+        echo mysqli_error();
     }
 ?>

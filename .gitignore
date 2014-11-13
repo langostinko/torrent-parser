@@ -1,4 +1,9 @@
+#sublime projects
+torrent-parser.sublime-project
+torrent-parser.sublime-workspace
+
 #movie posters
 img/posters/
+
 #passwords
 lib/pass.php

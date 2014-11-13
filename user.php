@@ -21,13 +21,13 @@
 
     $movies = array();
 
-    $sqlresult = mysql_query("SELECT * FROM movies");
-    while ($row = mysql_fetch_assoc($sqlresult))
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies");
+    while ($row = mysqli_fetch_assoc($sqlresult))
         $movies[(int)$row['id']] = $row;
     
-    $sqlresult = mysql_query("SELECT movieId FROM userignore WHERE userId = $userId ORDER BY id DESC");
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT movieId FROM userignore WHERE userId = $userId ORDER BY id DESC");
     $ignore = array();
-    while ($row = mysql_fetch_assoc($sqlresult))
+    while ($row = mysqli_fetch_assoc($sqlresult))
         $ignore[$row['movieId']] = true;
 
 ?>

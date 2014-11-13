@@ -63,7 +63,7 @@
   </div>
 </div>
 
-<div id="userSettings" <?php if ($_SESSION['showSettings'] === "no") echo "style='display: none;'" ?>>
+<div id="userSettings" <?php if (array_key_exists('showSettings', $_SESSION) && $_SESSION['showSettings'] === "no") echo "style='display: none;'" ?>>
 <div class="container">
     <form class="form-inline" role="form" action='/' method='post'>
         <input type='hidden' name="method" value="setSettings"/>

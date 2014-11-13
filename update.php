@@ -5,25 +5,25 @@ include_once "lib/libRutor.php";
 include_once "lib/libSeedoff.php";
 
 function deleteOld(){
-    $sqlresult = mysql_query("SELECT * FROM links WHERE updated < date_add(current_timestamp, interval -7 day)");
-    echo mysql_num_rows($sqlresult) . " old links deleted\n";
-    while ($row = mysql_fetch_assoc($sqlresult))
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE updated < date_add(current_timestamp, interval -7 day)");
+    echo mysqli_num_rows($sqlresult) . " old links deleted\n";
+    while ($row = mysqli_fetch_assoc($sqlresult))
         echo "\t".$row['link']."\n";
-    mysql_query("DELETE FROM links WHERE updated < date_add(current_timestamp, interval -7 day)");
+    mysqli_query($GLOBALS['mysqli'], "DELETE FROM links WHERE updated < date_add(current_timestamp, interval -7 day)");
     return;
     
-    $sqlresult = mysql_query("SELECT movieid FROM links");
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT movieid FROM links");
     $actual = array();
-    while ($row = mysql_fetch_assoc($sqlresult))
+    while ($row = mysqli_fetch_assoc($sqlresult))
         $actual[$row['movieid']] = 1;
-    $sqlresult = mysql_query("SELECT * FROM movies");
-    while ($row = mysql_fetch_assoc($sqlresult))
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies");
+    while ($row = mysqli_fetch_assoc($sqlresult))
         if (!array_key_exists($row['id'], $actual)) {
             $img = "img/posters/".$row['imdbid'].".jpg";
             $realImg = dirname( __FILE__ ) . "/$img";
             echo "\t".$row['title'];
             echo unlink($realImg) ? " :: poster deleted\n" : " :: poster not found\n";
-            mysql_query("DELETE FROM movies WHERE id = " . $row['id']);
+            mysqli_query($GLOBALS['mysqli'], "DELETE FROM movies WHERE id = " . $row['id']);
         }
 }
 
@@ -67,8 +67,8 @@ function updateLinks(){
 
 function updateMovies(){
     echo "UPDATE MOVIES\n";
-    $sqlresult = mysql_query("SELECT imdbid,title FROM movies");
-    while ($row = mysql_fetch_assoc($sqlresult)) {
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT imdbid,title FROM movies");
+    while ($row = mysqli_fetch_assoc($sqlresult)) {
         if (!trySkipMovie($row)) {
             echo "\t" . $row['title'] . "\n";
             addMovie($row);
