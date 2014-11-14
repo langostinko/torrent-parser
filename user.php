@@ -48,7 +48,7 @@
                 $('tr.movieTr'+movieId).fadeOut();
                 //alert( "Data Loaded: " + data );
             });
-    }
+        }
   
   </script>
 

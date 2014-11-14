@@ -91,6 +91,7 @@
     <?php
         $title = "Cinema : Новые фильмы на торрентах";
         include "html/head.php";
+        include "html/userSettings.php";
     ?>
 
   <body>
@@ -100,95 +101,15 @@
         function ignoreMovie(movieId) {
             $.post( "ajax.php", { method: "ignoreMovie", userId: userId, movieId: movieId })
                 .done(function( data ) {
-                $('.movieTr'+movieId).remove();
-
-                owlPos = -1;
-                //items = $("#owl-example").data('owlCarousel')._items;
-                items = $("#owl-example").data('owlCarousel').$userItems;
-                for (i = 0; i < items.length; ++i) 
-                    //if (items[i][0].firstChild.className == "movie moviePos"+movieId) {
-                    if (items[i].className == "movie moviePos"+movieId) {
-                        owlPos = i;
-                        break;
-                    }
-                if (owlPos != -1) {
-                    //beta
-                    //$("#owl-example").trigger('removeItem', [owlPos]);
-                
-                    nextPos = $("#owl-example").data('owlCarousel').currentItem;
-                    $("#owl-example").data('owlCarousel').removeItem(owlPos);
-                    $("#owl-example").data('owlCarousel').jumpTo(nextPos);
-                }
 
             });
         }
 
         $(document).ready(function() {
-            $('#torrentTable').DataTable({
-                paging: false,
-                ordering: true,
-                order: [[ 6, "desc" ]]
-            });
-        
-            //beta
-            /*
-            $("#owl-example").owlCarousel({
-                loop:true,
-                autoWidth: true,
-                margin: 10,
-                dotsEach: 6,
-                autoplay: true,
-                responsive:{
-                    200:{
-                        items:1,
-                        dotsEach: 1,
-                    },
-                    400:{
-                        items:2,
-                        dotsEach: 2,
-                    },
-                    600:{
-                        items:3,
-                        dotsEach: 3,
-                    },
-                    800:{
-                        items:4,
-                        dotsEach: 4,
-                    },
-                    1000:{
-                        items:5,
-                        dotsEach: 5,
-                    },
-                    1200:{
-                        items:6,
-                        dotsEach: 6,
-                    }
-                }
-            });
-*/
-            
-            //stable
-            $("#owl-example").owlCarousel({
-                items : 6,
-                itemsDesktop : [1199,5],
-                itemsDesktopSmall : [999,4],
-                itemsTablet: [799,3],
-                itemsTabletSmall: [599,2],
-                itemsMobile : [399, 1],
-                autoPlay: true,
-            });
-            
             $(".movieDelete").click(function( event ) {
-              event.preventDefault();
-              $('#main').css("height", $('#main').height());
               ignoreMovie($(this).attr('movieId'));
-              $('#main').css("height", "");
             });
-        });
-
-
-
-  
+        });  
   </script>
 
     
@@ -198,88 +119,40 @@
     ?>
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron" style="padding: 10px 0">
+    <div class="jumbotron">
       <div id='main' class="container-fluid" style="padding: 0">
-
-        <div id="owl-example" class="owl-carousel">
-            <?php
-                $cnt = 0;
-                foreach(array_keys($newMov) as $key) {
-                    $desc = $movies[$key]['description'];
-                    if (array_key_exists("Poster", $desc) && $desc['Poster'] != 'N/A') {
-                    ?>
-            <div class='movie moviePos<?php echo $key; ?>'>
-                <img class='poster' src='<?php echo $desc['Poster']; ?>' 
-                     onclick="$('html, body').animate({ scrollTop: $('tr.movieTr<?php echo $key; ?>').offset().top-100 }, 1000);
-                              $('.highlighted').removeClass('highlighted');
-                              $('tr.movieTr<?php echo $key; ?> a').addClass('highlighted');
-                                            //                          .delay(4500)
-                                            //                          .queue(function() {
-                                            //                           $('.movieTr<?php echo $key; ?> a').removeClass('highlighted');
-                                            //                           $('.movieTr<?php echo $key; ?> a').dequeue();
-                                            //                       });"
-                />
-                <a title="открыть на IMDB" target='_blank' href='<?php echo "http://www.imdb.com/title/".$movies[$key]['imdbid'];?>/'> 
-                    <div class='movieInfo'>
-                        <div class='movieRating'><?php echo $desc['imdbRating']; ?></div>
-                        <div class='movieRelease'><?php echo date("M'y",$movies[$key]['Release']); ?></div>
+        <?php
+            $cnt = 0;
+            foreach(array_keys($newMov) as $key) {
+                $desc = $movies[$key]['description'];
+                if (array_key_exists("Poster", $desc) && $desc['Poster'] != 'N/A') {
+                ?>
+                    <div class='movie moviePos<?php echo $key; ?>'>
+                        <a title="<?php echo $desc['Title'] ?>" href="/movie.php?id=<?php echo $key; ?>">
+                            <img class='poster' src='<?php echo $desc['Poster']; ?>' />
+                        </a>
+                        <a title="открыть на IMDB" target='_blank' href='<?php echo "http://www.imdb.com/title/".$movies[$key]['imdbid'];?>/'> 
+                            <div class='movieInfo'>
+                                <div class='movieRating'><?php echo $desc['imdbRating']; ?></div>
+                                <div class='movieRelease'><?php echo date("M'y",$movies[$key]['Release']); ?></div>
+                            </div>
+                        </a>
+                        <?php if ($login) { ?>
+                        <a title="не показывать (в корзину)" target='_blank' href='#'> 
+                            <div class='movieDelete' movieId='<?php echo $key ?>'>
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                            </div>
+                        </a>
+                        <?php } ?>
                     </div>
-                </a>
-                <?php if ($login) { ?>
-                <a title="не показывать (в корзину)" target='_blank' href='#'> 
-                    <div class='movieDelete' movieId='<?php echo $key ?>'>
-                        <span class="glyphicon glyphicon-remove-circle"></span>
-                    </div>
-                </a>
-                <?php } ?>
-            </div>
-                    <?php
-                        if (++$cnt >= 24)
-                            break;
-                    }
-                }    
-            ?>
-        </div>
-    
+                <?php
+                    if (++$cnt >= 24)
+                        break;
+                }
+            }    
+        ?>    
       </div>
     </div>
-
-    <div class="container table-responsive" style="padding: 0">
-        <!-- <table id = 'hor-minimalist-b'> -->
-        <table id='torrentTable' class='table table-striped table-hover'>
-            <thead>
-                <!-- <td>Title</td> -->
-                <!-- <td>IMDB</td> -->
-                <!-- <td>Release</td> -->
-                <td>Качество</td>
-                <td>Перевод</td>
-                <td>Ссылка</td>
-                <td>Размер</td>
-                <td>Сиды</td>
-                <td>Личеры</td>
-                <td>Добавлено</td>
-            </thead>
-            <tbody>
-            <?php
-            foreach($result as $cur) {
-                $desc = $movies[$cur['movieId']]['description'];
-                echo "<tr class='movieTr" . $movies[$cur['movieId']]['id'] . "'>\n";
-                //echo "\t<td><a target='_blank' href='http://www.imdb.com/title/".$movies[$cur['movieId']]['imdbid']."/'><div class='fullDiv'>".$movies[$cur['movieId']]['title']."</div></a></td>\n";
-                //echo "\t<td><a target='_blank' href='http://www.imdb.com/title/".$movies[$cur['movieId']]['imdbid']."/'><div class='fullDiv'>".(float)$desc['imdbRating']."</div></a></td>\n";
-                //echo "\t<td data-order='" .strtotime($desc['Released']) . "'>".$desc['Released']."</td>\n";
-                echo "\t<td data-order='" . qualityToRool($cur['quality']) . "'>".$cur['quality']."</td>\n";
-                echo "\t<td data-order='" . translateQualityToRool($cur['translateQuality']) . "'>".$cur['translateQuality']."</td>\n";
-                echo "\t<td><a target='_blank' href='".$cur['link']."'><div class='fullDiv'>".$cur['description']."</div></a></td>\n";
-                echo "\t<td>".$cur['size']."</td>\n";
-                echo "\t<td>".$cur['seed']."</td>\n";
-                echo "\t<td>".$cur['leech']."</td>\n";
-                echo "\t<td data-order='" . strtotime($cur['added']) . "'>".date("M j", strtotime($cur['added']))."</td>\n";
-                echo "</tr>\n";
-            }
-            ?>
-            </tbody>
-        </table>
-      <hr>
 
     <?php
         include "html/footer.php";

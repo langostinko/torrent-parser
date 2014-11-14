@@ -1,0 +1,116 @@
+<?php
+    session_start();
+    include_once "lib/lib.php";
+    connect();
+        
+    Login();
+    
+    $user = $_SESSION["user"];
+
+    $userId = $user['id'];
+    $login = $user['login'] ? $user['login'] : $user['vkid'];
+    
+    $movieId = array_key_exists('id', $_GET) ? (int)$_GET['id'] : -1;
+    $movie = false;
+    $desc = false;
+    $ignore = false;
+    $torrents = false;
+
+    if ($movieId != -1) {
+        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies WHERE id = $movieId");
+        $movie = mysqli_fetch_assoc($sqlresult);
+        $desc = json_decode($movie['description'], true);
+        
+        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT movieId FROM userignore WHERE userId = $userId AND movieId = $movieId ORDER BY id DESC");
+        $ignore = (bool)mysqli_fetch_assoc($sqlresult);
+
+        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE movieId = $movieId ORDER BY added DESC LIMIT 500");
+        while ($row = mysqli_fetch_assoc($sqlresult)) {
+            if (qualityToRool($row['quality']) < $user['quality'])
+                continue;
+            if (translateQualityToRool($row['translateQuality']) < $user['translateQuality'])
+                continue;
+            $torrents[] = $row;
+        }
+    }
+
+    if ($login == 'wise guest' || $login == 'guest') {
+        $userId = -1;
+        $login = false;        
+    }
+?>
+<!DOCTYPE html>
+<html lang="en">
+<?php
+    $title = $movie['title'];
+    include "html/head.php";
+?>
+
+  <body>
+    <script type="text/javascript">
+        var userId = <?php echo $userId; ?>;
+
+        function unIgnoreMovie(movieId) {
+            $.post( "ajax.php", { method: "unIgnoreMovie", userId: userId, movieId: movieId })
+                .done(function( data ) {
+                $('tr.movieTr'+movieId).fadeOut();
+                //alert( "Data Loaded: " + data );
+            });
+        }
+
+        $(document).ready(function() {
+            //$('#torrentTable').DataTable({
+            //    paging: false,
+            //    ordering: true,
+            //    order: [[ 6, "desc" ]]
+            //});
+        });
+    </script>
+
+    <?php
+        $liactive = "";
+        include "html/navbar.php";
+    ?>
+    
+    <div class="container">
+    <?php if ($movie) { ?>
+        <h3><?php echo $movie['title']; ?> </h3>
+        <img class="bigPoster" src='<?php echo $desc['Poster']; ?>' />
+        <table id='torrentTable' class='table table-striped table-hover'>
+            <thead>
+                <td>Качество</td>
+                <td>Перевод</td>
+                <td>Ссылка</td>
+                <td>Размер</td>
+                <td>Сиды</td>
+                <td>Личеры</td>
+                <td>Добавлено</td>
+            </thead>
+            <tbody>
+            <?php
+                foreach($torrents as $cur) {
+                    echo "<tr>\n";
+                    echo "\t<td data-order='" . qualityToRool($cur['quality']) . "'>".$cur['quality']."</td>\n";
+                    echo "\t<td data-order='" . translateQualityToRool($cur['translateQuality']) . "'>".$cur['translateQuality']."</td>\n";
+                    echo "\t<td><a target='_blank' href='".$cur['link']."'><div class='fullDiv'>".$cur['description']."</div></a></td>\n";
+                    echo "\t<td>".$cur['size']."</td>\n";
+                    echo "\t<td>".$cur['seed']."</td>\n";
+                    echo "\t<td>".$cur['leech']."</td>\n";
+                    echo "\t<td data-order='" . strtotime($cur['added']) . "'>".date("M j", strtotime($cur['added']))."</td>\n";
+                    echo "</tr>\n";
+                }
+            ?>
+            </tbody>
+        </table>
+        <div style="clear:left"/>
+    <?php } else
+        echo "movie with this id not found"
+    ?>
+
+    <?php
+        include "html/footer.php";
+    ?>
+    </div>
+
+  </body>
+</html>

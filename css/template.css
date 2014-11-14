@@ -4,10 +4,16 @@ body {
   padding-bottom: 20px;
 }
 
+#main {
+    text-align: center;
+}
+
 .movie {
-    float: left;
+    position: relative;
+    display: inline-block;
     width: 200px;
     height: 317px;
+    margin: 5px;
 }
 
 #userSettings {
@@ -70,6 +76,8 @@ body {
 
 .poster {
     position: absolute;
+    left: 0;
+    top: 0;
     z-index: 1;
     width: 200px;
     height: 317px;
@@ -84,6 +92,17 @@ body {
     opacity: 0.5;
 }
 
+.bigPoster {
+    float: left;
+    width: 20%;
+    padding-right: 10px;
+}
+
+#torrentTable {
+    float: left;
+    width: 80%;
+}
+
 .delImg {
     visibility:hidden;
     width: 24px;
@@ -96,48 +115,4 @@ body {
     color: #777;
     font-size: 14px;
     line-height: 20px;
-}
-
-#hor-minimalist-a td {
-color:#669;
-padding:9px 8px 0;
-}
-
-#hor-minimalist-b td {
-border-bottom:1px solid #ccc;
-color:#669;
-padding:6px 12px;
-}
-
-#hor-minimalist-a,#hor-minimalist-b {
-font-family:"Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-font-size:12px;
-background:#fff;
-width:80%;
-border-collapse:collapse;
-text-align:left;
-}
-
-#hor-minimalist-a th,#hor-minimalist-b th {
-font-size:14px;
-font-weight:400;
-color:#039;
-border-bottom:2px solid #6678b1;
-padding:10px 8px;
-}
-
-#hor-minimalist-a tbody tr:hover td,#hor-minimalist-b tbody tr:hover td {
-color:#005;
-}
-/*#hor-minimalist-a tbody td:hover,#hor-minimalist-b tbody td:hover {
-background-color:#EEF;
-}*/
-#hor-minimalist-a tbody tr:hover td,#hor-minimalist-b tbody tr:hover td a{
-    color:#F88;
-}
-#hor-minimalist-a tbody tr:hover td,#hor-minimalist-b tbody tr:hover td .delImg{
-    visibility: visible;
-}
-.highlighted {
-    font-weight: bold;
 }
