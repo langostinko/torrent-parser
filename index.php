@@ -101,12 +101,13 @@
         function ignoreMovie(movieId) {
             $.post( "ajax.php", { method: "ignoreMovie", userId: userId, movieId: movieId })
                 .done(function( data ) {
-
+                $('.moviePos'+movieId).remove();
             });
         }
 
         $(document).ready(function() {
             $(".movieDelete").click(function( event ) {
+              event.preventDefault();
               ignoreMovie($(this).attr('movieId'));
             });
         });  
@@ -146,7 +147,7 @@
                         <?php } ?>
                     </div>
                 <?php
-                    if (++$cnt >= 24)
+                    if (++$cnt >= 36)
                         break;
                 }
             }    

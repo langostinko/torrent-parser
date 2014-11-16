@@ -104,7 +104,6 @@ body {
 }
 
 .delImg {
-    visibility:hidden;
     width: 24px;
     cursor: pointer;
 }
