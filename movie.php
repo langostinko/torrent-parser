@@ -47,25 +47,29 @@
 ?>
 
   <body>
+    <script src="js/googleApiAuth.js"></script>
     <script type="text/javascript">
-        var userId = <?php echo $userId; ?>;
+        // Search for a specified string.
+        function search() {
+          var q = '<?php echo $movie['title']; ?>';
+          gapi.client.setApiKey('AIzaSyCBRMNUbFXHHBnQnY0V-hk_PO0xdYAwBio');
+          var request = gapi.client.youtube.search.list({
+            q: q + " trailer",
+            part: 'id'
+          });
+          request.execute(function(response) {
+            var videoId = response.items[0].id.videoId;
+            $('#movieTrailer').attr('src', '//www.youtube.com/embed/'+videoId);
+            $('.stretchy-wrapper').show();
+          });
+        }    
 
-        function unIgnoreMovie(movieId) {
-            $.post( "ajax.php", { method: "unIgnoreMovie", userId: userId, movieId: movieId })
-                .done(function( data ) {
-                $('tr.movieTr'+movieId).fadeOut();
-                //alert( "Data Loaded: " + data );
-            });
+        // After the API loads, call a function to enable the search box.
+        function handleAPILoaded() {
+            search();
         }
-
-        $(document).ready(function() {
-            //$('#torrentTable').DataTable({
-            //    paging: false,
-            //    ordering: true,
-            //    order: [[ 6, "desc" ]]
-            //});
-        });
     </script>
+    <script src="https://apis.google.com/js/client.js?onload=googleApiClientReady"></script>
 
     <?php
         $liactive = "";
@@ -75,34 +79,43 @@
     <div class="container">
     <?php if ($movie) { ?>
         <h3><?php echo $movie['title']; ?> </h3>
-        <img class="bigPoster" src='<?php echo $desc['Poster']; ?>' />
-        <table id='torrentTable' class='table table-striped table-hover'>
-            <thead>
-                <td>Качество</td>
-                <td>Перевод</td>
-                <td>Ссылка</td>
-                <td>Размер</td>
-                <td>Сиды</td>
-                <td>Личеры</td>
-                <td>Добавлено</td>
-            </thead>
-            <tbody>
-            <?php
-                foreach($torrents as $cur) {
-                    echo "<tr>\n";
-                    echo "\t<td data-order='" . qualityToRool($cur['quality']) . "'>".$cur['quality']."</td>\n";
-                    echo "\t<td data-order='" . translateQualityToRool($cur['translateQuality']) . "'>".$cur['translateQuality']."</td>\n";
-                    echo "\t<td><a target='_blank' href='".$cur['link']."'><div class='fullDiv'>".$cur['description']."</div></a></td>\n";
-                    echo "\t<td>".$cur['size']."</td>\n";
-                    echo "\t<td>".$cur['seed']."</td>\n";
-                    echo "\t<td>".$cur['leech']."</td>\n";
-                    echo "\t<td data-order='" . strtotime($cur['added']) . "'>".date("M j", strtotime($cur['added']))."</td>\n";
-                    echo "</tr>\n";
-                }
-            ?>
-            </tbody>
-        </table>
-        <div style="clear:left"/>
+        <div style="float:left; width: 25%">
+            <img class="bigPoster" src='<?php echo $desc['Poster']; ?>' />
+        </div>
+        <div style="float:right; width: 75%">
+            <div class="stretchy-wrapper" style="display:none;">
+                <div>
+                    <iframe id="movieTrailer" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+            <table id='torrentTable' class='table table-striped table-hover'>
+                <thead>
+                    <td>Качество</td>
+                    <td>Перевод</td>
+                    <td>Ссылка</td>
+                    <td>Размер</td>
+                    <td>Сиды</td>
+                    <td>Личеры</td>
+                    <td>Добавлено</td>
+                </thead>
+                <tbody>
+                <?php
+                    foreach($torrents as $cur) {
+                        echo "<tr>\n";
+                        echo "\t<td data-order='" . qualityToRool($cur['quality']) . "'>".$cur['quality']."</td>\n";
+                        echo "\t<td data-order='" . translateQualityToRool($cur['translateQuality']) . "'>".$cur['translateQuality']."</td>\n";
+                        echo "\t<td><a target='_blank' href='".$cur['link']."'><div class='fullDiv'>".$cur['description']."</div></a></td>\n";
+                        echo "\t<td>".$cur['size']."</td>\n";
+                        echo "\t<td>".$cur['seed']."</td>\n";
+                        echo "\t<td>".$cur['leech']."</td>\n";
+                        echo "\t<td data-order='" . strtotime($cur['added']) . "'>".date("M j", strtotime($cur['added']))."</td>\n";
+                        echo "</tr>\n";
+                    }
+                ?>
+                </tbody>
+            </table>
+        </div>
+        <div style="clear:both"></div>
     <?php } else
         echo "movie with this id not found"
     ?>

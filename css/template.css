@@ -93,14 +93,8 @@ body {
 }
 
 .bigPoster {
-    float: left;
-    width: 25%;
+    width: 100%;
     padding-right: 10px;
-}
-
-#torrentTable {
-    float: left;
-    width: 75%;
 }
 
 .delImg {
@@ -114,4 +108,15 @@ body {
     color: #777;
     font-size: 14px;
     line-height: 20px;
+}
+
+div.stretchy-wrapper {
+	width: 100%;
+	padding-bottom: 56.25%; /* 16:9 */
+	position: relative;
+}
+
+div.stretchy-wrapper > div {
+    position: absolute;
+    top: 0; bottom: 0; left: 0; right: 0;
 }
