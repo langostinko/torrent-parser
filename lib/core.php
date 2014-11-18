@@ -102,7 +102,7 @@
     
     function trySkipMovie($movie) {
         $imdbid=mysqli_real_escape_string($GLOBALS['mysqli'], $movie['imdbid']);
-        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies WHERE imdbid='$imdbid' AND updated > date_add(current_timestamp, interval -1 hour)");
+        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies WHERE imdbid='$imdbid' AND updated > date_add(current_timestamp, interval -1 day)");
         if (!mysqli_num_rows($sqlresult))
             return false;
         $row = mysqli_fetch_assoc($sqlresult);
