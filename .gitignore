@@ -7,3 +7,6 @@ img/posters/
 
 #passwords
 lib/pass.php
+
+#tmp files
+tmp.php

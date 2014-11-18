@@ -120,3 +120,8 @@ div.stretchy-wrapper > div {
     position: absolute;
     top: 0; bottom: 0; left: 0; right: 0;
 }
+
+.movDesc {
+    font-size: 24px;
+    color: #333;
+}

@@ -56,7 +56,7 @@
                     $needYear = array_key_exists('year', $movie) ? (int)$movie['year'] : $curYear;
                     if (abs($curYear - $needYear) <= 1) {
                         $movie['movie']['imdbid'] = $cur['id'];
-                        $movie['movie']['title'] = html_entity_decode($cur['title'], ENT_QUOTES, "UTF-8");
+                        $movie['movie']['title'] = html_entity_decode($cur['title'], ENT_QUOTES, "-8");
                         $movie['movie']['description'] = html_entity_decode($cur['description'], ENT_QUOTES, "UTF-8");
                         $movie['movie']['year'] = $curYear;
                         return true;
@@ -115,27 +115,26 @@
             return false;
         return true;
     }
-    
 
-    function getKinopoiskId($title) {
+    function getKinopoiskLink($link) {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "http://www.kinopoisk.ru/index.php?first=yes&what=&kp_query=".urlencode($title));
+        curl_setopt($ch, CURLOPT_URL, $link);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        //curl_setopt($ch, CURLOPT_VERBOSE, 1);
         curl_setopt($ch, CURLOPT_HEADER, 1);
         curl_setopt($ch, CURLOPT_ENCODING, 'gzip,deflate,sdch');
         curl_setopt($ch, CURLOPT_REFERER, 'http://www.kinopoisk.ru/');
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safari/537.36');
-        
         $response = curl_exec($ch);
+        curl_close($ch);
+        return $response;
+
+    }
+
+    function getKinopoiskId($title) {
+        $response = getKinopoiskLink("http://www.kinopoisk.ru/index.php?first=yes&what=&kp_query=".urlencode($title));
         
-        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-    	curl_close($ch);
-        $header = substr($response, 0, $header_size);
-        $body = substr($response, $header_size);
-    
         $result = array();
-        $res = preg_match_all('/Location\: \/film\/(\d+)\//isu', $header, $result);
+        $res = preg_match_all('/Location\: \/film\/(\d+)\//isu', $response, $result);
         
         if ($result && count($result[0]))
             return $result[1][0];
@@ -147,6 +146,18 @@
         $kinopoiskId = (int)$kinopoiskId;
         $xml = simplexml_load_file("http://rating.kinopoisk.ru/$kinopoiskId.xml");
         return (string) $xml->kp_rating;
+    }
+    
+    function getKinopoiskDesc($kinopoiskId, &$desc) {
+        $response = getKinopoiskLink("http://www.kinopoisk.ru/film/".urlencode($kinopoiskId));
+        if (!$response)
+            return false;
+
+        $result = array();
+        $res = preg_match_all('/>([^<]+)<\/h1>/isU', $response, $result);
+        if ($result && count($result[1]))
+            $desc['titleRu'] = iconv('windows-1251', 'UTF-8', $result[1][0]);
+        return true;
     }
     
     function addMovie($movie) {
@@ -169,8 +180,10 @@
             return false;
             
         $json['kinopoiskId'] = getKinopoiskId($movie['title']);
-        if ($json['kinopoiskId'])
+        if ($json['kinopoiskId']) {
             $json['kinopoiskRating'] = getKinopoiskRating($json['kinopoiskId']);
+            getKinopoiskDesc($json['kinopoiskId'], $json);
+        }
 
         $img = "img/posters/$imdbid.jpg";
         $realImg = dirname( __FILE__ ) . "/../$img";
@@ -182,7 +195,7 @@
             $json['Poster'] = $img;
         } else
             unset($json['Poster']);
-        $movie['description'] = json_encode($json);
+        $movie['description'] = json_encode($json, JSON_UNESCAPED_UNICODE);
         $description = mysqli_real_escape_string($GLOBALS['mysqli'], $movie['description']);
 
         //$year = (int)$movie['year'];

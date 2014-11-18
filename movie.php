@@ -42,16 +42,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php
-    $title = $movie['title'];
+    $title = array_key_exists("titleRu",$desc) ? $desc['titleRu'] : $desc['Title'];
     include "html/head.php";
 ?>
 
   <body>
     <script src="js/googleApiAuth.js"></script>
     <script type="text/javascript">
+
+        $(document).ready(function() {
+            $('#torrentTable').DataTable({
+                searching: false,
+                paging: false,
+                ordering: true,
+                order: [[ 6, "desc" ]]
+            });
+        });
+
         // Search for a specified string.
         function search() {
-          var q = '<?php echo $movie['title']; ?>';
+          var q = '<?php echo $title; ?> трейлер';
           gapi.client.setApiKey('AIzaSyCBRMNUbFXHHBnQnY0V-hk_PO0xdYAwBio');
           var request = gapi.client.youtube.search.list({
             q: q + " trailer",
@@ -76,11 +86,21 @@
         include "html/navbar.php";
     ?>
     
+    <div class="jumbotron">
     <div class="container">
     <?php if ($movie) { ?>
-        <h3><?php echo $movie['title']; ?> </h3>
         <div style="float:left; width: 25%">
             <img class="bigPoster" src='<?php echo $desc['Poster']; ?>' />
+            <a title="открыть на IMDB" target='_blank' href='<?php echo "http://www.imdb.com/title/".$movie['imdbid'];?>/'>
+                <div class="movDesc">
+                    imdb: <?php echo $desc['imdbRating']; ?>
+                </div>
+            </a>
+            <a title="открыть на Kinopoisk" target='_blank' href='<?php echo "http://www.kinopoisk.ru/film/".$desc['kinopoiskId'];?>/'>
+                <div class="movDesc">
+                    kinopoisk: <?php echo $desc['kinopoiskRating']; ?>
+                </div>
+            </a>
         </div>
         <div style="float:right; width: 75%">
             <div class="stretchy-wrapper" style="display:none;">
@@ -123,6 +143,7 @@
     <?php
         include "html/footer.php";
     ?>
+    </div>
     </div>
 
   </body>
