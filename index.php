@@ -36,7 +36,6 @@
         }        
     
 
-    $result = array();
     $movies = array();
     
     $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies");
@@ -49,9 +48,14 @@
         $ignore[$row['movieId']] = true;
 
     $newMov = array();    
-    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links ORDER BY added DESC LIMIT 500");
+    $take = array();
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links ORDER BY seed+leech DESC");
     while ($row = mysqli_fetch_assoc($sqlresult))
         if (!array_key_exists($row['movieId'], $ignore)) {
+            if (!$take[$row['movieId']]) {
+                $newMov[] = $row['movieId'];
+                $take[$row['movieId']] = 1;
+            }
             if (qualityToRool($row['quality']) < $user['quality'])
                 continue;
             if (translateQualityToRool($row['translateQuality']) < $user['translateQuality'])
@@ -75,9 +79,7 @@
             }
             if (!(array_key_exists("Poster", $movies[$row['movieId']]['description']) && $movies[$row['movieId']]['description']['Poster'] != 'N/A'))
                 continue;
-
-            $newMov[$row['movieId']] = true;
-            $result[] = $row;
+            $take[$row['movieId']] = 2;
         }
         
     if ($login == 'wise guest' || $login == 'guest') {
@@ -124,7 +126,8 @@
       <div id='main' class="container-fluid" style="padding: 0">
         <?php
             $cnt = 0;
-            foreach(array_keys($newMov) as $key) {
+            foreach($newMov as $key) 
+            if ($take[$key] == 2) {
                 $desc = $movies[$key]['description'];
                 if (array_key_exists("Poster", $desc) && $desc['Poster'] != 'N/A') {
                 ?>
@@ -147,7 +150,7 @@
                         <?php } ?>
                     </div>
                 <?php
-                    if (++$cnt >= 36)
+                    if (++$cnt >= 72)
                         break;
                 }
             }    

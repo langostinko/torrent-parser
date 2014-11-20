@@ -56,7 +56,7 @@
                     $needYear = array_key_exists('year', $movie) ? (int)$movie['year'] : $curYear;
                     if (abs($curYear - $needYear) <= 1) {
                         $movie['movie']['imdbid'] = $cur['id'];
-                        $movie['movie']['title'] = html_entity_decode($cur['title'], ENT_QUOTES, "-8");
+                        $movie['movie']['title'] = html_entity_decode($cur['title'], ENT_QUOTES, "UTF-8");
                         $movie['movie']['description'] = html_entity_decode($cur['description'], ENT_QUOTES, "UTF-8");
                         $movie['movie']['year'] = $curYear;
                         return true;
@@ -176,9 +176,9 @@
 
         $movie['description'] = file_get_contents("http://www.omdbapi.com/?i=" . urlencode($movie['imdbid']));           
         $json = json_decode($movie['description'], true);
-        if (!$json or $json['Response'] == "False" )
+        if (!$json || $json['Response'] == "False" || !array_key_exists("Title", $json) )
             return false;
-            
+
         $json['kinopoiskId'] = getKinopoiskId($movie['title']);
         if ($json['kinopoiskId']) {
             $json['kinopoiskRating'] = getKinopoiskRating($json['kinopoiskId']);
@@ -199,9 +199,12 @@
         $description = mysqli_real_escape_string($GLOBALS['mysqli'], $movie['description']);
 
         //$year = (int)$movie['year'];
-        mysqli_query($GLOBALS['mysqli'], "UPDATE movies SET title='$title', description='$description',updated=now() WHERE imdbid='$imdbid'");
-        echo mysqli_error($GLOBALS['mysqli']);
-        return true;
+        if ($description) {
+            mysqli_query($GLOBALS['mysqli'], "UPDATE movies SET title='$title', description='$description',updated=now() WHERE imdbid='$imdbid'");
+            echo mysqli_error($GLOBALS['mysqli']);
+            return true;
+        }
+        return false;
     }
     
     function trySkip($cur) {
