@@ -108,6 +108,12 @@
         }
 
         $(document).ready(function() {
+            $('#torrentTable').DataTable({
+                searching: false,
+                paging: false,
+                ordering: true,
+                order: [[ 7, "desc" ]]
+            });
             $(".movieDelete").click(function( event ) {
               event.preventDefault();
               ignoreMovie($(this).attr('movieId'));
@@ -155,7 +161,42 @@
                 }
             }    
         ?>    
-      </div>
+
+            <h2>Свежие торренты</h2>
+            <table id='torrentTable' class='table table-striped table-hover'>
+                <thead>
+                    <td>Качество</td>
+                    <td>Перевод</td>
+                    <td>Фильм</td>
+                    <td>Ссылка</td>
+                    <td>Размер</td>
+                    <td>Сиды</td>
+                    <td>Личеры</td>
+                    <td>Добавлено</td>
+                </thead>
+                <tbody>
+                <?php
+                    $torrents = array();
+                    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE 1 ORDER BY added DESC LIMIT 10");
+                    while ($row = mysqli_fetch_assoc($sqlresult))
+                        $torrents[] = $row;
+
+                    foreach($torrents as $cur) {
+                        echo "<tr>\n";
+                        echo "\t<td data-order='" . qualityToRool($cur['quality']) . "'>".$cur['quality']."</td>\n";
+                        echo "\t<td data-order='" . translateQualityToRool($cur['translateQuality']) . "'>".$cur['translateQuality']."</td>\n";
+                        echo "\t<td><a target='_blank' href='/movie.php?id=".$cur['movieId']."'><div class='fullDiv'>".$movies[$cur['movieId']]['title']."</div></a></td>\n";
+                        echo "\t<td><a target='_blank' href='".$cur['link']."'><div class='fullDiv'>".$cur['description']."</div></a></td>\n";
+                        echo "\t<td>".$cur['size']."</td>\n";
+                        echo "\t<td>".$cur['seed']."</td>\n";
+                        echo "\t<td>".$cur['leech']."</td>\n";
+                        echo "\t<td data-order='" . strtotime($cur['added']) . "'>".date("M j h:i:s", strtotime($cur['added']))."</td>\n";
+                        echo "</tr>\n";
+                    }
+                ?>
+                </tbody>
+            </table>      
+        </div>
     </div>
 
     <?php

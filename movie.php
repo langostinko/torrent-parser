@@ -26,10 +26,10 @@
 
         $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE movieId = $movieId ORDER BY added DESC LIMIT 500");
         while ($row = mysqli_fetch_assoc($sqlresult)) {
-            if (qualityToRool($row['quality']) < $user['quality'])
-                continue;
-            if (translateQualityToRool($row['translateQuality']) < $user['translateQuality'])
-                continue;
+            //if (qualityToRool($row['quality']) < $user['quality'])
+            //    continue;
+            //if (translateQualityToRool($row['translateQuality']) < $user['translateQuality'])
+            //    continue;
             $torrents[] = $row;
         }
     }

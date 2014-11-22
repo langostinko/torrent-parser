@@ -9,7 +9,7 @@
             <input name="minRating" type="number" class="form-control" id="minRating" placeholder="0.0" min=0 max=10 step=0.1 value='<?php echo $user['minRating']; ?>'>
         </div>
       </div>
-      <div class="form-group">
+      <div class="form-group" style="display: none;">
         <label class="sr-only" for="minVotes">голосов IMDB</label>
         <div class="input-group">
             <div class="input-group-addon">голосов IMDB ≥</div>
