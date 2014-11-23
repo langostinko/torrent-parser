@@ -138,7 +138,7 @@
                 if (array_key_exists("Poster", $desc) && $desc['Poster'] != 'N/A') {
                 ?>
                     <div class='movie moviePos<?php echo $key; ?>'>
-                        <a title="<?php echo $desc['Title'] ?>" href="/movie.php?id=<?php echo $key; ?>">
+                        <a title="<?php echo array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']; ?>" href="/movie.php?id=<?php echo $key; ?>">
                             <img class='poster' src='<?php echo $desc['Poster']; ?>' />
                         </a>
                         <a title="открыть на IMDB" target='_blank' href='<?php echo "http://www.imdb.com/title/".$movies[$key]['imdbid'];?>/'> 
@@ -147,6 +147,9 @@
                                 <div class='movieRelease'><?php echo date("M'y",$movies[$key]['Release']); ?></div>
                             </div>
                         </a>
+                        <div class='movieTitle'>
+                            <?php echo array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']; ?>
+                        </div>
                         <?php if ($login) { ?>
                         <a title="не показывать (в корзину)" target='_blank' href='#'> 
                             <div class='movieDelete' movieId='<?php echo $key ?>'>
@@ -190,7 +193,7 @@
                         echo "\t<td>".$cur['size']."</td>\n";
                         echo "\t<td>".$cur['seed']."</td>\n";
                         echo "\t<td>".$cur['leech']."</td>\n";
-                        echo "\t<td data-order='" . strtotime($cur['added']) . "'>".date("M j h:i:s", strtotime($cur['added']))."</td>\n";
+                        echo "\t<td data-order='" . strtotime($cur['added']) . "'>".date("M j H:i:s", strtotime($cur['added']))."</td>\n";
                         echo "</tr>\n";
                     }
                 ?>
