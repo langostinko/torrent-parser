@@ -106,6 +106,8 @@
         if (!mysqli_num_rows($sqlresult))
             return false;
         $row = mysqli_fetch_assoc($sqlresult);
+        if (!$row['title'])
+            return false;
         $json = json_decode($row['description'], true);
         if (!$json or $json['Response'] == "False")
             return false;
@@ -171,14 +173,17 @@
         if (!mysqli_num_rows($sqlresult)) {
             mysqli_query($GLOBALS['mysqli'], "INSERT INTO movies(imdbid) VALUES('$imdbid')");
             echo mysqli_error($GLOBALS['mysqli']);
+        } else {
+            $row = mysqli_fetch_assoc($sqlresult);
+            $movie['description'] = json_decode($row['description'], true);
         }
-        $title = mysqli_real_escape_string($GLOBALS['mysqli'], $movie['title']);
 
-        $movie['description'] = file_get_contents("http://www.omdbapi.com/?i=" . urlencode($movie['imdbid']));           
-        $json = json_decode($movie['description'], true);
+        $omdbapi = file_get_contents("http://www.omdbapi.com/?i=" . urlencode($movie['imdbid']));           
+        $json = json_decode($omdbapi, true);
         if (!$json || $json['Response'] == "False" || !array_key_exists("Title", $json) )
             return false;
 
+        $title = mysqli_real_escape_string($GLOBALS['mysqli'], $json['Title']);
         $json['kinopoiskId'] = getKinopoiskId($movie['title']);
         if ($json['kinopoiskId']) {
             $json['kinopoiskRating'] = getKinopoiskRating($json['kinopoiskId']);
@@ -195,6 +200,13 @@
             $json['Poster'] = $img;
         } else
             unset($json['Poster']);
+        echo "was";
+        print_r($json);
+        echo "was";
+        print_r((array)$movie['description']);
+        $json = array_merge((array)$movie['description'], $json);
+        echo "now";
+        print_r($json);
         $movie['description'] = json_encode($json, JSON_UNESCAPED_UNICODE);
         $description = mysqli_real_escape_string($GLOBALS['mysqli'], $movie['description']);
 
