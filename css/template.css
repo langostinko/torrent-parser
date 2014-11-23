@@ -102,7 +102,7 @@ body {
     cursor: pointer;
 }
 
-.desc {
+.navbarDesc {
     float: left;
     padding: 15px;
     color: #777;
@@ -122,6 +122,9 @@ div.stretchy-wrapper > div {
 }
 
 .movDesc {
-    font-size: 24px;
-    color: #333;
+    font-size: 14px;
+}
+
+.movDescName {
+    font-size: 18px;
 }

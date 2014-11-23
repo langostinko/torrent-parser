@@ -8,7 +8,7 @@
         <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand" href="/">Cinema</a>
-      <span class="desc">персональная доставка лучших фильмов</span>
+      <span class="navbarDesc">персональная доставка лучших фильмов</span>
     </div>
     <div class="navbar-collapse collapse">
     <?php if ($login) { ?>

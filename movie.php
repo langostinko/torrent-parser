@@ -91,16 +91,63 @@
     <?php if ($movie) { ?>
         <div style="float:left; width: 25%">
             <img class="bigPoster" src='<?php echo $desc['Poster']; ?>' />
-            <a title="открыть на IMDB" target='_blank' href='<?php echo "http://www.imdb.com/title/".$movie['imdbid'];?>/'>
-                <div class="movDesc">
-                    imdb: <?php echo $desc['imdbRating']; ?>
-                </div>
-            </a>
-            <a title="открыть на Kinopoisk" target='_blank' href='<?php echo "http://www.kinopoisk.ru/film/".$desc['kinopoiskId'];?>/'>
-                <div class="movDesc">
-                    kinopoisk: <?php echo $desc['kinopoiskRating']; ?>
-                </div>
-            </a>
+            <table class="movDesc table table-condensed">
+            <tbody>
+                <tr class="movDescName">
+                    <td colspan="2">
+                        <?php echo array_key_exists('titleRu', $desc)?$desc['titleRu']:$desc['Title']; ?>
+                    </td>
+                </tr>
+                <tr> 
+                    <td colspan="2"> 
+                        <?php 
+                            echo array_key_exists('titleRu', $desc)?($desc['Title']." "):"";
+                            echo $desc['Year'];
+                        ?> 
+                    </td>
+                </tr>
+                <tr>
+                    <td>IMDB</td>
+                    <td>
+                    <a title="открыть на IMDB" target='_blank' href='<?php echo "http://www.imdb.com/title/".$movie['imdbid'];?>/'>
+                        <?php echo $desc['imdbRating']; ?>
+                    </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>КиноПоиск</td>
+                    <td>
+                    <a title="открыть на Kinopoisk" target='_blank' href='<?php echo "http://www.kinopoisk.ru/film/".$desc['kinopoiskId'];?>/'>
+                        <?php echo $desc['kinopoiskRating']; ?>
+                    </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Metascore</td>
+                    <td><?php echo $desc['Metascore']; ?></td>
+                </tr>
+                <tr>
+                    <td>премьера</td>
+                    <td><?php echo $desc['Released']; ?></td>
+                </tr>
+                <tr>
+                    <td>жанр</td>
+                    <td><?php echo $desc['Genre']; ?></td>
+                </tr>
+                <tr>
+                    <td>режиссер</td>
+                    <td><?php echo $desc['Director']; ?></td>
+                </tr>
+                <tr>
+                    <td>сценарист</td>
+                    <td><?php echo $desc['Writer']; ?></td>
+                </tr>
+                <tr>
+                    <td>актеры</td>
+                    <td><?php echo $desc['Actors']; ?></td>
+                </tr>
+            </tbody>
+            </table>
         </div>
         <div style="float:right; width: 75%">
             <div class="stretchy-wrapper" style="display:none;">
