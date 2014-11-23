@@ -11,7 +11,7 @@
             array("ORIGINAL",)
         )) return 0;
         if (in_array($qual,
-            array("L1","L2",)
+            array("L","L1","L2","A",)
         )) return 1;
         if (in_array($qual,
             array("P","P2","BAIBAKO",)
@@ -67,7 +67,9 @@
 
     function extractTranslate($str, &$movie){
     	$result = array();
-    	$res = preg_match_all('/\| *[\W](лицензия|чистый звук|звук с ts|l1|p|p2|Звук с CAMRip|iTunes|D|BaibaKo|L2)[\W]/isuU', $str.' ', $result);
+    	$res = preg_match_all('/\| *[\W](лицензия|чистый звук|звук с ts|Звук с CAMRip|iTunes|BaibaKo)[\W]/isuU', $str.' ', $result);
+    	if (!$result[0])
+        	$res = preg_match_all('/\| *[\W](l|l1|l2|p|p2|D|A)[\W]/isuU', $str.' ', $result);
     	if ($result[0])
             $movie['translateQuality'] = mb_strtoupper($result[1][0], 'UTF-8');
     }
@@ -84,7 +86,7 @@
     	    $pos = $result[0][0][1];
     	}
     	
-    	$res = preg_match_all('/[\W](dvdrip|dvdscr|hdrip|ts|tc|cam|brrip|webrip|bdrip|camrip|hdts|hdcam|hdtv|hdtvrip|telecine|web-dl|web-dlrip)[\W]/isuU', $str.' ', $result, PREG_OFFSET_CAPTURE);
+    	$res = preg_match_all('/[\W](dvdrip|dvdscr|hdrip|ts|tc|cam|brrip|webrip|bdrip|camrip|hdts|hdcam|hdtv|hdtvrip|telecine|web-dl|web-dlrip|bluray|bdremux|bd-remux)[\W]/isuU', $str.' ', $result, PREG_OFFSET_CAPTURE);
     	if ($result[0]) {
             $movie['quality'] = strtoupper($result[1][0][0]);
             $pos = min($pos, $result[1][0][1]);
@@ -200,13 +202,7 @@
             $json['Poster'] = $img;
         } else
             unset($json['Poster']);
-        echo "was";
-        print_r($json);
-        echo "was";
-        print_r((array)$movie['description']);
         $json = array_merge((array)$movie['description'], $json);
-        echo "now";
-        print_r($json);
         $movie['description'] = json_encode($json, JSON_UNESCAPED_UNICODE);
         $description = mysqli_real_escape_string($GLOBALS['mysqli'], $movie['description']);
 
@@ -226,11 +222,7 @@
             while ($row = mysqli_fetch_assoc($sqlresult))
                 $cache[$row['md5']] = true;
         }
-        return array_key_exists(md5($cur['link']), $cache);
-        
-        $hash = md5($cur['link']);
-        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE md5 = '$hash' AND updated > date_add(current_timestamp, interval -1 day)");
-        return mysqli_num_rows($sqlresult);
+        return array_key_exists(md5($cur['link']), $cache) && (md5($cur['link']) != "");
     }
     
     function addLink($cur) {

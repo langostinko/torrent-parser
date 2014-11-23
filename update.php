@@ -42,9 +42,11 @@ function updateLinks(){
     $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=14&options=0&order=5&by=2&pages=4"));
     $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=14&options=0&order=5&by=2&pages=5"));
     $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=14&options=0&order=5&by=2&pages=6"));
+    $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=64&options=0&order=5&by=2&pages=1"));
+    $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=64&options=0&order=5&by=2&pages=2"));
 
-    $resPirate = array_merge($resPirate, pirate\getPirateBay("http://thepiratebay.se/top/207", 60));
-    $resPirate = array_merge($resPirate, pirate\getPirateBay("http://thepiratebay.se/top/201", 30));
+    $resPirate = array_merge($resPirate, pirate\getPirateBay("http://thepiratebay.se/top/207", 100));
+    $resPirate = array_merge($resPirate, pirate\getPirateBay("http://thepiratebay.se/top/201", 50));
     /*for ($page = 1; $page >= 0; --$page)
         $resPirate = array_merge($resPirate, pirate\getPirateBay("http://pirateproxy.in/browse/201/$page/7"));
     for ($page = 2; $page >= 0; --$page)
