@@ -117,7 +117,7 @@
                 <tr>
                     <td>КиноПоиск</td>
                     <td>
-                    <a title="открыть на Kinopoisk" target='_blank' href='<?php echo "http://www.kinopoisk.ru/film/".$desc['kinopoiskId'];?>/'>
+                    <a title="открыть на КиноПоиске" target='_blank' href='<?php echo "http://www.kinopoisk.ru/film/".$desc['kinopoiskId'];?>/'>
                         <?php echo $desc['kinopoiskRating']; ?>
                     </a>
                     </td>

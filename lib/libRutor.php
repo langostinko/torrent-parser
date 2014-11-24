@@ -9,7 +9,7 @@
         $res = $html->find('a',1);
         if (!$res)
             return false;
-        $movie['link'] = "http://new-rutor.org".$res->href;
+        $movie['link'] = "http://alt.rutor.org".$res->href;
         if (trySkip($movie))
             return false;
         
@@ -48,7 +48,7 @@
         return true;
     }
 
-    function getRutor($link = "http://new-rutor.org/browse/0/1/0/2/"){
+    function getRutor($link = "http://alt.rutor.org/browse/0/1/0/2/"){
         echo "fetching $link\n";
         //$file = file_get_contents($link);
         global $result;

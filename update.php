@@ -33,10 +33,11 @@ function updateLinks(){
     $resRutor = array();
 
     $resRutor = rutor\getRutor();
-    //$resRutor = array_merge($resRutor, rutor\getRutor("http://nluxwru.llruj.saariselka.ru/browse/0/1/0/2"));
-    $resRutor = array_merge($resRutor, rutor\getRutor("http://new-rutor.org/browse/1/1/0/2/"));
-
-    $resSeedoff = seedoff\getSeedoff();
+    $resRutor = array_merge($resRutor, rutor\getRutor("http://alt.rutor.org/browse/1/1/0/2/"));
+    flush();
+    
+    $resSeedoff = array();
+    /*$resSeedoff = seedoff\getSeedoff();
     $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=14&options=0&order=5&by=2&pages=2"));
     $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=14&options=0&order=5&by=2&pages=3"));
     $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=14&options=0&order=5&by=2&pages=4"));
@@ -44,9 +45,11 @@ function updateLinks(){
     $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=14&options=0&order=5&by=2&pages=6"));
     $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=64&options=0&order=5&by=2&pages=1"));
     $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=64&options=0&order=5&by=2&pages=2"));
+    flush();*/
 
     $resPirate = array_merge($resPirate, pirate\getPirateBay("http://thepiratebay.se/top/207", 100));
     $resPirate = array_merge($resPirate, pirate\getPirateBay("http://thepiratebay.se/top/201", 50));
+    flush();
     /*for ($page = 1; $page >= 0; --$page)
         $resPirate = array_merge($resPirate, pirate\getPirateBay("http://pirateproxy.in/browse/201/$page/7"));
     for ($page = 2; $page >= 0; --$page)
@@ -80,6 +83,7 @@ function updateMovies(){
 
 header('Content-Type: text/plain; charset=UTF-8');
 connect();
+set_time_limit(5*60);
 
 $time_start = microtime(true);
 
