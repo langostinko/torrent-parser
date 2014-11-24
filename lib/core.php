@@ -161,6 +161,16 @@
                     $desc['kinopoiskId'] = $id;
                     $desc['kinopoiskRating'] = $rating;
                     $desc['titleRu'] = iconv('windows-1251', 'UTF-8', $name);
+
+                    $img = "img/posters/".$desc['imdbID']."Ru.jpg";
+                    $realImg = dirname( __FILE__ ) . "/../$img";
+
+                    $url = "http://st.kp.yandex.net/images/film_iphone/iphone360_$id.jpg";
+                    if ( !(file_exists($realImg) && filesize($realImg)) )
+                        file_put_contents($realImg, file_get_contents($url));
+                    if (file_exists($realImg) && filesize($realImg))
+                        $desc['PosterRu'] = $img;
+
                     return true;
                 }
             }

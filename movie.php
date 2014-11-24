@@ -90,7 +90,7 @@
     <div class="container">
     <?php if ($movie) { ?>
         <div style="float:left; width: 25%">
-            <img class="bigPoster" src='<?php echo $desc['Poster']; ?>' />
+            <img class="bigPoster" src='<?php echo array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster']; ?>' />
             <table class="movDesc table table-condensed">
             <tbody>
                 <tr class="movDescName">

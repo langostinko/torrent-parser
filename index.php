@@ -135,33 +135,31 @@
             foreach($newMov as $key) 
             if ($take[$key] == 2) {
                 $desc = $movies[$key]['description'];
-                if (array_key_exists("Poster", $desc) && $desc['Poster'] != 'N/A') {
                 ?>
-                    <div class='movie moviePos<?php echo $key; ?>'>
-                        <a title="<?php echo array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']; ?>" href="/movie.php?id=<?php echo $key; ?>">
-                            <img class='poster' src='<?php echo $desc['Poster']; ?>' />
-                        </a>
-                        <a title="открыть на IMDB" target='_blank' href='<?php echo "http://www.imdb.com/title/".$movies[$key]['imdbid'];?>/'> 
-                            <div class='movieInfo'>
-                                <div class='movieRating'><?php echo $desc['imdbRating']; ?></div>
-                                <div class='movieRelease'><?php echo date("M'y",$movies[$key]['Release']); ?></div>
-                            </div>
-                        </a>
-                        <div class='movieTitle'>
-                            <?php echo array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']; ?>
+                <div class='movie moviePos<?php echo $key; ?>'>
+                    <a title="<?php echo array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']; ?>" href="/movie.php?id=<?php echo $key; ?>">
+                        <img class='poster' src='<?php echo array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster']; ?>' />
+                    </a>
+                    <a title="открыть на IMDB" target='_blank' href='<?php echo "http://www.imdb.com/title/".$movies[$key]['imdbid'];?>/'> 
+                        <div class='movieInfo'>
+                            <div class='movieRating'><?php echo $desc['imdbRating']; ?></div>
+                            <div class='movieRelease'><?php echo date("M'y",$movies[$key]['Release']); ?></div>
                         </div>
-                        <?php if ($login) { ?>
-                        <a title="не показывать (в корзину)" target='_blank' href='#'> 
-                            <div class='movieDelete' movieId='<?php echo $key ?>'>
-                                <span class="glyphicon glyphicon-remove-circle"></span>
-                            </div>
-                        </a>
-                        <?php } ?>
+                    </a>
+                    <div class='movieTitle'>
+                        <?php echo array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']; ?>
                     </div>
+                    <?php if ($login) { ?>
+                    <a title="не показывать (в корзину)" target='_blank' href='#'> 
+                        <div class='movieDelete' movieId='<?php echo $key ?>'>
+                            <span class="glyphicon glyphicon-remove-circle"></span>
+                        </div>
+                    </a>
+                    <?php } ?>
+                </div>
                 <?php
                     if (++$cnt >= 72)
                         break;
-                }
             }    
         ?>    
 
