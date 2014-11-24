@@ -75,8 +75,9 @@ function updateMovies(){
     $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT imdbid,title FROM movies");
     while ($row = mysqli_fetch_assoc($sqlresult)) {
         if (!trySkipMovie($row)) {
-            echo "\t" . $row['title'] . "\n";
             addMovie($row);
+            echo "\t" . $row['title'] . "\n";
+            print_r($row);
         }
     }
 }

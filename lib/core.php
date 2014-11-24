@@ -57,7 +57,7 @@
                     if (abs($curYear - $needYear) <= 1) {
                         $movie['movie']['imdbid'] = $cur['id'];
                         $movie['movie']['title'] = html_entity_decode($cur['title'], ENT_QUOTES, "UTF-8");
-                        $movie['movie']['description'] = html_entity_decode($cur['description'], ENT_QUOTES, "UTF-8");
+                        //$movie['movie']['description'] = html_entity_decode($cur['description'], ENT_QUOTES, "UTF-8");
                         $movie['movie']['year'] = $curYear;
                         return true;
                     }
@@ -134,16 +134,39 @@
 
     }
 
-    function getKinopoiskId($title) {
-        $response = getKinopoiskLink("http://www.kinopoisk.ru/index.php?first=yes&what=&kp_query=".urlencode($title));
-        
-        $result = array();
-        $res = preg_match_all('/Location\: \/film\/(\d+)\//isu', $response, $result);
-        
-        if ($result && count($result[0]))
-            return $result[1][0];
-        else 
-            return false;
+    function getKinopoiskId($title, &$desc) {
+		$response = getKinopoiskLink("http://www.kinopoisk.ru/index.php?first=no&what=&kp_query=".urlencode(iconv("windows-1251", "UTF-8", $title)));
+
+        include_once('lib/simple_html_dom.php');
+		$html = str_get_html($response);
+		
+		foreach($html->find('div[class=element]') as $row) {
+		    $pName = $row->find('p[class=name]',0);
+		    
+		    $link = $pName->find('a',0)->href;
+            $id = array();
+            $res = preg_match_all('/\/film\/(\d+)\//isu', $link, $id);
+            if ($id && count($id[0]))
+                $id = $id[1][0];
+            else 
+                $id = false;
+
+            if ($id) {
+    		    $name = $pName->find('a',0)->plaintext;
+    		    $year = $pName->find('span',0)->plaintext;
+    		    $rating = $row->find('div[class=rating]',0)->plaintext;
+    
+                $needYear = array_key_exists('Year', $desc) ? (int)$desc['Year'] : $year;
+                if (abs($year - $needYear) <= 1) {
+                    $desc['kinopoiskId'] = $id;
+                    $desc['kinopoiskRating'] = $rating;
+                    $desc['titleRu'] = iconv('windows-1251', 'UTF-8', $name);
+                    return true;
+                }
+            }
+
+		}
+		return false;
     }   
     
     function getKinopoiskRating($kinopoiskId) {
@@ -164,7 +187,7 @@
         return true;
     }
     
-    function addMovie($movie) {
+    function addMovie(&$movie) {
         if (!$movie)
             return false;
         if (trySkipMovie($movie))
@@ -186,11 +209,8 @@
             return false;
 
         $title = mysqli_real_escape_string($GLOBALS['mysqli'], $json['Title']);
-        $json['kinopoiskId'] = getKinopoiskId($movie['title']);
-        if ($json['kinopoiskId']) {
-            $json['kinopoiskRating'] = getKinopoiskRating($json['kinopoiskId']);
-            getKinopoiskDesc($json['kinopoiskId'], $json);
-        }
+        
+        $kinRes = getKinopoiskId($movie['title'], $json);
 
         $img = "img/posters/$imdbid.jpg";
         $realImg = dirname( __FILE__ ) . "/../$img";
@@ -202,9 +222,8 @@
             $json['Poster'] = $img;
         } else
             unset($json['Poster']);
-        $json = array_merge((array)$movie['description'], $json);
-        $movie['description'] = json_encode($json, JSON_UNESCAPED_UNICODE);
-        $description = mysqli_real_escape_string($GLOBALS['mysqli'], $movie['description']);
+        $movie['description'] = array_merge((array)$movie['description'], $json);
+        $description = mysqli_real_escape_string($GLOBALS['mysqli'], json_encode($movie['description'], JSON_UNESCAPED_UNICODE));
 
         //$year = (int)$movie['year'];
         if ($description) {
@@ -222,7 +241,7 @@
             while ($row = mysqli_fetch_assoc($sqlresult))
                 $cache[$row['md5']] = true;
         }
-        return array_key_exists(md5($cur['link']), $cache) && (md5($cur['link']) != "");
+        return array_key_exists(md5($cur['link']), $cache) && (md5($cur['link']) != "66ef92773d6e3e31454f1e09c86d2c10");
     }
     
     function addLink($cur) {
