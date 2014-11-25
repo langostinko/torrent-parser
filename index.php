@@ -112,7 +112,8 @@
                 searching: false,
                 paging: false,
                 ordering: true,
-                order: [[ 7, "desc" ]]
+                order: [[ 7, "desc" ]],
+                info: false,
             });
             $(".movieDelete").click(function( event ) {
               event.preventDefault();
@@ -191,7 +192,7 @@
                         echo "\t<td><a target='_blank' href='/movie.php?id=".$cur['movieId']."'><div class='fullDiv'>";
                         echo array_key_exists("titleRu",$movies[$cur['movieId']]['description']) ? $movies[$cur['movieId']]['description']['titleRu'] : $movies[$cur['movieId']]['description']['Title'];
                         echo "</div></a></td>\n";
-                        echo "\t<td><a target='_blank' href='".$cur['link']."'><div class='fullDiv'>".$cur['description']."</div></a></td>\n";
+                        echo "\t<td><a target='_blank' href='".$cur['link']."'>".$cur['description']."</a></td>\n";
                         echo "\t<td>".$cur['size']."</td>\n";
                         echo "\t<td>".$cur['seed']."</td>\n";
                         echo "\t<td>".$cur['leech']."</td>\n";

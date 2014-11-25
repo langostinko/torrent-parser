@@ -55,7 +55,9 @@
                 searching: false,
                 paging: false,
                 ordering: true,
-                order: [[ 6, "desc" ]]
+                order: [[ 5, "desc" ]],
+                autoWidth: true,
+                info: false
             });
         });
 
@@ -70,7 +72,7 @@
           request.execute(function(response) {
             var videoId = response.items[0].id.videoId;
             $('#movieTrailer').attr('src', '//www.youtube.com/embed/'+videoId);
-            $('.stretchy-wrapper').show();
+            $('#movieTrailerDiv').show();
           });
         }    
 
@@ -89,7 +91,7 @@
     <div class="jumbotron">
     <div class="container">
     <?php if ($movie) { ?>
-        <div style="float:left; width: 25%">
+        <div style="float:left; width: 25%; padding-right: 10px;">
             <img class="bigPoster" src='<?php echo array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster']; ?>' />
             <table class="movDesc table table-condensed">
             <tbody>
@@ -150,20 +152,17 @@
             </table>
         </div>
         <div style="float:right; width: 75%">
-            <div class="stretchy-wrapper" style="display:none;">
-                <div>
-                    <iframe id="movieTrailer" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
-                </div>
+            <div id="movieTrailerDiv" class="embed-responsive embed-responsive-16by9" style="display:none;">
+                <iframe id="movieTrailer" class="embed-responsive-item" allowfullscreen></iframe>
             </div>
             <table id='torrentTable' class='table table-striped table-hover'>
                 <thead>
-                    <td>Качество</td>
-                    <td>Перевод</td>
-                    <td>Ссылка</td>
-                    <td>Размер</td>
-                    <td>Сиды</td>
-                    <td>Личеры</td>
-                    <td>Добавлено</td>
+                    <th>качество</th>
+                    <th>перевод</th>
+                    <th>ссылка</th>
+                    <th>размер</th>
+                    <th>сиды</th>
+                    <th>дата</th>
                 </thead>
                 <tbody>
                 <?php
@@ -171,11 +170,10 @@
                         echo "<tr>\n";
                         echo "\t<td data-order='" . qualityToRool($cur['quality']) . "'>".$cur['quality']."</td>\n";
                         echo "\t<td data-order='" . translateQualityToRool($cur['translateQuality']) . "'>".$cur['translateQuality']."</td>\n";
-                        echo "\t<td><a target='_blank' href='".$cur['link']."'><div class='fullDiv'>".$cur['description']."</div></a></td>\n";
+                        echo "\t<td><a target='_blank' href='".$cur['link']."'>".$cur['description']."</a></td>\n";
                         echo "\t<td>".$cur['size']."</td>\n";
                         echo "\t<td>".$cur['seed']."</td>\n";
-                        echo "\t<td>".$cur['leech']."</td>\n";
-                        echo "\t<td data-order='" . strtotime($cur['added']) . "'>".date("M j", strtotime($cur['added']))."</td>\n";
+                        echo "\t<td data-order='" . strtotime($cur['added']) . "'>".date("M\&\\nb\sp;j", strtotime($cur['added']))."</td>\n";
                         echo "</tr>\n";
                     }
                 ?>
