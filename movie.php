@@ -20,6 +20,8 @@
         $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies WHERE id = $movieId");
         $movie = mysqli_fetch_assoc($sqlresult);
         $desc = json_decode($movie['description'], true);
+
+        $movie['Release'] = strtotime($desc['Released']);
         
         $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT movieId FROM userignore WHERE userId = $userId AND movieId = $movieId ORDER BY id DESC");
         $ignore = (bool)mysqli_fetch_assoc($sqlresult);
@@ -43,6 +45,8 @@
 <html lang="en">
 <?php
     $title = array_key_exists("titleRu",$desc) ? $desc['titleRu'] : $desc['Title'];
+    $metaDescription = $title . " - скачать торрент в hd качестве dvdrip, перевод - дубляж";
+    $metaTitle .= "$title - свежие торренты";
     include "html/head.php";
 ?>
 
@@ -89,64 +93,70 @@
     ?>
     
     <div class="jumbotron">
-    <div class="container">
+    <div class="container" itemscope itemtype="http://schema.org/Movie">
     <?php if ($movie) { ?>
         <div style="float:left; width: 25%; padding-right: 10px;">
-            <img class="bigPoster" src='<?php echo array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster']; ?>' />
+            <img itemprop="image" class="bigPoster" src='<?php echo array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster']; ?>' />
             <table class="movDesc table table-condensed">
             <tbody>
                 <tr class="movDescName">
-                    <td colspan="2">
+                    <td itemprop="name" colspan="2">
                         <?php echo array_key_exists('titleRu', $desc)?$desc['titleRu']:$desc['Title']; ?>
                     </td>
                 </tr>
                 <tr> 
                     <td colspan="2"> 
-                        <?php 
-                            echo array_key_exists('titleRu', $desc)?($desc['Title']." "):"";
-                            echo $desc['Year'];
-                        ?> 
+                        <span itemprop="alternateName"><?php echo array_key_exists('titleRu', $desc)?($desc['Title']." "):""; ?></span>
+                        <?php echo $desc['Year']; ?>
                     </td>
                 </tr>
-                <tr>
+                <tr itemtype="http://schema.org/AggregateRating" itemscope itemprop="aggregateRating">
                     <td>IMDB</td>
                     <td>
-                    <a title="открыть на IMDB" target='_blank' href='<?php echo "http://www.imdb.com/title/".$movie['imdbid'];?>/'>
+                    <a itemprop="ratingValue" title="открыть на IMDB" target='_blank' href='<?php echo "http://www.imdb.com/title/".$movie['imdbid'];?>/'>
                         <?php echo $desc['imdbRating']; ?>
                     </a>
+                    <meta itemprop="bestRating" content="10" />
+                    <meta itemprop="worstRating" content="0" >
                     </td>
                 </tr>
-                <tr>
+                <tr itemtype="http://schema.org/AggregateRating" itemscope itemprop="aggregateRating">
                     <td>КиноПоиск</td>
                     <td>
-                    <a title="открыть на КиноПоиске" target='_blank' href='<?php echo "http://www.kinopoisk.ru/film/".$desc['kinopoiskId'];?>/'>
+                    <a itemprop="ratingValue" title="открыть на КиноПоиске" target='_blank' href='<?php echo "http://www.kinopoisk.ru/film/".$desc['kinopoiskId'];?>/'>
                         <?php echo $desc['kinopoiskRating']; ?>
                     </a>
+                    <meta itemprop="bestRating" content="10"/>
+                    <meta itemprop="worstRating" content="0"/>
                     </td>
                 </tr>
-                <tr>
+                <tr itemtype="http://schema.org/AggregateRating" itemscope itemprop="aggregateRating">
                     <td>Metascore</td>
-                    <td><?php echo $desc['Metascore']; ?></td>
+                    <td itemprop="ratingValue"><?php echo $desc['Metascore']; ?>
+                    <meta itemprop="bestRating" content="100"/>
+                    <meta itemprop="worstRating" content="0"/>
+                    </td>
                 </tr>
                 <tr>
                     <td>премьера</td>
-                    <td><?php echo $desc['Released']; ?></td>
+                    <td><?php echo date("j M Y",$movie['Release']); ?></td>
+                    <meta itemprop="datePublished" content="<?php echo date("c",$movie['Release']); ?>"/>
                 </tr>
                 <tr>
                     <td>жанр</td>
-                    <td><?php echo $desc['Genre']; ?></td>
+                    <td itemprop="genre"><?php echo $desc['Genre']; ?></td>
                 </tr>
                 <tr>
                     <td>режиссер</td>
-                    <td><?php echo $desc['Director']; ?></td>
+                    <td itemprop="director"><?php echo $desc['Director']; ?></td>
                 </tr>
                 <tr>
                     <td>сценарист</td>
-                    <td><?php echo $desc['Writer']; ?></td>
+                    <td itemprop="author"><?php echo $desc['Writer']; ?></td>
                 </tr>
                 <tr>
                     <td>актеры</td>
-                    <td><?php echo $desc['Actors']; ?></td>
+                    <td itemprop="actors"><?php echo $desc['Actors']; ?></td>
                 </tr>
             </tbody>
             </table>
@@ -159,7 +169,7 @@
                 <thead>
                     <th>качество</th>
                     <th>перевод</th>
-                    <th>ссылка</th>
+                    <th>скачать торрент</th>
                     <th>размер</th>
                     <th>сиды</th>
                     <th>дата</th>

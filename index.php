@@ -91,7 +91,6 @@
 <!DOCTYPE html>
 <html lang="en">
     <?php
-        $title = "Новые фильмы на торрентах";
         include "html/head.php";
         include "html/userSettings.php";
     ?>
@@ -167,14 +166,14 @@
             <h2>Свежие торренты</h2>
             <table id='torrentTable' class='table table-striped table-hover'>
                 <thead>
-                    <td>Качество</td>
-                    <td>Перевод</td>
-                    <td>Фильм</td>
-                    <td>Ссылка</td>
-                    <td>Размер</td>
-                    <td>Сиды</td>
-                    <td>Личеры</td>
-                    <td>Добавлено</td>
+                    <td>качество</td>
+                    <td>перевод</td>
+                    <td>фильм</td>
+                    <td>скачать торрент</td>
+                    <td>размер</td>
+                    <td>сиды</td>
+                    <td>личеры</td>
+                    <td>добавлено</td>
                 </thead>
                 <tbody>
                 <?php
