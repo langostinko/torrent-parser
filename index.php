@@ -52,7 +52,7 @@
     $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links ORDER BY seed+leech DESC");
     while ($row = mysqli_fetch_assoc($sqlresult))
         if (!array_key_exists($row['movieId'], $ignore)) {
-            if (!$take[$row['movieId']]) {
+            if (!array_key_exists($row['movieId'], $take) || !$take[$row['movieId']]) {
                 $newMov[] = $row['movieId'];
                 $take[$row['movieId']] = 1;
             }
