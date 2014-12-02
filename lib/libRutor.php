@@ -51,6 +51,7 @@
     function getRutor($link = "http://alt.rutor.org/browse/0/1/0/2/"){
         echo "fetching $link\n";
         //$file = file_get_contents($link);
+        //print_r($file);
         global $result;
         $result = array();
 

@@ -55,7 +55,7 @@
                 searching: false,
                 paging: false,
                 ordering: true,
-                order: [[ 5, "desc" ]],
+                order: [[ 1, "desc" ], [ 4, "desc" ]],
                 autoWidth: true,
                 info: false
             });
@@ -64,7 +64,7 @@
         // Search for a specified string.
         function search() {
           var q = '<?php echo html_entity_decode($title); ?>';
-          gapi.client.setApiKey('AIzaSyCBRMNUbFXHHBnQnY0V-hk_PO0xdYAwBio');
+          gapi.client.setApiKey('AIzaSyDtncZmxqR9jZlLDT00WbT1FwdYGkoY8G0');
           var request = gapi.client.youtube.search.list({
             q: q + " trailer",
             part: 'id'

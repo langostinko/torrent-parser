@@ -10,7 +10,7 @@
             unset($_SESSION['user']);       
         if(isset($_SESSION['showSettings']))
             unset($_SESSION['showSettings']);      
-        header("Location: http://cinema.todeliver.ru/"); 
+        header("Location: " . \pass\VK::$redirect_uri); 
     }
 
     Login();

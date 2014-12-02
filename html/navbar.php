@@ -7,7 +7,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/">Cinema</a>
+      <a class="navbar-brand" style="font-family: Georgia, 'Times New Roman', Times, serif;" href="/">FRESH SWAG</a>
       <span class="navbarDesc">персональная доставка лучших фильмов</span>
     </div>
     <div class="navbar-collapse collapse">
@@ -43,7 +43,7 @@
              <form class="navbar-form navbar-right" role="form" action='https://oauth.vk.com/authorize' method='get'>  
                  <input type='hidden' name='client_id' value='4586424'/>
                  <input type='hidden' name='scope' value=''/>
-                 <input type='hidden' name='redirect_uri' value='http://cinema.todeliver.ru/'/>
+                 <input type='hidden' name='redirect_uri' value='<?php echo \pass\VK::$redirect_uri; ?>'/>
                  <input type='hidden' name='response_type' value='code'/>
                  <input type='hidden' name='v' value='5.25'/>
                 <!--    <div class="form-group">
