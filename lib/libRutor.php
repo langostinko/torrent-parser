@@ -1,9 +1,9 @@
 <?php
-    namespace rutor;
+include_once('lib.php');
 
-    include_once('lib.php');
+class Rutor {
 
-    $result = array();
+    public $result;
 
     function processTd($html, &$movie){
         $res = $html->find('a',1);
@@ -25,7 +25,8 @@
 
     function processTr($html){
         $movie = array();
-		$res = processTd($html->children(1), $movie);
+		$res = $this->processTd($html->children(1), $movie);
+            
 		if (!$res)
 		    return false;
 
@@ -37,37 +38,44 @@
         if (strpos($curTr[3], 'G'))
             $movie['size'] *= 1024;
 
-        $result = array();
-    	$res = preg_match_all('/\d+/isu', $curTr[4], $result);
-    	if (!$result || count($result[0]) !=  2)
+        $preg_result = array();
+    	$res = preg_match_all('/\d+/isu', $curTr[4], $preg_result);
+    	if (!$preg_result || count($preg_result[0]) !=  2)
     	    return false;
-    	$movie['seed'] = (int)$result[0][0];
-    	$movie['leech'] = (int)$result[0][1];
-        global $result;
-        $result[] = $movie;
+    	$movie['seed'] = (int)$preg_result[0][0];
+    	$movie['leech'] = (int)$preg_result[0][1];
+        $this->result[] = $movie;
         return true;
     }
-
-    function getRutor($link = "http://alt.rutor.org/browse/0/1/0/2/"){
-        echo "fetching $link\n";
-        //$file = file_get_contents($link);
-        //print_r($file);
-        global $result;
-        $result = array();
+    
+    function getRutorCallback($response, $info) {
+        echo $info['http_code'] . " :: " . $info['url'] . " fetched in " . $info['total_time'] . "\n";
+        if ($info['http_code'] != 200) {
+            echo "\terror\n";
+            return;
+        }
 
         include_once('simple_html_dom.php');
-		$html = file_get_html($link);
+		$html = str_get_html($response);
 		if (!$html) {
-		    echo "failed\n";
-		    return $result;
+		    echo "\tfailed to convert DOM\n";
+		    return;
 		}
 
 		foreach($html->find('tr') as $row) {
 		    $curTr = $row->find('td');
 			if (count($curTr) == 5) 
-			    processTr($row);
+			    $this->processTr($row);
 		}
 		
-		return $result;
+		echo "\t " . count($this->result) . " new links found\n";
     }
+
+    function getRutor($link = "http://alt.rutor.org/browse/0/1/0/2/"){
+        $this->result = array();
+
+        \RollingCurl::$rc->get($link, null, null, array("callback"=>array($this, "getRutorCallback")) );
+    }
+
+}
 ?>

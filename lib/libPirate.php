@@ -1,9 +1,9 @@
 <?php
-    namespace pirate;
+include_once('lib.php');
 
-    include_once('lib.php');
-
-    $result = array();
+class Pirate {
+    
+    public $result;
 
     function processDesc($str, &$movie){
         $str = html_entity_decode($str);
@@ -39,13 +39,13 @@
         $res = $html->find('font.detDesc',0);
         if (!$res)
             return false;
-        processDesc($res->plaintext, $movie);
+        $this->processDesc($res->plaintext, $movie);
         return true;
     }
 
     function processTr($html){
         $movie = array();
-		$res = processTd($html->children(1), $movie);
+		$res = $this->processTd($html->children(1), $movie);
 		if (!$res)
 		    return false;
         $curTr = array();
@@ -54,33 +54,43 @@
 		$movie['seed'] = (int)$curTr[2];
 		$movie['leech'] = (int)$curTr[3];
 		$movie['translateQuality'] = 'ORIGINAL';
-        global $result;
-        $result[] = $movie;
+        $this->result[] = $movie;
         return true;
     }
-
-    function getPirateBay($link = "http://thepiratebay.se/browse/201/0/7/0", $cnt = 50){
-        echo "fetching $link\n";
-
-        global $result;
-        $result = array();
+    
+    function getPirateCallback($response, $info, $request) {
+        echo $info['http_code'] . " :: " . $info['url'] . " fetched in " . $info['total_time'] . "\n";
+        if ($info['http_code'] != 200) {
+            echo "\terror\n";
+            return;
+        }
 
         include_once('simple_html_dom.php');
 
-        $html = file_get_html($link);
+        $html = str_get_html($response);
+		if (!$html) {
+		    echo "\tfailed to convert DOM\n";
+		    return;
+		}
 
         $got = 0;
+        $cnt = $request->cookie['cnt'];
 		foreach($html->find('tr') as $row) {
 		    $curTr = $row->find('td');
 			if (count($curTr) == 4) {
 			    ++$got;
-			    processTr($row);
+			    $this->processTr($row);
 			}
 			if ($got >= $cnt)
 			    break;
 		}
-
-		return $result;
+		echo "\t " . count($this->result) . " new links found\n";
     }
 
+    function getPirateBay($link = "http://thepiratebay.se/browse/201/0/7/0", $cnt = 50){
+        $this->result = array();
+        \RollingCurl::$rc->get($link, null, null, array("callback"=>array($this, "getPirateCallback"), "cnt"=>$cnt) );
+    }
+    
+}
 ?>

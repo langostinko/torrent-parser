@@ -3,6 +3,7 @@ include_once "lib/lib.php";
 include_once "lib/libPirate.php";
 include_once "lib/libRutor.php";
 include_once "lib/libSeedoff.php";
+require_once "lib/RollingCurl.php";
 
 function deleteOld(){
     $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE updated < date_add(current_timestamp, interval -7 day)");
@@ -27,13 +28,24 @@ function deleteOld(){
         }
 }
 
+function main_callback($response, $info, $request) {
+    call_user_func($request->cookie['callback'], $response, $info, $request);
+}
+
 function updateLinks(){
     echo "UPDATE LINKS\n";
     $resPirate = array();
-    $resRutor = array();
+    
+    //parallel RollingCurl
+    
+    RollingCurl::$rc = new RollingCurl("main_callback");
+    // the window size determines how many simultaneous requests to allow.  
+    RollingCurl::$rc->window_size = 10;
 
-    $resRutor = rutor\getRutor();
-    $resRutor = array_merge($resRutor, rutor\getRutor("http://alt.rutor.org/browse/1/1/0/2/"));
+    $resRutor1 = new Rutor;
+    $resRutor1->getRutor();
+    $resRutor2 = new Rutor;
+    $resRutor2->getRutor("http://alt.rutor.org/browse/1/1/0/2/");
     flush();
     
     $resSeedoff = array();
@@ -47,15 +59,14 @@ function updateLinks(){
     $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=64&options=0&order=5&by=2&pages=2"));
     flush();*/
 
-    $resPirate = array_merge($resPirate, pirate\getPirateBay("http://thepiratebay.se/top/207", 100));
-    $resPirate = array_merge($resPirate, pirate\getPirateBay("http://thepiratebay.se/top/201", 50));
+    $resPirate1 = new Pirate;
+    $resPirate1->getPirateBay("http://thepiratebay.se/top/207", 100);
+    $resPirate2 = new Pirate;
+    $resPirate2->getPirateBay("http://thepiratebay.se/top/201", 50);
     flush();
-    /*for ($page = 1; $page >= 0; --$page)
-        $resPirate = array_merge($resPirate, pirate\getPirateBay("http://pirateproxy.in/browse/201/$page/7"));
-    for ($page = 2; $page >= 0; --$page)
-        $resPirate = array_merge($resPirate, pirate\getPirateBay("http://pirateproxy.in/browse/207/$page/7"));*/
 
-    $resPirate = array_merge($resPirate, $resRutor, $resSeedoff);
+    RollingCurl::$rc->execute();
+    $resPirate = array_merge($resPirate1->result, $resPirate2->result, $resRutor1->result, $resRutor2->result, $resSeedoff);
     
     foreach($resPirate as $cur) {
         if (trySkip($cur))

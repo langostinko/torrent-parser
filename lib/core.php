@@ -43,9 +43,8 @@
     function searchIMDB($title, &$movie){
         $title = strtolower($title);
         $link = "http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=" . urlencode($title);
-        //echo "$link\n";
 
-        $file = file_get_contents("http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=" . urlencode($title));
+        $file = file_get_contents($link);
         $json = json_decode($file, true);
 
         $vector = array('title_popular','title_exact','title_approx');
@@ -245,13 +244,15 @@
     }
     
     function trySkip($cur) {
+        if (!is_array($cur) || !array_key_exists("link", $cur))
+            return true;
         static $cache = false;
         if (!$cache) {
             $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT md5 FROM links WHERE updated > date_add(current_timestamp, interval -1 day)");
             while ($row = mysqli_fetch_assoc($sqlresult))
                 $cache[$row['md5']] = true;
         }
-        return array_key_exists(md5($cur['link']), $cache) && (md5($cur['link']) != "66ef92773d6e3e31454f1e09c86d2c10");
+        return array_key_exists(md5($cur['link']), $cache);
     }
     
     function addLink($cur) {
