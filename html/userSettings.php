@@ -27,7 +27,13 @@
         <div class="checkbox">
             <label>
                 <input name="quality" type="checkbox" <?php echo $user['quality']?"checked":""; ?> >
-                только HD
+                HD
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input name="onlyNewTor" type="checkbox" <?php echo $user['onlyNewTor']?"checked":""; ?> >
+                свежие
             </label>
         </div>
       </div>

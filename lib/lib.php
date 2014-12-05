@@ -8,10 +8,11 @@
         $quality = $user['quality'] = $settings['quality'];
         $minRating = $user['minRating'] = $settings['minRating'];
         $maxDaysDif = $user['maxDaysDif'] = $settings['maxDaysDif'];
+        $onlyNewTor = $user['onlyNewTor'] = $settings['onlyNewTor'];
         $minVotes = $user['minVotes'] = $settings['minVotes'];
         $translateQuality = $user['translateQuality'] = $settings['translateQuality'];
         if ($userId != 3)
-            mysqli_query($GLOBALS['mysqli'], "UPDATE users SET quality=$quality, minRating=$minRating, maxDaysDif=$maxDaysDif, minVotes=$minVotes, translateQuality=$translateQuality WHERE id=$userId");
+            mysqli_query($GLOBALS['mysqli'], "UPDATE users SET quality=$quality, minRating=$minRating, maxDaysDif=$maxDaysDif, onlyNewTor=$onlyNewTor, minVotes=$minVotes, translateQuality=$translateQuality WHERE id=$userId");
         $_SESSION["user"] = $user;
     }
 
@@ -39,6 +40,8 @@
         //login as guest by default
         $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM users WHERE login='$guestLogin'" );
         $_SESSION['user'] = mysqli_fetch_assoc($sqlresult);
+        $_SESSION['expires'] = time() + 30*24*60*60;
+        $_SESSION['showSettings'] = true;
         return false;
     }
 

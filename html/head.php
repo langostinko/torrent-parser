@@ -1,3 +1,8 @@
+<?php
+    if (!$head_time_start)
+        $head_time_start = microtime(true);
+?>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
