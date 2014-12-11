@@ -21,7 +21,7 @@ function calcTotalSeedLeech(&$movies, $ignore, $user) {
                 if ( (time() - $added)/(24*60*60) > 7)
                     continue;
             }
-            
+
             if (qualityToRool($row['quality']) < $user['quality'])
                 continue;
             if (translateQualityToRool($row['translateQuality']) < $user['translateQuality'])

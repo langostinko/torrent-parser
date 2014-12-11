@@ -11,12 +11,15 @@
             array("ORIGINAL",)
         )) return 0;
         if (in_array($qual,
-            array("L","L1","L2","A",)
+            array("ЗВУК С TS","ЗВУК С CAMRIP",)
         )) return 1;
         if (in_array($qual,
-            array("P","P2","BAIBAKO",)
+            array("L","L1","L2","A",)
         )) return 2;
-        return 3;
+        if (in_array($qual,
+            array("P","P2","BAIBAKO",)
+        )) return 3;
+        return 4;
     }
     
     function checkTranslateQuality($qual, $rool) {

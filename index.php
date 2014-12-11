@@ -1,4 +1,6 @@
 <?php
+    //header('Content-Type: text/plain; charset=UTF-8');
+
     $head_time_start = microtime(true);
     
     session_start();

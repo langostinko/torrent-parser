@@ -42,9 +42,10 @@
         <div class="input-group">
             <div class="input-group-addon">перевод не хуже, чем</div>
             <select name="translateQuality" class="form-control">
-              <option value="3" <?php echo $user['translateQuality']==3?"selected":""; ?>>дубляж</option>
-              <option value="2" <?php echo $user['translateQuality']==2?"selected":""; ?>>многоголосый</option>
-              <option value="1" <?php echo $user['translateQuality']==1?"selected":""; ?>>любительский</option>
+              <option value="4" <?php echo $user['translateQuality']==4?"selected":""; ?>>дубляж</option>
+              <option value="3" <?php echo $user['translateQuality']==3?"selected":""; ?>>многоголосый</option>
+              <option value="2" <?php echo $user['translateQuality']==2?"selected":""; ?>>любительский</option>
+              <option value="1" <?php echo $user['translateQuality']==1?"selected":""; ?>>с TS</option>
               <option value="0" <?php echo $user['translateQuality']==0?"selected":""; ?>>оригинал</option>
             </select>
         </div>
