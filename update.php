@@ -83,9 +83,10 @@ function updateLinks(){
 
 function updateMovies(){
     echo "UPDATE MOVIES\n";
-    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT imdbid,title FROM movies");
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT id,imdbid,title FROM movies");
     while ($row = mysqli_fetch_assoc($sqlresult)) {
-        if (!trySkipMovie($row)) {
+        $checkLink = mysqli_query($GLOBALS['mysqli'], "SELECT id FROM links WHERE movieId = " . $row['id']);
+        if (mysqli_num_rows($checkLink) && !trySkipMovie($row)) {
             addMovie($row);
             echo "\t" . $row['title'] . "\n";
             print_r($row);

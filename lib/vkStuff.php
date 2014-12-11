@@ -21,7 +21,7 @@
             $fname = mysqli_real_escape_string($GLOBALS['mysqli'], $result['first_name']);
             $lname = mysqli_real_escape_string($GLOBALS['mysqli'], $result['last_name']);
             $photo = mysqli_real_escape_string($GLOBALS['mysqli'], $result['photo_100']);
-            mysql_query("UPDATE users SET login='$fname', lastName='$lname', photo='$photo' WHERE vkid=$vkid");
+            mysqli_query($GLOBALS['mysqli'], "UPDATE users SET login='$fname', lastName='$lname', photo='$photo' WHERE vkid=$vkid");
             return $fname;
         }
         return "user";
