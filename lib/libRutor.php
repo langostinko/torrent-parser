@@ -25,10 +25,6 @@ class Rutor {
 
     function processTr($html){
         $movie = array();
-		$res = $this->processTd($html->children(1), $movie);
-            
-		if (!$res)
-		    return false;
 
         $curTr = array();
 		foreach ($html->find('td') as $item)
@@ -44,6 +40,12 @@ class Rutor {
     	    return false;
     	$movie['seed'] = (int)$preg_result[0][0];
     	$movie['leech'] = (int)$preg_result[0][1];
+
+		$res = $this->processTd($html->children(1), $movie);
+            
+		if (!$res)
+		    return false;
+
         $this->result[] = $movie;
         return true;
     }

@@ -41,7 +41,13 @@ body {
     font-size: 16px;
 }
 
+.movieQuality {
+    font-size: 10px;
+}
+
 .movieInfo {
+    font-size: 12px;
+    text-align: center;
     z-index: 2;
     position:absolute;
     background-color:black;
@@ -83,14 +89,14 @@ body {
 }
 
 .movieRating {
-    font-size: 50px;
-    line-height: 40px;
+    font-size: 40px;
+    line-height: 30px;
     text-align: center;
 }
 
 .movieRelease {
-    text-align: center;
-    padding-right: 15px;
+
+    
 }
 
 .poster {

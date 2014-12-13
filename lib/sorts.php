@@ -6,6 +6,12 @@ function cmpByLeech(&$a, &$b) {
     return $a["sortVal"] < $b["sortVal"];
 }
 
+function cmpBySeedLeech(&$a, &$b) {
+    $a['sortVal'] = $a["totalLeech"] + $a["totalSeed"];
+    $b['sortVal'] = $b["totalLeech"] + $b["totalSeed"];
+    return $a["sortVal"] < $b["sortVal"];
+}
+
 function cmpByRatingLeech(&$a, &$b) {
     $a['sortVal'] = exp(-($a["totalLeech"]+$a["totalSeed"])/20000.0)*exp($a['kinopoiskRating']);
     $b['sortVal'] = exp(-($b["totalLeech"]+$b["totalSeed"])/20000.0)*exp($b['kinopoiskRating']);
@@ -13,7 +19,7 @@ function cmpByRatingLeech(&$a, &$b) {
 }
 
 function calcTotalSeedLeech(&$movies, $ignore, $user) {
-    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links");
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links ORDER BY seed DESC");
     while ($row = mysqli_fetch_assoc($sqlresult))
         if (!array_key_exists($row['movieId'], $ignore)) {
             if ($user['onlyNewTor']) {
@@ -43,7 +49,7 @@ function calcTotalSeedLeech(&$movies, $ignore, $user) {
                 $movies[$row['movieId']]['Release'] = strtotime($movies[$row['movieId']]['description']['Released']);
 
             if ($user['maxDaysDif']) {
-                if ((time()-$movies[$row['movieId']]['Release'])/(30.417*24*60*60) > $user['maxDaysDif']) 
+                if ((time()-$movies[$row['movieId']]['Release'])/(30.417*24*60*60) > $user['maxDaysDif'])
                     continue;
             }
             if (!(array_key_exists("Poster", $movies[$row['movieId']]['description']) && $movies[$row['movieId']]['description']['Poster'] != 'N/A'))
@@ -51,6 +57,19 @@ function calcTotalSeedLeech(&$movies, $ignore, $user) {
             $movies[(int)$row['movieId']]['totalSeed'] += $row['seed'];
             $movies[(int)$row['movieId']]['totalLeech'] += $row['leech'];
             $movies[(int)$row['movieId']]['userTake'] = true;
+            if (qualityToRool($row['quality']) > $movies[(int)$row['movieId']]['quality']) {
+                $movies[(int)$row['movieId']]['quality'] = qualityToRool($row['quality']);
+                $movies[(int)$row['movieId']]['qualityStr'] = $row['quality'];
+                $movies[(int)$row['movieId']]['translateQuality'] = translateQualityToRool($row['translateQuality']);
+                $movies[(int)$row['movieId']]['translateQualityStr'] = $row['translateQuality'];
+            }
+            if (qualityToRool($row['quality']) == $movies[(int)$row['movieId']]['quality'] &&
+                translateQualityToRool($row['translateQuality']) > $movies[(int)$row['movieId']]['translateQuality'] ) {
+                    $movies[(int)$row['movieId']]['quality'] = qualityToRool($row['quality']);
+                    $movies[(int)$row['movieId']]['qualityStr'] = $row['quality'];
+                    $movies[(int)$row['movieId']]['translateQuality'] = translateQualityToRool($row['translateQuality']);
+                    $movies[(int)$row['movieId']]['translateQualityStr'] = $row['translateQuality'];
+                }
         }
       
 }
@@ -69,7 +88,10 @@ function sortBySeedLeech(&$movies, $ignore, $user) {
                     "kinopoiskRating"=>(float)$movie['description']['kinopoiskRating'],
                     );
         }
-    usort($take, "cmpByLeech");
+    if ($user['onlyNewTor'])
+        usort($take, "cmpBySeedLeech");
+    else
+        usort($take, "cmpByLeech");
     //usort($take, "cmpByRatingLeech");
 
     return $take;

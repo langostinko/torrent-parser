@@ -109,7 +109,7 @@
                 $desc = $movie['description'];
                 ?>
                 <div class='movie moviePos<?php echo $movie['id']; ?>'>
-                    <a title="<?php echo array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']; echo " (".$movie['totalSeed']."↑ ".$movie['totalLeech']."↓".$movieSorted['sortVal'].")"; ?>" target='_blank' href="/movie.php?id=<?php echo $movie['id']; ?>">
+                    <a title="<?php echo array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']; echo " (".$movie['totalSeed']."↑ ".$movie['totalLeech']."↓)"; ?>" target='_blank' href="/movie.php?id=<?php echo $movie['id']; ?>">
                         <img class='poster' src='<?php echo array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster']; ?>' />
                     </a>
                     <?php if (array_key_exists("kinopoiskId", $desc)) {?>
@@ -118,7 +118,7 @@
                         <a title="открыть на IMDB" target='_blank' href='<?php echo "http://www.imdb.com/title/".$movie['imdbid'];?>/'> 
                     <?php } ?>
                         <div class='movieInfo'>
-                            <div class='movieRating'><?php echo array_key_exists("kinopoiskRating", $desc)?$desc['kinopoiskRating']:$desc['imdbRating']; ?></div>
+                            <div class='movieRating'><?php echo (array_key_exists("kinopoiskRating", $desc)&&$desc['kinopoiskRating'])?$desc['kinopoiskRating']:$desc['imdbRating']; ?></div>
                             <div class='movieRelease'>
                                 <?php echo date("M'y",$movie['Release']); ?>
                                 <!--<?php echo $movie['totalSeed']."↑ ".$movie['totalLeech']."↓"; ?>-->
@@ -127,6 +127,10 @@
                     </a>
                     <div class='movieTitle'>
                         <?php echo array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']; ?>
+                        <div class='movieQuality'>
+                            <span class="glyphicon glyphicon-facetime-video"></span> <?php echo $movie['qualityStr']; ?>
+                            <span class="glyphicon glyphicon-volume-up"></span> <?php echo $movie['translateQualityStr'];/*translateQualityToStr($movie['translateQuality']);*/ ?>
+                        </div>
                     </div>
                     <?php if ($login) { ?>
                     <a title="не показывать (в корзину)" target='_blank' href='#'> 

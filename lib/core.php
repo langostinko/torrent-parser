@@ -6,6 +6,21 @@
         return 1;
     }
     
+    function translateQualityToStr($qual) {
+        switch ($qual) {
+            case 0:
+                return "O";
+            case 1:
+                return "TS";
+            case 2:
+                return "L";
+            case 3:
+                return "P";
+            case 4:
+                return "D";
+        }        
+    }
+    
     function translateQualityToRool($qual) {
         if (in_array($qual,
             array("ORIGINAL",)
@@ -254,6 +269,12 @@
             $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT md5 FROM links WHERE updated > date_add(current_timestamp, interval -1 day)");
             while ($row = mysqli_fetch_assoc($sqlresult))
                 $cache[$row['md5']] = true;
+        }
+        if ( array_key_exists(md5($cur['link']), $cache) && array_key_exists("seed", $cur) && array_key_exists("leech", $cur) ) {
+            $seed = (int)$cur['seed'];
+            $leech = (int)$cur['leech'];
+            mysqli_query($GLOBALS['mysqli'], "UPDATE links SET seed=$seed, leech=$leech WHERE md5 = '" . md5($cur['link']) . "'");
+            return true;
         }
         return array_key_exists(md5($cur['link']), $cache);
     }

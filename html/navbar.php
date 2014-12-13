@@ -8,7 +8,7 @@
         <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand" style="font-family: Georgia, 'Times New Roman', Times, serif;" href="/">FRESH SWAG</a>
-      <span class="navbarDesc">персональная доставка лучших фильмов</span>
+      <span class="navbarDesc"></span>
     </div>
     <div class="navbar-collapse collapse">
     <?php if ($login) { ?>
