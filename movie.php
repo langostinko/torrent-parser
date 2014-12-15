@@ -59,7 +59,7 @@
                 searching: false,
                 paging: false,
                 ordering: true,
-                order: [[ 1, "desc" ], [ 4, "desc" ]],
+                order: [[ 0, "desc" ], [ 1, "desc" ], [ 4, "desc" ]],
                 autoWidth: true,
                 info: false
             });

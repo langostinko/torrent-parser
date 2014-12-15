@@ -29,7 +29,7 @@
             array("ЗВУК С TS","ЗВУК С CAMRIP",)
         )) return 1;
         if (in_array($qual,
-            array("L","L1","L2","A","ЕСАРЕВ")
+            array("L","L1","L2","A","ЕСАРЕВ","МАТВЕЕВ",)
         )) return 2;
         if (in_array($qual,
             array("P","P2","BAIBAKO",)
@@ -84,9 +84,11 @@
 
     function extractTranslate($str, &$movie){
     	$result = array();
-    	$res = preg_match_all('/\| *[\W](лицензия|чистый звук|звук с ts|Звук с CAMRip|iTunes|BaibaKo|Есарев)[\W]/isuU', $str.' ', $result);
+    	$res = preg_match_all('/\| *[\W](лицензия|чистый звук|звук с ts|Звук с CAMRip|iTunes|BaibaKo)[\W]/isuU', $str.' ', $result);
     	if (!$result[0])
-        	$res = preg_match_all('/\| *[\W](l|l1|l2|p|p2|D|A)[\W]/isuU', $str.' ', $result);
+        	$res = preg_match_all('/\|.*[\W](Есарев|Матвеев)[\W]/isuU', $str.' ', $result);
+    	if (!$result[0])
+        	$res = preg_match_all('/\| *[\W](l|l1|l2|p|p2|D|A|А)[\W]/isuU', $str.' ', $result);
     	if ($result[0])
             $movie['translateQuality'] = mb_strtoupper($result[1][0], 'UTF-8');
     }
