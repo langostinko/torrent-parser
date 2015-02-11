@@ -59,7 +59,7 @@
                 searching: false,
                 paging: false,
                 ordering: true,
-                order: [[ 1, "desc" ], [ 4, "desc" ]],
+                order: [[ 0, "desc" ], [ 1, "desc" ], [ 4, "desc" ]],
                 autoWidth: true,
                 info: false
             });
@@ -172,6 +172,7 @@
                     <th>скачать торрент</th>
                     <th>размер</th>
                     <th>сиды</th>
+                    <th>личеры</th>
                     <th>дата</th>
                 </thead>
                 <tbody>
@@ -183,6 +184,7 @@
                         echo "\t<td><a target='_blank' href='".$cur['link']."'>".$cur['description']."</a></td>\n";
                         echo "\t<td>".$cur['size']."</td>\n";
                         echo "\t<td>".$cur['seed']."</td>\n";
+                        echo "\t<td>".$cur['leech']."</td>\n";
                         echo "\t<td data-order='" . strtotime($cur['added']) . "'>".date("M\&\\nb\sp;j", strtotime($cur['added']))."</td>\n";
                         echo "</tr>\n";
                     }

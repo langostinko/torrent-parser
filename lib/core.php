@@ -6,17 +6,35 @@
         return 1;
     }
     
+    function translateQualityToStr($qual) {
+        switch ($qual) {
+            case 0:
+                return "O";
+            case 1:
+                return "TS";
+            case 2:
+                return "L";
+            case 3:
+                return "P";
+            case 4:
+                return "D";
+        }        
+    }
+    
     function translateQualityToRool($qual) {
         if (in_array($qual,
             array("ORIGINAL",)
         )) return 0;
         if (in_array($qual,
-            array("L","L1","L2","A",)
+            array("ЗВУК С TS","ЗВУК С CAMRIP",)
         )) return 1;
         if (in_array($qual,
-            array("P","P2","BAIBAKO",)
+            array("L","L1","L2","A","ЕСАРЕВ","МАТВЕЕВ",)
         )) return 2;
-        return 3;
+        if (in_array($qual,
+            array("P","P2","BAIBAKO",)
+        )) return 3;
+        return 4;
     }
     
     function checkTranslateQuality($qual, $rool) {
@@ -68,7 +86,9 @@
     	$result = array();
     	$res = preg_match_all('/\| *[\W](лицензия|чистый звук|звук с ts|Звук с CAMRip|iTunes|BaibaKo)[\W]/isuU', $str.' ', $result);
     	if (!$result[0])
-        	$res = preg_match_all('/\| *[\W](l|l1|l2|p|p2|D|A)[\W]/isuU', $str.' ', $result);
+        	$res = preg_match_all('/\|.*[\W](Есарев|Матвеев)[\W]/isuU', $str.' ', $result);
+    	if (!$result[0])
+        	$res = preg_match_all('/\| *[\W](l|l1|l2|p|p2|D|A|А)[\W]/isuU', $str.' ', $result);
     	if ($result[0])
             $movie['translateQuality'] = mb_strtoupper($result[1][0], 'UTF-8');
     }
@@ -251,6 +271,12 @@
             $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT md5 FROM links WHERE updated > date_add(current_timestamp, interval -1 day)");
             while ($row = mysqli_fetch_assoc($sqlresult))
                 $cache[$row['md5']] = true;
+        }
+        if ( array_key_exists(md5($cur['link']), $cache) && array_key_exists("seed", $cur) && array_key_exists("leech", $cur) ) {
+            $seed = (int)$cur['seed'];
+            $leech = (int)$cur['leech'];
+            mysqli_query($GLOBALS['mysqli'], "UPDATE links SET seed=$seed, leech=$leech WHERE md5 = '" . md5($cur['link']) . "'");
+            return true;
         }
         return array_key_exists(md5($cur['link']), $cache);
     }

@@ -3,9 +3,9 @@
     <form class="form-inline" role="form" action='/' method='post'>
         <input type='hidden' name="method" value="setSettings"/>
       <div class="form-group">
-        <label class="sr-only" for="minRating">рейтинг IMDB</label>
+        <label class="sr-only" for="minRating">рейтинг</label>
         <div class="input-group">
-            <div class="input-group-addon">рейтинг IMDB ≥</div>
+            <div class="input-group-addon">рейтинг ≥</div>
             <input name="minRating" type="number" class="form-control" id="minRating" placeholder="0.0" min=0 max=10 step=0.1 value='<?php echo $user['minRating']; ?>'>
         </div>
       </div>
@@ -17,9 +17,9 @@
         </div>
       </div>
       <div class="form-group">
-        <label class="sr-only" for="maxDaysDif">Прошло месяцев с премьеры</label>
+        <label class="sr-only" for="maxDaysDif">прошло месяцев с премьеры</label>
         <div class="input-group">
-            <div class="input-group-addon">Прошло месяцев с премьеры ≤</div>
+            <div class="input-group-addon">прошло месяцев с премьеры ≤</div>
             <input name="maxDaysDif" type="number" class="form-control" id="maxDaysDif" placeholder="0" min=0 max=9000 step=1 value='<?php echo $user['maxDaysDif']; ?>'>
         </div>
       </div>
@@ -27,18 +27,25 @@
         <div class="checkbox">
             <label>
                 <input name="quality" type="checkbox" <?php echo $user['quality']?"checked":""; ?> >
-                только HD
+                HD
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input name="onlyNewTor" type="checkbox" <?php echo $user['onlyNewTor']?"checked":""; ?> >
+                свежие
             </label>
         </div>
       </div>
       <div class="form-group">
         <label class="sr-only" for="translateQuality">Перевод не хуже, чем</label>
         <div class="input-group">
-            <div class="input-group-addon">Перевод не хуже, чем</div>
+            <div class="input-group-addon">перевод не хуже, чем</div>
             <select name="translateQuality" class="form-control">
-              <option value="3" <?php echo $user['translateQuality']==3?"selected":""; ?>>дубляж</option>
-              <option value="2" <?php echo $user['translateQuality']==2?"selected":""; ?>>многоголосый</option>
-              <option value="1" <?php echo $user['translateQuality']==1?"selected":""; ?>>любительский</option>
+              <option value="4" <?php echo $user['translateQuality']==4?"selected":""; ?>>дубляж</option>
+              <option value="3" <?php echo $user['translateQuality']==3?"selected":""; ?>>многоголосый</option>
+              <option value="2" <?php echo $user['translateQuality']==2?"selected":""; ?>>любительский</option>
+              <option value="1" <?php echo $user['translateQuality']==1?"selected":""; ?>>с TS</option>
               <option value="0" <?php echo $user['translateQuality']==0?"selected":""; ?>>оригинал</option>
             </select>
         </div>

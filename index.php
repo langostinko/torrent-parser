@@ -1,6 +1,11 @@
 <?php
+    //header('Content-Type: text/plain; charset=UTF-8');
+
+    $head_time_start = microtime(true);
+    
     session_start();
-    include_once "lib/lib.php";
+    require_once "lib/lib.php";
+    require_once "lib/sorts.php";
     connect();
 
     vkAuth();
@@ -25,6 +30,7 @@
                     array("minRating"=>(float)$_POST['minRating'], 
                         "minVotes"=>(int)$_POST['minVotes'], 
                         "maxDaysDif"=>(int)$_POST['maxDaysDif'], 
+                        "onlyNewTor"=>(int)!empty($_POST['onlyNewTor']), 
                         "quality"=>(int)!empty($_POST['quality']),
                         "translateQuality"=>(int)$_POST['translateQuality'],
                         )
@@ -47,46 +53,12 @@
     while ($row = mysqli_fetch_assoc($sqlresult))
         $ignore[$row['movieId']] = true;
 
-    $newMov = array();    
-    $take = array();
-    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links ORDER BY seed+leech DESC");
-    while ($row = mysqli_fetch_assoc($sqlresult))
-        if (!array_key_exists($row['movieId'], $ignore)) {
-            if (!array_key_exists($row['movieId'], $take) || !$take[$row['movieId']]) {
-                $newMov[] = $row['movieId'];
-                $take[$row['movieId']] = 1;
-            }
-            if (qualityToRool($row['quality']) < $user['quality'])
-                continue;
-            if (translateQualityToRool($row['translateQuality']) < $user['translateQuality'])
-                continue;
-            if (!is_array($movies[$row['movieId']]['description']))
-                $movies[$row['movieId']]['description'] = json_decode($movies[$row['movieId']]['description'], true);
-            if ((float)$movies[$row['movieId']]['description']['imdbRating'] < $user['minRating'])
-                continue;
-            if ($user['minVotes']) {
-                $votes = intval(str_replace(",","",$movies[$row['movieId']]['description']['imdbVotes']));;
-                if ($votes < $user['minVotes']) 
-                    continue;
-            }
-
-            if (empty($movies[$row['movieId']]['Release']))
-                $movies[$row['movieId']]['Release'] = strtotime($movies[$row['movieId']]['description']['Released']);
-
-            if ($user['maxDaysDif']) {
-                if ((time()-$movies[$row['movieId']]['Release'])/(30.417*24*60*60) > $user['maxDaysDif']) 
-                    continue;
-            }
-            if (!(array_key_exists("Poster", $movies[$row['movieId']]['description']) && $movies[$row['movieId']]['description']['Poster'] != 'N/A'))
-                continue;
-            $take[$row['movieId']] = 2;
-        }
-        
     if ($login == 'wise guest' || $login == 'guest') {
         $userId = -1;
         $login = false;        
     }
-
+    
+    $keys = sortBySeedLeech($movies, $ignore, $user);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -132,26 +104,37 @@
       <div id='main' class="container-fluid" style="padding: 0">
         <?php
             $cnt = 0;
-            foreach($newMov as $key) 
-            if ($take[$key] == 2) {
-                $desc = $movies[$key]['description'];
+            foreach($keys as $key=>$movieSorted) {
+                $movie = $movies[$movieSorted['id']];
+                $desc = $movie['description'];
                 ?>
-                <div class='movie moviePos<?php echo $key; ?>'>
-                    <a title="<?php echo array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']; ?>" href="/movie.php?id=<?php echo $key; ?>">
+                <div class='movie moviePos<?php echo $movie['id']; ?>'>
+                    <a title="<?php echo array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']; echo " (".$movie['totalSeed']."↑ ".$movie['totalLeech']."↓)"; ?>" target='_blank' href="/movie.php?id=<?php echo $movie['id']; ?>">
                         <img class='poster' src='<?php echo array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster']; ?>' />
                     </a>
-                    <a title="открыть на IMDB" target='_blank' href='<?php echo "http://www.imdb.com/title/".$movies[$key]['imdbid'];?>/'> 
+                    <?php if (array_key_exists("kinopoiskId", $desc)) {?>
+                        <a title="открыть на Кинопоиске" target='_blank' href='<?php echo "http://www.kinopoisk.ru/film/".$desc['kinopoiskId'];?>/'> 
+                    <?php } else { ?>
+                        <a title="открыть на IMDB" target='_blank' href='<?php echo "http://www.imdb.com/title/".$movie['imdbid'];?>/'> 
+                    <?php } ?>
                         <div class='movieInfo'>
-                            <div class='movieRating'><?php echo $desc['imdbRating']; ?></div>
-                            <div class='movieRelease'><?php echo date("M'y",$movies[$key]['Release']); ?></div>
+                            <div class='movieRating'><?php echo (array_key_exists("kinopoiskRating", $desc)&&$desc['kinopoiskRating'])?$desc['kinopoiskRating']:$desc['imdbRating']; ?></div>
+                            <div class='movieRelease'>
+                                <?php echo date("M'y",$movie['Release']); ?>
+                                <!--<?php echo $movie['totalSeed']."↑ ".$movie['totalLeech']."↓"; ?>-->
+                            </div>
                         </div>
                     </a>
                     <div class='movieTitle'>
                         <?php echo array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']; ?>
+                        <div class='movieQuality'>
+                            <span class="glyphicon glyphicon-facetime-video"></span> <?php echo $movie['qualityStr']; ?>
+                            <span class="glyphicon glyphicon-volume-up"></span> <?php echo $movie['translateQualityStr'];/*translateQualityToStr($movie['translateQuality']);*/ ?>
+                        </div>
                     </div>
                     <?php if ($login) { ?>
                     <a title="не показывать (в корзину)" target='_blank' href='#'> 
-                        <div class='movieDelete' movieId='<?php echo $key ?>'>
+                        <div class='movieDelete' movieId='<?php echo $movie['id']; ?>'>
                             <span class="glyphicon glyphicon-remove-circle"></span>
                         </div>
                     </a>
