@@ -20,11 +20,15 @@ function cmpByRatingLeech(&$a, &$b) {
 
 function calcTotalSeedLeech(&$movies, $ignore, $user) {
     $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links ORDER BY seed DESC");
+    $igList = array();
     while ($row = mysqli_fetch_assoc($sqlresult))
         if (!array_key_exists($row['movieId'], $ignore)) {
+            if (in_array($row['movieId'], $igList))
+                continue;
+            
             if ($user['onlyNewTor']) {
                 $added = strtotime($row['added']);
-                if ( (time() - $added)/(24*60*60) > 7)
+                if ( (time() - $added)/(24*60*60) > 33)
                     continue;
             }
 
@@ -92,6 +96,7 @@ function sortBySeedLeech(&$movies, $ignore, $user) {
         usort($take, "cmpBySeedLeech");
     else
         usort($take, "cmpByLeech");
+    //usort($take, "cmpBySeedLeech");
     //usort($take, "cmpByRatingLeech");
 
     return $take;

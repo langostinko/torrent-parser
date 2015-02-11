@@ -131,6 +131,8 @@
                             <span class="glyphicon glyphicon-facetime-video"></span> <?php echo $movie['qualityStr']; ?>
                             <span class="glyphicon glyphicon-volume-up"></span> <?php echo $movie['translateQualityStr'];/*translateQualityToStr($movie['translateQuality']);*/ ?>
                         </div>
+                    <!--
+                    -->
                     </div>
                     <?php if ($login) { ?>
                     <a title="не показывать (в корзину)" target='_blank' href='#'> 
