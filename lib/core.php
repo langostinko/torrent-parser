@@ -156,7 +156,7 @@
     function getKinopoiskId($title, &$desc) {
 		$response = getKinopoiskLink("http://www.kinopoisk.ru/index.php?first=no&what=&kp_query=".urlencode(iconv("windows-1251", "UTF-8", $title)));
 
-        include_once('lib/simple_html_dom.php');
+        include_once(__DIR__.'/simple_html_dom.php');
 		$html = str_get_html($response);
 		
 		foreach($html->find('div[class=element]') as $row) {
