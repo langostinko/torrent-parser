@@ -1,9 +1,9 @@
 <?php
-include_once "lib/lib.php";
-include_once "lib/libPirate.php";
-include_once "lib/libRutor.php";
-include_once "lib/libSeedoff.php";
-require_once "lib/RollingCurl.php";
+include_once __DIR__."/lib/lib.php";
+include_once __DIR__."/lib/libPirate.php";
+include_once __DIR__."/lib/libRutor.php";
+include_once __DIR__."/lib/libSeedoff.php";
+require_once __DIR__."/lib/RollingCurl.php";
 
 function deleteOld(){
     $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE updated < date_add(current_timestamp, interval -7 day)");
