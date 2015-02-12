@@ -1,7 +1,7 @@
 <?php
     function qualityToRool($qual) {
         if (in_array($qual, 
-            array("DVDSCR","TS","CAM","CAMRIP","HDTS","HDCAM","TELECINE","TC",)
+            array("DVDSCR","TS","CAM","CAMRIP","HDTS","HDCAM","TELECINE","TC","",)
         )) return 0;
         return 1;
     }
@@ -152,13 +152,52 @@
         return $response;
 
     }
+    
+    function getKinopoiskDesc($kinopoiskId, &$desc) {
+        $response = getKinopoiskLink("http://www.kinopoisk.ru/film/".urlencode($kinopoiskId));
+        if (!$response)
+            return false;
+
+        $result = array();
+        $res = preg_match_all('/>([^<]+)<\/h1>/isU', $response, $result);
+        if ($result && count($result[1]))
+            $desc['titleRu'] = iconv('windows-1251', 'UTF-8', $result[1][0]);
+            
+        $result = array();
+        $res = preg_match_all('/rating_ball\">([^<]+)<\/span>/isU', $response, $result);
+        if ($result && count($result[1]))
+            $desc['kinopoiskRating'] = iconv('windows-1251', 'UTF-8', $result[1][0]);
+
+        $img = "img/posters/".$desc['imdbID']."Ru.jpg";
+        $realImg = dirname( __FILE__ ) . "/../$img";
+        $url = "http://st.kp.yandex.net/images/film_iphone/iphone360_$kinopoiskId.jpg";
+        if ( !(file_exists($realImg) && filesize($realImg)) )
+            file_put_contents($realImg, file_get_contents($url));
+        if (file_exists($realImg) && filesize($realImg))
+            $desc['PosterRu'] = $img;
+        
+        return true;
+    }
 
     function getKinopoiskId($title, &$desc) {
 		$response = getKinopoiskLink("http://www.kinopoisk.ru/index.php?first=no&what=&kp_query=".urlencode(iconv("windows-1251", "UTF-8", $title)));
 
+        //search for HTTP 302
+        $id = array();
+        $res = preg_match_all('/Location: \/film\/(\d+)\//isu', $response, $id);
+        if ($id && count($id[0]))
+            $id = $id[1][0];
+        else 
+            $id = false;
+        if ($id) {
+            $desc['kinopoiskId'] = $id;
+            return getKinopoiskDesc($id, $desc);
+        }
+
+
         include_once(__DIR__.'/simple_html_dom.php');
 		$html = str_get_html($response);
-		
+
 		foreach($html->find('div[class=element]') as $row) {
 		    $pName = $row->find('p[class=name]',0);
 		    
@@ -202,18 +241,6 @@
         $kinopoiskId = (int)$kinopoiskId;
         $xml = simplexml_load_file("http://rating.kinopoisk.ru/$kinopoiskId.xml");
         return (string) $xml->kp_rating;
-    }
-    
-    function getKinopoiskDesc($kinopoiskId, &$desc) {
-        $response = getKinopoiskLink("http://www.kinopoisk.ru/film/".urlencode($kinopoiskId));
-        if (!$response)
-            return false;
-
-        $result = array();
-        $res = preg_match_all('/>([^<]+)<\/h1>/isU', $response, $result);
-        if ($result && count($result[1]))
-            $desc['titleRu'] = iconv('windows-1251', 'UTF-8', $result[1][0]);
-        return true;
     }
     
     function addMovie(&$movie) {

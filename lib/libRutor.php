@@ -4,6 +4,10 @@ include_once('lib.php');
 class Rutor {
 
     public $result;
+    
+    function __construct() {
+        $this->result = array();
+    }
 
     function processTd($html, &$movie){
         $res = $html->find('a',1);
@@ -29,6 +33,18 @@ class Rutor {
         $curTr = array();
 		foreach ($html->find('td') as $item)
 			$curTr[] = trim(html_entity_decode($item->plaintext, ENT_QUOTES, "UTF-8"));
+		if (count($curTr) == 4) {
+		    $curTr[4] = $curTr[3];
+		    $curTr[3] = $curTr[2];
+		    $curTr[2] = 0;
+		}
+			
+		$curTr[0] = str_replace(
+		    array(" Янв "," Фев "," Мар "," Апр "," Май "," Июн "," Июл "," Авг "," Сен "," Окт "," Ноя "," Дек "), 
+		    array(" Jan "," Feb "," Mar "," Apr "," May "," Jun "," Jul "," Aug "," Sep "," Oct "," Nov "," Dec "), 
+		    $curTr[0] );
+		if ( (time() - strtotime($curTr[0])) / 3600 / 24 > 120)
+		    return false;
 
         $movie['size'] = (float)$curTr[3];
         if (strpos($curTr[3], 'G'))
@@ -66,7 +82,7 @@ class Rutor {
 
 		foreach($html->find('tr') as $row) {
 		    $curTr = $row->find('td');
-			if (count($curTr) == 5) 
+			if (count($curTr) == 5 || count($curTr) == 4) 
 			    $this->processTr($row);
 		}
 		

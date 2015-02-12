@@ -46,6 +46,24 @@ function updateLinks(){
     $resRutor1->getRutor();
     $resRutor2 = new Rutor;
     $resRutor2->getRutor("http://alt.rutor.org/browse/1/1/0/2/");
+    $resRutor3 = new Rutor;
+    $resRutor3->getRutor("http://alt.rutor.org/browse/2/1/0/2/");
+    $resRutor4 = new Rutor;
+    $resRutor4->getRutor("http://alt.rutor.org/browse/3/1/0/2/");
+    $resRutor5 = new Rutor;
+    $resRutor5->getRutor("http://alt.rutor.org/browse/4/1/0/2/");
+    $resRutor6 = new Rutor;
+    $resRutor6->getRutor("http://alt.rutor.org/browse/5/1/0/2/");
+    $resRutor7 = new Rutor;
+    $resRutor7->getRutor("http://alt.rutor.org/browse/6/1/0/2/");
+    $resRutor8 = new Rutor;
+    $resRutor8->getRutor("http://alt.rutor.org/browse/7/1/0/2/");
+    $resRutor9 = new Rutor;
+    //$resRutor9->getRutor("http://alt.rutor.org/browse/8/1/0/2/");
+    $resRutor10 = new Rutor;
+    //$resRutor10->getRutor("http://alt.rutor.org/browse/9/1/0/2/");
+    $resRutor11 = new Rutor;
+    $resRutor11->getRutor("http://alt.rutor.org/browse/0/7/0/2/");
     flush();
     
     $resSeedoff = array();
@@ -60,13 +78,18 @@ function updateLinks(){
     flush();*/
 
     $resPirate1 = new Pirate;
-    $resPirate1->getPirateBay("http://thepiratebay.se/top/207", 100);
+    $resPirate1->getPirateBay("https://pirateproxy.sx/top/207", 100);
+    //$resPirate1->getPirateBay("http://thepiratebay.se/top/207", 100);
     $resPirate2 = new Pirate;
-    $resPirate2->getPirateBay("http://thepiratebay.se/top/201", 50);
+    $resPirate2->getPirateBay("https://pirateproxy.sx/top/201", 50);
+    //$resPirate2->getPirateBay("http://thepiratebay.se/top/201", 50);
     flush();
 
     RollingCurl::$rc->execute();
-    $resPirate = array_merge($resPirate1->result, $resPirate2->result, $resRutor1->result, $resRutor2->result, $resSeedoff);
+    $resRutor = array_merge($resRutor1->result, $resRutor2->result, $resRutor3->result, $resRutor4->result, $resRutor5->result, 
+                            $resRutor6->result, $resRutor7->result, $resRutor8->result, $resRutor9->result, $resRutor10->result,
+                            $resRutor11->result);
+    $resPirate = array_merge($resPirate1->result, $resPirate2->result, $resRutor, $resSeedoff);
     
     foreach($resPirate as $cur) {
         if (trySkip($cur))
