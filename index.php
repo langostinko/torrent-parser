@@ -118,7 +118,7 @@
                         <a title="открыть на IMDB" target='_blank' href='<?php echo "http://www.imdb.com/title/".$movie['imdbid'];?>/'> 
                     <?php } ?>
                         <div class='movieInfo'>
-                            <div class='movieRating'><?php echo (array_key_exists("kinopoiskRating", $desc)&&$desc['kinopoiskRating'])?$desc['kinopoiskRating']:$desc['imdbRating']; ?></div>
+                            <div class='movieRating'><?php echo sprintf("%.1f", (array_key_exists("kinopoiskRating", $desc)&&$desc['kinopoiskRating'])?$desc['kinopoiskRating']:$desc['imdbRating'] ); ?></div>
                             <div class='movieRelease'>
                                 <?php echo date("M'y",$movie['Release']); ?>
                                 <!--<?php echo $movie['totalSeed']."↑ ".$movie['totalLeech']."↓"; ?>-->

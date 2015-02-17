@@ -106,7 +106,20 @@ function updateLinks(){
 
 function updateMovies(){
     echo "UPDATE MOVIES\n";
-    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT id,imdbid,title FROM movies");
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], 
+    "   UPDATE movies c
+        INNER JOIN (
+          SELECT movieId, SUM(seed)+SUM(leech) as total
+          FROM links
+          WHERE `translateQuality` != \"ORIGINAL\"
+          GROUP BY movieId
+        ) x ON c.id = x.movieId
+        SET c.max_peers = GREATEST(c.max_peers, x.total)    
+    "
+    );
+    echo mysqli_error($GLOBALS['mysqli']);
+    
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT id,imdbid,title,max_peers FROM movies");
     while ($row = mysqli_fetch_assoc($sqlresult)) {
         $checkLink = mysqli_query($GLOBALS['mysqli'], "SELECT id FROM links WHERE movieId = " . $row['id']);
         if (mysqli_num_rows($checkLink) && !trySkipMovie($row)) {

@@ -15,6 +15,7 @@
     $desc = false;
     $ignore = false;
     $torrents = false;
+    $bestQuality = array('quality'=>"CAMRIP", 'translateQuality'=>"ORIGINAL");
 
     if ($movieId != -1) {
         $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies WHERE id = $movieId");
@@ -26,15 +27,18 @@
         $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT movieId FROM userignore WHERE userId = $userId AND movieId = $movieId ORDER BY id DESC");
         $ignore = (bool)mysqli_fetch_assoc($sqlresult);
 
-        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE movieId = $movieId ORDER BY added DESC LIMIT 500");
+        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE movieId = $movieId ORDER BY seed DESC LIMIT 500");
         while ($row = mysqli_fetch_assoc($sqlresult)) {
-            //if (qualityToRool($row['quality']) < $user['quality'])
-            //    continue;
-            //if (translateQualityToRool($row['translateQuality']) < $user['translateQuality'])
-            //    continue;
+            if (qualityToRool($row['quality']) > qualityToRool($bestQuality['quality'])
+            || (qualityToRool($row['quality']) == qualityToRool($bestQuality['quality']) && translateQualityToRool($row['translateQuality']) > translateQualityToRool($bestQuality['translateQuality']) ) ) {
+                $bestQuality['quality'] = $row['quality'];
+                $bestQuality['translateQuality'] = $row['translateQuality'];
+            }
             $torrents[] = $row;
         }
     }
+    $bestQuality['quality'] = mb_strtolower($bestQuality['quality'], "UTF-8");
+    $bestQuality['translateQuality'] = mb_strtolower($bestQuality['translateQuality'], "UTF-8");
 
     if ($login == 'wise guest' || $login == 'guest') {
         $userId = -1;
@@ -45,7 +49,7 @@
 <html lang="en">
 <?php
     $title = array_key_exists("titleRu",$desc) ? $desc['titleRu'] : $desc['Title'];
-    $metaDescription = $title . " - скачать торрент в hd качестве dvdrip, перевод - дубляж";
+    $metaDescription = "скачать торрент " . $bestQuality['quality'] . ", перевод - " . $bestQuality['translateQuality'];
     $metaTitle .= "$title - свежие торренты";
     include "html/head.php";
 ?>
