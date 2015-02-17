@@ -13,8 +13,8 @@ function cmpBySeedLeech(&$a, &$b) {
 }
 
 function cmpByRatingLeech(&$a, &$b) {
-    $a['sortVal'] = exp(-($a["totalLeech"]+$a["totalSeed"])/20000.0)*exp($a['kinopoiskRating']);
-    $b['sortVal'] = exp(-($b["totalLeech"]+$b["totalSeed"])/20000.0)*exp($b['kinopoiskRating']);
+    $a['sortVal'] = exp(-($a["totalLeech"]+$a["totalSeed"])/5000.0)*exp($a['kinopoiskRating']);
+    $b['sortVal'] = exp(-($b["totalLeech"]+$b["totalSeed"])/5000.0)*exp($b['kinopoiskRating']);
     return $a["sortVal"] < $b["sortVal"];
 }
 
@@ -25,13 +25,10 @@ function calcTotalSeedLeech(&$movies, $ignore, $user) {
         if (!array_key_exists($row['movieId'], $ignore)) {
             if (in_array($row['movieId'], $igList))
                 continue;
-                
-            $movies[(int)$row['movieId']]['totalSeed'] += $row['seed'];
-            $movies[(int)$row['movieId']]['totalLeech'] += $row['leech'];
             
             if ($user['onlyNewTor']) {
                 $added = strtotime($row['added']);
-                if ( (time() - $added)/(24*60*60) > 33)
+                if ( (time() - $added)/(24*60*60) > 7)
                     continue;
             }
 
@@ -62,6 +59,10 @@ function calcTotalSeedLeech(&$movies, $ignore, $user) {
             if (!(array_key_exists("Poster", $movies[$row['movieId']]['description']) && $movies[$row['movieId']]['description']['Poster'] != 'N/A'))
                 continue;
             $movies[(int)$row['movieId']]['userTake'] = true;
+                
+            $movies[(int)$row['movieId']]['totalSeed'] += $row['seed'];
+            $movies[(int)$row['movieId']]['totalLeech'] += $row['leech'];
+            
             if (qualityToRool($row['quality']) > $movies[(int)$row['movieId']]['quality']) {
                 $movies[(int)$row['movieId']]['quality'] = qualityToRool($row['quality']);
                 $movies[(int)$row['movieId']]['qualityStr'] = $row['quality'];
@@ -98,8 +99,10 @@ function sortBySeedLeech(&$movies, $ignore, $user) {
     else
         usort($take, "cmpByLeech");
     */
-    usort($take, "cmpBySeedLeech");
-    //usort($take, "cmpByRatingLeech");
+    if (array_key_exists("underrated", $_GET))
+        usort($take, "cmpByRatingLeech");
+    else
+        usort($take, "cmpBySeedLeech");
 
     return $take;
 }

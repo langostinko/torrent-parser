@@ -66,20 +66,21 @@
         $json = json_decode($file, true);
 
         $vector = array('title_popular','title_exact','title_approx');
+        $curDif = 2;
         foreach($vector as $type)
             if ($json and array_key_exists($type, $json))
                 foreach ($json[$type] as $cur) {
                     $curYear = (int)substr($cur['description'],0,4);
                     $needYear = array_key_exists('year', $movie) ? (int)$movie['year'] : $curYear;
-                    if (abs($curYear - $needYear) <= 1) {
+                    if (abs($curYear - $needYear) < $curDif) {
                         $movie['movie']['imdbid'] = $cur['id'];
                         $movie['movie']['title'] = html_entity_decode($cur['title'], ENT_QUOTES, "UTF-8");
                         //$movie['movie']['description'] = html_entity_decode($cur['description'], ENT_QUOTES, "UTF-8");
                         $movie['movie']['year'] = $curYear;
-                        return true;
+                        $curDif = abs($curYear - $needYear);
                     }
                 }
-        return false;
+        return ($curDif < 2);
     }
 
     function extractTranslate($str, &$movie){

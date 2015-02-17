@@ -143,7 +143,7 @@
                     <?php } ?>
                 </div>
                 <?php
-                    if (++$cnt >= 72)
+                    if (++$cnt >= 48)
                         break;
             }    
         ?>    
