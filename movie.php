@@ -49,7 +49,7 @@
 <html lang="en">
 <?php
     $title = array_key_exists("titleRu",$desc) ? $desc['titleRu'] : $desc['Title'];
-    $metaDescription = "скачать торрент " . $bestQuality['quality'] . ", перевод - " . $bestQuality['translateQuality'];
+    $metaDescription = "скачать торрент " . $bestQuality['quality'] . ", перевод " . $bestQuality['translateQuality'];
     $metaTitle .= "$title - свежие торренты";
     include "html/head.php";
 ?>
