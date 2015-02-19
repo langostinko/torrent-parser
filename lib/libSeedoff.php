@@ -25,6 +25,9 @@
     }
 
     function processTr($html){
+        if ( (time() - strtotime($html->find('td',7)->plaintext) ) / 3600 / 24 > 120)
+            return false;
+            
         $movie = array();
 		$res = processTd($html->children(1), $movie);
 		if (!$res)
