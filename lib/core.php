@@ -137,6 +137,10 @@
         $realImg = dirname( __FILE__ ) . "/../$img";
         if (array_key_exists("Poster", $json) && (!file_exists($realImg) or !filesize($realImg)) )
             return false;
+        $img = "img/posters/$imdbid\Ru.jpg";
+        $realImg = dirname( __FILE__ ) . "/../$img";
+        if (array_key_exists("PosterRu", $json) && (!file_exists($realImg) or !filesize($realImg)) )
+            return false;
         return true;
     }
 

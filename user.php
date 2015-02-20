@@ -62,7 +62,7 @@
         <table id = 'hor-minimalist-b'>
             <thead>
                 <td>Название</td>
-                <td>рейтинг IMDB</td>
+                <td>рейтинг</td>
                 <td>Дата премьеры</td>
                 <td></td>
             </thead>
@@ -75,7 +75,11 @@
                 $desc = json_decode($cur['description'], true);
                 $poster = $desc && array_key_exists('Poster', $desc) ? $desc['Poster'] : "";
                 echo "<tr class='movieTr" . $cur['id'] . "'>\n";
-                echo "\t<td><a target='_blank' href='http://www.imdb.com/title/".$cur['imdbid']."/'><div class='fullDiv'>".$cur['title']."</div></a></td>\n";
+                echo "\t<td><a target='_blank' href='"
+                    .(array_key_exists('kinopoiskId', $desc)?("http://www.kinopoisk.ru/film/".$desc['kinopoiskId']):("http://www.imdb.com/title/".$cur['imdbid']))
+                    ."/'><div class='fullDiv'>"
+                    .(array_key_exists('titleRu',$desc)?($desc['titleRu']." (".$cur['title'].")"):$cur['title'])
+                    ."</div></a></td>\n";
                 echo "\t<td><a target='_blank' href='http://www.imdb.com/title/".$cur['imdbid']."/'><div class='fullDiv'>".(float)$desc['imdbRating']."</div></a></td>\n";
                 echo "\t<td>".$desc['Released']."</td>\n";
                 echo "\t<td class='button' onclick='unIgnoreMovie(" . $cur['id'] . ")'><img class='delImg' src='img/cross.png'/></td>\n";

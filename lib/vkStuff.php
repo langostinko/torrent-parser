@@ -51,7 +51,7 @@
                 $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM users WHERE vkid=" . $result['user_id']);
                 if (!mysqli_num_rows($sqlresult))
                     mysqli_query($GLOBALS['mysqli'], "INSERT INTO users (vkid) VALUES(" . $result['user_id'] . ")");
-                $expires = time() + $result['expires_in'];
+                $expires = time() + $result['expires_in'] + 7*24*60*60; //+7 days
                 mysqli_query($GLOBALS['mysqli'], "UPDATE users SET expires=FROM_UNIXTIME($expires), token='" . $result['access_token'] . "' WHERE vkid=" . $result['user_id']);
 
                 $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM users WHERE vkid=" . $result['user_id']);
