@@ -5,12 +5,23 @@ include_once __DIR__."/lib/libRutor.php";
 include_once __DIR__."/lib/libSeedoff.php";
 require_once __DIR__."/lib/RollingCurl.php";
 
+function deleteBanned() {
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT MIN(seed) FROM links WHERE link LIKE '%rutor.org%' AND updated > date_add(current_timestamp, interval -2 hour)");
+    $row = mysqli_fetch_assoc($sqlresult);
+    $minSeed = (int)$row['MIN(seed)'] * 2;
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT link FROM links WHERE link LIKE '%rutor.org%' AND updated < date_add(current_timestamp, interval -2 hour) AND seed > $minSeed");
+    echo mysqli_num_rows($sqlresult) . " old banned deleted\n";
+    while ($row = mysqli_fetch_assoc($sqlresult))
+        echo "\t" . $row['link'] . "\n";
+    mysqli_query($GLOBALS['mysqli'], "DELETE FROM links WHERE link LIKE '%rutor.org%' AND updated < date_add(current_timestamp, interval -2 hour) AND seed > $minSeed");
+}
+
 function deleteOld(){
-    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE updated < date_add(current_timestamp, interval -7 day)");
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE updated < date_add(current_timestamp, interval -".DELETELINKSAFTERDAYS." day)");
     echo mysqli_num_rows($sqlresult) . " old links deleted\n";
     while ($row = mysqli_fetch_assoc($sqlresult))
         echo "\t".$row['link']."\n";
-    mysqli_query($GLOBALS['mysqli'], "DELETE FROM links WHERE updated < date_add(current_timestamp, interval -7 day)");
+    mysqli_query($GLOBALS['mysqli'], "DELETE FROM links WHERE updated < date_add(current_timestamp, interval -".DELETELINKSAFTERDAYS." day)");
     return;
     
     $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT movieid FROM links");
@@ -119,7 +130,7 @@ function updateMovies(){
     );
     echo mysqli_error($GLOBALS['mysqli']);
     
-    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT id,imdbid,title,max_peers FROM movies");
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT id,imdbid,title,max_peers,updated FROM movies");
     while ($row = mysqli_fetch_assoc($sqlresult)) {
         $checkLink = mysqli_query($GLOBALS['mysqli'], "SELECT id FROM links WHERE movieId = " . $row['id']);
         if (mysqli_num_rows($checkLink) && !trySkipMovie($row)) {
@@ -137,6 +148,8 @@ set_time_limit(5*60);
 $time_start = microtime(true);
 
 updateLinks();
+echo "\n";
+deleteBanned();
 echo "\n";
 deleteOld();
 echo "\n";

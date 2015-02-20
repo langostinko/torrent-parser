@@ -43,7 +43,7 @@ class Rutor {
 		    array(" Янв "," Фев "," Мар "," Апр "," Май "," Июн "," Июл "," Авг "," Сен "," Окт "," Ноя "," Дек "), 
 		    array(" Jan "," Feb "," Mar "," Apr "," May "," Jun "," Jul "," Aug "," Sep "," Oct "," Nov "," Dec "), 
 		    $curTr[0] );
-		if ( (time() - strtotime($curTr[0])) / 3600 / 24 > 120)
+		if ( (time() - strtotime($curTr[0])) / 3600 / 24 > 180)
 		    return false;
 
         $movie['size'] = (float)$curTr[3];

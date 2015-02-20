@@ -25,7 +25,7 @@
     }
 
     function processTr($html){
-        if ( (time() - strtotime($html->find('td',7)->plaintext) ) / 3600 / 24 > 120)
+        if ( (time() - strtotime($html->find('td',7)->plaintext) ) / 3600 / 24 > 180)
             return false;
             
         $movie = array();

@@ -1,4 +1,5 @@
 <?php
+    include_once(__DIR__."/defines.php");
     include_once(__DIR__."/pass.php");
     include_once(__DIR__."/vkStuff.php");
     include_once(__DIR__."/core.php");

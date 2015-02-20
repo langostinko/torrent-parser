@@ -137,7 +137,7 @@
         $realImg = dirname( __FILE__ ) . "/../$img";
         if (array_key_exists("Poster", $json) && (!file_exists($realImg) or !filesize($realImg)) )
             return false;
-        $img = "img/posters/$imdbid\Ru.jpg";
+        $img = "img/posters/{$imdbid}Ru.jpg";
         $realImg = dirname( __FILE__ ) . "/../$img";
         if (array_key_exists("PosterRu", $json) && (!file_exists($realImg) or !filesize($realImg)) )
             return false;
@@ -307,7 +307,7 @@
         if ( array_key_exists(md5($cur['link']), $cache) && array_key_exists("seed", $cur) && array_key_exists("leech", $cur) ) {
             $seed = (int)$cur['seed'];
             $leech = (int)$cur['leech'];
-            mysqli_query($GLOBALS['mysqli'], "UPDATE links SET seed=$seed, leech=$leech WHERE md5 = '" . md5($cur['link']) . "'");
+            mysqli_query($GLOBALS['mysqli'], "UPDATE links SET seed=$seed, leech=$leech, updated=NOW() WHERE md5 = '" . md5($cur['link']) . "'");
             return true;
         }
         return array_key_exists(md5($cur['link']), $cache);
