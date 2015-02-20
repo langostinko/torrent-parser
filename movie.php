@@ -99,7 +99,7 @@
     <div class="jumbotron">
     <div class="container" itemscope itemtype="http://schema.org/Movie">
     <?php if ($movie) { ?>
-        <div style="float:left; width: 25%; padding-right: 10px;">
+        <div class="movLeft">
             <img itemprop="image" class="bigPoster" src='<?php echo array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster']; ?>' />
             <table class="movDesc table table-condensed">
             <tbody>
@@ -165,31 +165,31 @@
             </tbody>
             </table>
         </div>
-        <div style="float:right; width: 75%">
+        <div class="movRight">
             <div id="movieTrailerDiv" class="embed-responsive embed-responsive-16by9" style="display:none;">
                 <iframe id="movieTrailer" class="embed-responsive-item" allowfullscreen></iframe>
             </div>
-            <table id='torrentTable' class='table table-striped table-hover'>
+            <table id='torrentTable' class='table table-striped table-hover' cellspacing="0">
                 <thead>
                     <th>качество</th>
                     <th>перевод</th>
-                    <th>скачать торрент</th>
+                    <th class='hidden-xs'>скачать торрент</th>
                     <th>размер</th>
                     <th>сиды</th>
-                    <th>личеры</th>
-                    <th>дата</th>
+                    <th class='hidden-xs'>личеры</th>
+                    <th class='hidden-xs'>дата</th>
                 </thead>
                 <tbody>
                 <?php
                     foreach($torrents as $cur) {
                         echo "<tr>\n";
-                        echo "\t<td data-order='" . qualityToRool($cur['quality']) . "'>".$cur['quality']."</td>\n";
-                        echo "\t<td data-order='" . translateQualityToRool($cur['translateQuality']) . "'>".$cur['translateQuality']."</td>\n";
-                        echo "\t<td><a target='_blank' href='".$cur['link']."'>".$cur['description']."</a></td>\n";
+                        echo "\t<td data-order='" . qualityToRool($cur['quality']) . "'><a target='_blank' href='".$cur['link']."'>".$cur['quality']."</a></td>\n";
+                        echo "\t<td data-order='" . translateQualityToRool($cur['translateQuality']) . "'><a target='_blank' href='".$cur['link']."'>".$cur['translateQuality']."</a></td>\n";
+                        echo "\t<td class='hidden-xs'><a target='_blank' href='".$cur['link']."'>".$cur['description']."</a></td>\n";
                         echo "\t<td>".$cur['size']."</td>\n";
                         echo "\t<td>".$cur['seed']."</td>\n";
-                        echo "\t<td>".$cur['leech']."</td>\n";
-                        echo "\t<td data-order='" . strtotime($cur['added']) . "'>".date("M\&\\nb\sp;j", strtotime($cur['added']))."</td>\n";
+                        echo "\t<td class='hidden-xs'>".$cur['leech']."</td>\n";
+                        echo "\t<td data-order='" . strtotime($cur['added']) . "' class='hidden-xs'>".date("M\&\\nb\sp;j", strtotime($cur['added']))."</td>\n";
                         echo "</tr>\n";
                     }
                 ?>

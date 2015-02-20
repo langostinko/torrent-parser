@@ -148,8 +148,8 @@
             }    
         ?>    
 
-            <h2>Свежие торренты</h2>
-            <table id='torrentTable' class='table table-striped table-hover'>
+            <h2 class="visible-lg-block">Свежие торренты</h2>
+            <table id='torrentTable' class='table table-striped table-hover visible-lg-block'>
                 <thead>
                     <td>качество</td>
                     <td>перевод</td>

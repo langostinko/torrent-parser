@@ -22,7 +22,7 @@
         </form>-->
     <?php if ($login) { ?>
       <ul class="nav navbar-nav navbar-right">
-        <li>
+        <li class="hidden-xs">
             <img height='50px' src='<?php echo $user['photo']; ?>'/>
         </li>
         <li <?php if ($liactive=='home') echo "class='active'"; ?>>
@@ -53,7 +53,7 @@
          <input type='hidden' name='v' value='5.25'/>
         <button 
             type="submit" class="btn btn-success" style="border: 0; background-color: #597DA3">
-            Создать личную выборку / Войти через VK
+            Войти через VK
         </button>
       </form>
     <?php } ?>

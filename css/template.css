@@ -150,3 +150,36 @@ table.dataTable thead > tr > th {
 	padding-left: 8px;
 	padding-right: 16px;
 }
+
+.movLeft {
+    float:left; 
+    width: 25%; 
+    padding-right: 10px;
+}
+
+.movRight {
+    float:right;
+    width: 75%
+}
+
+@media (max-width: 767px) {
+    .jumbotron {
+        padding: 15px 0;
+    }
+    
+    .container {
+        padding: 0;
+    }
+    
+    .movLeft {
+        float: none;
+        width: 100%;
+        padding: 0;
+    }
+
+    .movRight {
+        float: none;
+        width: 100%;
+    }
+
+}
