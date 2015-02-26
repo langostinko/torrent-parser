@@ -25,10 +25,11 @@
     }
 
     function processTr($html){
-        if ( (time() - strtotime($html->find('td',7)->plaintext) ) / 3600 / 24 > 180)
+        $movie = array();
+		$movie['added_tracker'] = strtotime($html->find('td',7)->plaintext);
+        if ( (time() - $movie['added_tracker'] ) / 3600 / 24 > ADDLINKSPASTDAYS)
             return false;
             
-        $movie = array();
 		$res = processTd($html->children(1), $movie);
 		if (!$res)
 		    return false;

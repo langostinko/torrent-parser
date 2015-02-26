@@ -1,4 +1,5 @@
 <?php
+include_once(__DIR__."/defines.php");
 
 function cmpByLeech(&$a, &$b) {
     $a['sortVal'] = $a["totalLeech"];
@@ -27,8 +28,8 @@ function calcTotalSeedLeech(&$movies, $ignore, $user) {
                 continue;
             
             if ($user['onlyNewTor']) {
-                $added = strtotime($row['added']);
-                if ( (time() - $added)/(24*60*60) > 7)
+                $added = strtotime($row['added_tracker']?$row['added_tracker']:$row['added']);
+                if ( (time() - $added)/(24*60*60) > FRESHLINKSDAYS)
                     continue;
             }
 

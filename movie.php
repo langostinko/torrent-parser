@@ -188,7 +188,7 @@
                         echo "\t<td>".$cur['size']."</td>\n";
                         echo "\t<td>".$cur['seed']."</td>\n";
                         echo "\t<td class='hidden-xs'>".$cur['leech']."</td>\n";
-                        echo "\t<td data-order='" . strtotime($cur['added']) . "' class='hidden-xs'>".date("M\&\\nb\sp;j", strtotime($cur['added']))."</td>\n";
+                        echo "\t<td data-order='" . strtotime($cur['added']) . "' class='hidden-xs'>".date("M\&\\nb\sp;j", strtotime($cur['added_tracker']?$cur['added_tracker']:$cur['added']))."</td>\n";
                         echo "</tr>\n";
                     }
                 ?>
