@@ -1,5 +1,4 @@
 <?php
-    session_start();
     include_once "lib/lib.php";
     connect();
         
@@ -169,7 +168,7 @@
             <div id="movieTrailerDiv" class="embed-responsive embed-responsive-16by9" style="display:none;">
                 <iframe id="movieTrailer" class="embed-responsive-item" allowfullscreen></iframe>
             </div>
-            <table id='torrentTable' class='table table-striped table-hover' cellspacing="0">
+            <table id='torrentTable' class='table table-striped table-hover' cellspacing="0" width="100%">
                 <thead>
                     <th>качество</th>
                     <th>перевод</th>

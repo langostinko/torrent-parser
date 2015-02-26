@@ -3,7 +3,6 @@
 
     $head_time_start = microtime(true);
     
-    session_start();
     require_once "lib/lib.php";
     require_once "lib/sorts.php";
     connect();
@@ -148,8 +147,8 @@
             }    
         ?>    
 
-            <h2 class="visible-lg-block">Свежие торренты</h2>
-            <table id='torrentTable' class='table table-striped table-hover visible-lg-block'>
+            <h2 class="hidden-xs">Свежие торренты</h2>
+            <table id='torrentTable' class='table table-striped table-hover hidden-xs' cellspacing="0" width="100%">
                 <thead>
                     <td>качество</td>
                     <td>перевод</td>

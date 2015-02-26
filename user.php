@@ -1,9 +1,6 @@
 <?php
-    session_start();
     include_once "lib/lib.php";
     connect();
-    
-    
     
     Login();
     
@@ -59,7 +56,7 @@
     
     <div class="container">
         <h3>Фильмы в корзине</h3>
-        <table id = 'hor-minimalist-b'>
+        <table class='table table-striped table-hover'>
             <thead>
                 <td>Название</td>
                 <td>рейтинг</td>

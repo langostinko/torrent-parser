@@ -3,7 +3,13 @@
     include_once(__DIR__."/pass.php");
     include_once(__DIR__."/vkStuff.php");
     include_once(__DIR__."/core.php");
-
+    
+    //set session cookie lifetime
+    $lifetime=7*24*60*60;
+    session_start();
+    setcookie(session_name(),session_id(),time()+$lifetime);
+    //
+  
     function setSettings(&$user, $settings) {
         $userId = $user['id'];
         $quality = $user['quality'] = $settings['quality'];

@@ -13,7 +13,7 @@ class Rutor {
         $res = $html->find('a',1);
         if (!$res)
             return false;
-        $movie['link'] = "http://alt.rutor.org".$res->href;
+        $movie['link'] = RUTORROOT.$res->href;
         if (trySkip($movie))
             return false;
         
