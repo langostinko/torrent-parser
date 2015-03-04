@@ -10,10 +10,19 @@ function deleteBanned() {
     $row = mysqli_fetch_assoc($sqlresult);
     $minSeed = (int)$row['MIN(seed)'] * 2;
     $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT link FROM links WHERE link LIKE '%rutor.org%' AND updated < date_add(current_timestamp, interval -2 hour) AND seed > $minSeed");
-    echo mysqli_num_rows($sqlresult) . " old banned deleted\n";
+    echo mysqli_num_rows($sqlresult) . " old banned Rutor deleted\n";
     while ($row = mysqli_fetch_assoc($sqlresult))
         echo "\t" . $row['link'] . "\n";
     mysqli_query($GLOBALS['mysqli'], "DELETE FROM links WHERE link LIKE '%rutor.org%' AND updated < date_add(current_timestamp, interval -2 hour) AND seed > $minSeed");
+
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT MIN(seed) FROM links WHERE link LIKE '%seedoff.net%' AND updated > date_add(current_timestamp, interval -2 hour)");
+    $row = mysqli_fetch_assoc($sqlresult);
+    $minSeed = (int)$row['MIN(seed)'] * 2;
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT link FROM links WHERE link LIKE '%seedoff.net%' AND updated < date_add(current_timestamp, interval -2 hour) AND seed > $minSeed");
+    echo mysqli_num_rows($sqlresult) . " old banned Seedoff deleted\n";
+    while ($row = mysqli_fetch_assoc($sqlresult))
+        echo "\t" . $row['link'] . "\n";
+    mysqli_query($GLOBALS['mysqli'], "DELETE FROM links WHERE link LIKE '%seedoff.net%' AND updated < date_add(current_timestamp, interval -2 hour) AND seed > $minSeed");
 }
 
 function deleteOld(){
@@ -90,18 +99,18 @@ function updateLinks(){
     flush();
 
     $resPirate1 = new Pirate;
-    $resPirate1->getPirateBay("https://pirateproxy.sx/top/207", 100);
-    //$resPirate1->getPirateBay("http://thepiratebay.se/top/207", 100);
+    $resPirate1->getPirateBay("https://pirateproxy.sx/browse/207/0/7");
     $resPirate2 = new Pirate;
-    $resPirate2->getPirateBay("https://pirateproxy.sx/top/201", 50);
-    //$resPirate2->getPirateBay("http://thepiratebay.se/top/201", 50);
+    $resPirate2->getPirateBay("https://pirateproxy.sx/browse/207/1/7");
+    $resPirate3 = new Pirate;
+    $resPirate3->getPirateBay("https://pirateproxy.sx/browse/201/0/7");
     flush();
 
     RollingCurl::$rc->execute();
     $resRutor = array_merge($resRutor1->result, $resRutor2->result, $resRutor3->result, $resRutor4->result, $resRutor5->result, 
                             $resRutor6->result, $resRutor7->result, $resRutor8->result, $resRutor9->result, $resRutor10->result,
                             $resRutor11->result);
-    $resPirate = array_merge($resPirate1->result, $resPirate2->result, $resRutor, $resSeedoff);
+    $resPirate = array_merge($resPirate1->result, $resPirate2->result, $resPirate3->result, $resRutor, $resSeedoff);
     
     foreach($resPirate as $cur) {
         if (trySkip($cur))

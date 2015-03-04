@@ -45,15 +45,18 @@ class Pirate {
 
     function processTr($html){
         $movie = array();
-		$res = $this->processTd($html->children(1), $movie);
-		if (!$res)
-		    return false;
+
         $curTr = array();
 		foreach ($html->find('td') as $item)
 			$curTr[] = $item->plaintext;
 		$movie['seed'] = (int)$curTr[2];
 		$movie['leech'] = (int)$curTr[3];
 		$movie['translateQuality'] = 'ORIGINAL';
+
+		$res = $this->processTd($html->children(1), $movie);
+		if (!$res)
+		    return false;
+
         $this->result[] = $movie;
         return true;
     }

@@ -105,10 +105,10 @@
     	    $movie['year'] = $result[0][0][0];
     	    $pos = $result[0][0][1];
     	}
-    	
-    	$res = preg_match_all('/[\W](dvdrip|dvdscr|hdrip|ts|tc|cam|brrip|webrip|bdrip|camrip|hdts|hdcam|hdtv|hdtvrip|telecine|web-dl|web-dlrip|bluray|bdremux|bd-remux)[\W]/isuU', $str.' ', $result, PREG_OFFSET_CAPTURE);
+    	$res = preg_match_all('/[\W](dvdrip|dvdscr|hdrip|нdrip|ts|tc|cam|brrip|webrip|bdrip|camrip|hdts|hdcam|hdtv|hdtvrip|telecine|web-dl|web-dlrip|bluray|bdremux|bd-remux)[\W]/isuU', $str.' ', $result, PREG_OFFSET_CAPTURE);
     	if ($result[0]) {
             $movie['quality'] = strtoupper($result[1][0][0]);
+            $movie['quality'] = str_replace("НDRIP", "HDRIP", $movie['quality']);//н as h
             $pos = min($pos, $result[1][0][1]);
     	}
     	

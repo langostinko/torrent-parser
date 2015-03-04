@@ -29,10 +29,6 @@
 		$movie['added_tracker'] = strtotime($html->find('td',7)->plaintext);
         if ( (time() - $movie['added_tracker'] ) / 3600 / 24 > ADDLINKSPASTDAYS)
             return false;
-            
-		$res = processTd($html->children(1), $movie);
-		if (!$res)
-		    return false;
 		    
         $curTr = array();
 		foreach ($html->find('td') as $item)
@@ -44,6 +40,11 @@
 
     	$movie['seed'] = (int)$curTr[8];
     	$movie['leech'] = (int)$curTr[9];
+            
+		$res = processTd($html->children(1), $movie);
+		if (!$res)
+		    return false;
+
         global $result;
         $result[] = $movie;
 
