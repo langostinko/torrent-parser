@@ -49,7 +49,6 @@ function calcTotalSeedLeech(&$movies, $ignore, $user) {
                 if ($votes < $user['minVotes']) 
                     continue;
             }
-
             if (empty($movies[$row['movieId']]['Release']))
                 $movies[$row['movieId']]['Release'] = strtotime($movies[$row['movieId']]['description']['Released']);
 
@@ -57,10 +56,10 @@ function calcTotalSeedLeech(&$movies, $ignore, $user) {
                 if ((time()-$movies[$row['movieId']]['Release'])/(30.417*24*60*60) > $user['maxDaysDif'])
                     continue;
             }
-            if (!(array_key_exists("Poster", $movies[$row['movieId']]['description']) && $movies[$row['movieId']]['description']['Poster'] != 'N/A'))
+            if (!(array_key_exists("Poster", $movies[$row['movieId']]['description']) && $movies[$row['movieId']]['description']['Poster'] != 'N/A' || array_key_exists("PosterRu", $movies[$row['movieId']]['description'])))
                 continue;
             $movies[(int)$row['movieId']]['userTake'] = true;
-                
+
             $movies[(int)$row['movieId']]['totalSeed'] += $row['seed'];
             $movies[(int)$row['movieId']]['totalLeech'] += $row['leech'];
             
