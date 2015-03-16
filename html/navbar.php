@@ -15,11 +15,11 @@
             <a title="мы на Пикабу" href="http://pikabu.ru/profile/freshs" target='_blank' ><img style="height:30px" src="img/pk_64.png"/></a>
             <a title="мы в ВК" href="https://vk.com/freshswagru" target='_blank' ><img style="height:30px" src="img/vk_64.png"/></a>
         </p>
-        <!--<form class="navbar-form navbar-left" role="search">
+        <form class="navbar-form navbar-left hidden-xs" role="search">
           <div class="form-group">
-            <input type="text" class="form-control" placeholder="Search">
+            <input id="search" type="text" class="form-control typeahead" placeholder="поиск фильма">
           </div>
-        </form>-->
+        </form>
     <?php if ($login) { ?>
       <ul class="nav navbar-nav navbar-right">
         <li class="hidden-xs">
@@ -60,3 +60,29 @@
     </div><!--/.navbar-collapse -->
   </div>
 </div>
+
+
+<script type="text/javascript">
+var bestPictures = new Bloodhound({
+  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  limit: 10,
+  remote: 'ajax.php?search=%QUERY',
+});
+ 
+bestPictures.initialize();
+ 
+$('#search').typeahead(null, {
+  name: 'best-pictures',
+  displayKey: 'value',
+  source: bestPictures.ttAdapter(),
+  templates: {
+    empty: [
+      '<div class="tt-dropdown-menu tt-suggestion">',
+      'ничего не нашлось',
+      '</div>'
+    ].join('\n'),
+    suggestion: Handlebars.compile("<a href='movie.php?id={{id}}''><strong>{{value}}</strong> ({{year}})")
+  }
+});
+</script>

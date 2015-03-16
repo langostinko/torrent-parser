@@ -1,5 +1,5 @@
 <?php
-    if (!$head_time_start)
+    if (!isset($head_time_start))
         $head_time_start = microtime(true);
 ?>
 
@@ -18,9 +18,12 @@
     ================================================== -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/handlebars.js"></script>
+    <script src="js/typeahead.bundle.js"></script>
 
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/typeahead.css" rel="stylesheet">
 
     <!-- DataTables CSS -->
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.css">
