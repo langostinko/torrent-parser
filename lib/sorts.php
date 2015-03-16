@@ -61,10 +61,10 @@ function calcTotalSeedLeech(&$movies, $ignore, $user) {
                 continue;
             $movies[(int)$row['movieId']]['userTake'] = true;
                 
-            $movies[(int)$row['movieId']]['totalSeed'] += $row['seed'];
-            $movies[(int)$row['movieId']]['totalLeech'] += $row['leech'];
+            @$movies[(int)$row['movieId']]['totalSeed'] += $row['seed'];
+            @$movies[(int)$row['movieId']]['totalLeech'] += $row['leech'];
             
-            if (qualityToRool($row['quality']) > $movies[(int)$row['movieId']]['quality']) {
+            if (qualityToRool($row['quality']) > @$movies[(int)$row['movieId']]['quality']) {
                 $movies[(int)$row['movieId']]['quality'] = qualityToRool($row['quality']);
                 $movies[(int)$row['movieId']]['qualityStr'] = $row['quality'];
                 $movies[(int)$row['movieId']]['translateQuality'] = translateQualityToRool($row['translateQuality']);
@@ -86,7 +86,7 @@ function sortBySeedLeech(&$movies, $ignore, $user) {
 
     $take = array();
     foreach($movies as $key=>$movie) 
-        if ($movie['userTake']) {
+        if (@$movie['userTake']) {
             $take[$key] = array(
                     "id"=>$key,
                     "totalSeed"=>$movie['totalSeed'],
