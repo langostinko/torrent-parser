@@ -7,6 +7,12 @@ function cmpByLeech(&$a, &$b) {
     return $a["sortVal"] < $b["sortVal"];
 }
 
+function cmpByOcc(&$a, &$b) {
+    $a['sortVal'] = $a["firstOcc"];
+    $b['sortVal'] = $b["firstOcc"];
+    return $a["sortVal"] < $b["sortVal"];
+}
+
 function cmpBySeedLeech(&$a, &$b) {
     $a['sortVal'] = $a["totalLeech"] + $a["totalSeed"];
     $b['sortVal'] = $b["totalLeech"] + $b["totalSeed"];
@@ -63,6 +69,9 @@ function calcTotalSeedLeech(&$movies, $ignore, $user) {
                 
             @$movies[(int)$row['movieId']]['totalSeed'] += $row['seed'];
             @$movies[(int)$row['movieId']]['totalLeech'] += $row['leech'];
+            if (!array_key_exists("firstOcc", $movies[(int)$row['movieId']]))
+                $movies[(int)$row['movieId']]['firstOcc'] = strtotime($row['added_tracker']);
+            $movies[(int)$row['movieId']]['firstOcc'] = min($movies[(int)$row['movieId']]['firstOcc'],strtotime($row['added_tracker']));
             
             if (qualityToRool($row['quality']) > @$movies[(int)$row['movieId']]['quality']) {
                 $movies[(int)$row['movieId']]['quality'] = qualityToRool($row['quality']);
@@ -91,6 +100,7 @@ function sortBySeedLeech(&$movies, $ignore, $user) {
                     "id"=>$key,
                     "totalSeed"=>$movie['totalSeed'],
                     "totalLeech"=>$movie['totalLeech'],
+                    "firstOcc"=>$movie['firstOcc'],
                     "imdbRating"=>(float)$movie['description']['imdbRating'],
                     "kinopoiskRating"=>(float)$movie['description']['kinopoiskRating'],
                     );
@@ -102,6 +112,8 @@ function sortBySeedLeech(&$movies, $ignore, $user) {
     */
     if (array_key_exists("underrated", $_GET))
         usort($take, "cmpByRatingLeech");
+    else if (array_key_exists("last", $_GET))
+        usort($take, "cmpByOcc");
     else
         usort($take, "cmpBySeedLeech");
 
