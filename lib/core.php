@@ -23,7 +23,7 @@
     
     function translateQualityToRool($qual) {
         if (in_array($qual,
-            array("ORIGINAL",)
+            array("ORIGINAL","SUB",)
         )) return 0;
         if (in_array($qual,
             array("ЗВУК С TS","ЗВУК С CAMRIP",)
@@ -89,7 +89,7 @@
     	if (!$result[0])
         	$res = preg_match_all('/\|.*[\W](Есарев|Матвеев)[\W]/isuU', $str.' ', $result);
     	if (!$result[0])
-        	$res = preg_match_all('/\| *[\W](l|l1|l2|p|p2|D|A|А)[\W]/isuU', $str.' ', $result);
+        	$res = preg_match_all('/\| *[\W](l|l1|l2|p|p2|D|A|А|sub)[\W]/isuU', $str.' ', $result);
     	if ($result[0])
             $movie['translateQuality'] = mb_strtoupper($result[1][0], 'UTF-8');
     }
