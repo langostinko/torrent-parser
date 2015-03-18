@@ -85,6 +85,8 @@ function updateLinks(){
     //$resRutor10->getRutor("$rutorMain/browse/9/1/0/2/");
     $resRutor11 = new Rutor;
     $resRutor11->getRutor("$rutorMain/browse/0/7/0/2/");
+    $resRutor12 = new Rutor;
+    $resRutor12->getRutor("$rutorMain/browse/0/5/0/2");
     flush();
     
     $resSeedoff = array();
@@ -109,14 +111,14 @@ function updateLinks(){
     RollingCurl::$rc->execute();
     $resRutor = array_merge($resRutor1->result, $resRutor2->result, $resRutor3->result, $resRutor4->result, $resRutor5->result, 
                             $resRutor6->result, $resRutor7->result, $resRutor8->result, $resRutor9->result, $resRutor10->result,
-                            $resRutor11->result);
+                            $resRutor11->result, $resRutor12->result);
     $resPirate = array_merge($resPirate1->result, $resPirate2->result, $resPirate3->result, $resRutor, $resSeedoff);
     
     foreach($resPirate as $cur) {
         if (trySkip($cur))
             continue;
     
-        searchIMDB($cur['title_approx'], $cur);
+        getIds($cur['title_approx'], $cur);
         echo "\t".$cur['description'] . "\t" . $cur['link'] . "\n";
     
         addLink($cur);
@@ -140,15 +142,13 @@ function updateMovies(){
     );
     echo mysqli_error($GLOBALS['mysqli']);
     
-    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT id,imdbid,title,max_peers,updated FROM movies");
-    while ($row = mysqli_fetch_assoc($sqlresult)) {
-        $checkLink = mysqli_query($GLOBALS['mysqli'], "SELECT id FROM links WHERE movieId = " . $row['id']);
-        if (mysqli_num_rows($checkLink) && !trySkipMovie($row)) {
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM `movies` WHERE `movies`.id in (SELECT movieId FROM links)");
+    while ($row = mysqli_fetch_assoc($sqlresult))
+        if (!trySkipMovie($row)) {
             addMovie($row);
             echo "\t" . $row['title'] . "\n";
             print_r($row);
         }
-    }
 }
 
 header('Content-Type: text/plain; charset=UTF-8');

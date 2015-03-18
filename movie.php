@@ -109,7 +109,7 @@
                 </tr>
                 <tr> 
                     <td colspan="2"> 
-                        <span itemprop="alternateName"><?php echo array_key_exists('titleRu', $desc)?($desc['Title']." "):""; ?></span>
+                        <span itemprop="alternateName"><?php echo array_key_exists('titleRu', $desc)?(@$desc['Title']." "):""; ?></span>
                         <?php echo $desc['Year']; ?>
                     </td>
                 </tr>
@@ -117,7 +117,7 @@
                     <td>IMDB</td>
                     <td>
                     <a itemprop="ratingValue" title="открыть на IMDB" target='_blank' href='<?php echo "http://www.imdb.com/title/".$movie['imdbid'];?>/'>
-                        <?php echo $desc['imdbRating']; ?>
+                        <?php echo @$desc['imdbRating']; ?>
                     </a>
                     <meta itemprop="bestRating" content="10" />
                     <meta itemprop="worstRating" content="0" >
@@ -127,7 +127,7 @@
                     <td>КиноПоиск</td>
                     <td>
                     <a itemprop="ratingValue" title="открыть на КиноПоиске" target='_blank' href='<?php echo "http://www.kinopoisk.ru/film/".$desc['kinopoiskId'];?>/'>
-                        <?php echo $desc['kinopoiskRating']; ?>
+                        <?php echo @$desc['kinopoiskRating']; ?>
                     </a>
                     <meta itemprop="bestRating" content="10"/>
                     <meta itemprop="worstRating" content="0"/>
@@ -135,7 +135,7 @@
                 </tr>
                 <tr itemtype="http://schema.org/AggregateRating" itemscope itemprop="aggregateRating">
                     <td>Metascore</td>
-                    <td itemprop="ratingValue"><?php echo $desc['Metascore']; ?>
+                    <td itemprop="ratingValue"><?php echo @$desc['Metascore']; ?>
                     <meta itemprop="bestRating" content="100"/>
                     <meta itemprop="worstRating" content="0"/>
                     </td>
@@ -147,19 +147,19 @@
                 </tr>
                 <tr>
                     <td>жанр</td>
-                    <td itemprop="genre"><?php echo $desc['Genre']; ?></td>
+                    <td itemprop="genre"><?php echo array_key_exists("жанр", $desc)?$desc['жанр']:@$desc['Genre']; ?></td>
                 </tr>
                 <tr>
                     <td>режиссер</td>
-                    <td itemprop="director"><?php echo $desc['Director']; ?></td>
+                    <td itemprop="director"><?php echo array_key_exists("режиссер", $desc)?$desc['режиссер']:@$desc['Director']; ?></td>
                 </tr>
                 <tr>
                     <td>сценарист</td>
-                    <td itemprop="author"><?php echo $desc['Writer']; ?></td>
+                    <td itemprop="author"><?php echo array_key_exists("сценарий", $desc)?$desc['сценарий']:@$desc['Writer']; ?></td>
                 </tr>
                 <tr>
                     <td>актеры</td>
-                    <td itemprop="actors"><?php echo $desc['Actors']; ?></td>
+                    <td itemprop="actors"><?php echo array_key_exists("актеры", $desc)?$desc['актеры']:@$desc['Actors']; ?></td>
                 </tr>
             </tbody>
             </table>

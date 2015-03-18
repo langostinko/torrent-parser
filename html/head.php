@@ -7,11 +7,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="<?php echo $metaDescription?$metaDescription:"Новые фильмы на торрентах"?>">
+    <meta name="description" content="<?php echo @$metaDescription?$metaDescription:"Новые фильмы на торрентах"?>">
     <meta name="author" content="">
     <link rel="icon" href="img/icon2.png">
 
-    <title><?php echo $metaTitle?$metaTitle:"Новые фильмы на торрентах";?></title>
+    <title><?php echo @$metaTitle?$metaTitle:"Новые фильмы на торрентах";?></title>
     
 
     <!-- Bootstrap core JavaScript

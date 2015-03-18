@@ -46,7 +46,7 @@
     $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies");
     while ($row = mysqli_fetch_assoc($sqlresult))
         $movies[(int)$row['id']] = $row;
-    
+
     $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT movieId FROM userignore WHERE userId = $userId");
     $ignore = array();
     while ($row = mysqli_fetch_assoc($sqlresult))
@@ -108,7 +108,7 @@
                 $desc = $movie['description'];
                 ?>
                 <div class='movie moviePos<?php echo $movie['id']; ?>'>
-                    <a title="<?php echo array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']; echo " (".$movie['totalSeed']."↑ ".$movie['totalLeech']."↓)"; ?>" target='_blank' href="/movie.php?id=<?php echo $movie['id']; ?>">
+                    <a title="<?php echo array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']; echo " (".$movie['totalSeed']."↑ ".$movie['totalLeech']."↓)"; ?>" target='_blank' href="movie.php?id=<?php echo $movie['id']; ?>">
                         <img class='poster' src='<?php echo array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster']; ?>' />
                     </a>
                     <?php if (array_key_exists("kinopoiskId", $desc)) {?>

@@ -99,8 +99,8 @@ function sortBySeedLeech(&$movies, $ignore, $user) {
                     "totalSeed"=>$movie['totalSeed'],
                     "totalLeech"=>$movie['totalLeech'],
                     "firstOcc"=>$movie['firstOcc'],
-                    "imdbRating"=>(float)$movie['description']['imdbRating'],
-                    "kinopoiskRating"=>(float)$movie['description']['kinopoiskRating'],
+                    "imdbRating"=>(float)@$movie['description']['imdbRating'],
+                    "kinopoiskRating"=>(float)@$movie['description']['kinopoiskRating'],
                     );
         }
     /*if ($user['onlyNewTor'])

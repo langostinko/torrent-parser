@@ -7,7 +7,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" style="font-family: Georgia, 'Times New Roman', Times, serif;" href="/">FRESH SWAG</a>
+      <a class="navbar-brand" style="font-family: Georgia, 'Times New Roman', Times, serif;" href=".">FRESH SWAG</a>
       <span class="navbarDesc"></span>
     </div>
     <div class="navbar-collapse collapse">
@@ -26,7 +26,7 @@
             <img height='50px' src='<?php echo $user['photo']; ?>'/>
         </li>
         <li <?php if ($liactive=='home') echo "class='active'"; ?>>
-            <a href='/'>главная</a>
+            <a href='.'>главная</a>
         </li>
         <li style='display:none;' <?php if ($liactive=='settings') echo "class='active'"; ?>>
             <a href="#" onclick='

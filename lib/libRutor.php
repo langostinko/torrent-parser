@@ -20,7 +20,16 @@ class Rutor {
         $title = html_entity_decode($res->plaintext, ENT_QUOTES, "UTF-8");
         $movie['description'] = $title;
         $pos = strrpos($title, '/') + 1;
-        $title = trim(substr($title, $pos));
+        if ($pos != 1)
+            $title = trim(substr($title, $pos));
+
+        $result = array();
+        $res1 = preg_match_all('/\[S\d+/isU', $title, $result, PREG_OFFSET_CAPTURE);
+        $res2 = preg_match_all('/\[[\d-x ,]+\]/isU', $title, $result, PREG_OFFSET_CAPTURE);
+        if ($res1 || $res2) {//that's a series
+            echo "\tskip $title\n";
+            return false;
+        }
 
         extractString($title, $movie);
         extractTranslate($title, $movie);
