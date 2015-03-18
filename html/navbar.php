@@ -66,23 +66,33 @@
 var bestPictures = new Bloodhound({
   datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
   queryTokenizer: Bloodhound.tokenizers.whitespace,
-  limit: 10,
+  limit: 20,
   remote: 'ajax.php?search=%QUERY',
 });
  
 bestPictures.initialize();
  
-$('#search').typeahead(null, {
-  name: 'best-pictures',
-  displayKey: 'value',
-  source: bestPictures.ttAdapter(),
-  templates: {
-    empty: [
-      '<div class="tt-dropdown-menu tt-suggestion">',
-      'ничего не нашлось',
-      '</div>'
-    ].join('\n'),
-    suggestion: Handlebars.compile("<a href='movie.php?id={{id}}''><strong>{{value}}</strong> ({{year}})")
+var myTypeahead = $('#search').typeahead({
+    autoselect: true,
+  }, {
+    name: 'best-pictures',
+    displayKey: 'value',
+    source: bestPictures.ttAdapter(),
+    templates: {
+      empty: [
+        '<div class="tt-dropdown-menu tt-suggestion">',
+        'ничего не нашлось',
+        '</div>'
+      ].join('\n'),
+      suggestion: Handlebars.compile("<a href='movie.php?id={{id}}''><strong>{{value}}</strong> ({{year}})")
   }
+});
+
+myTypeahead.on('typeahead:selected',function(evt,data){
+    window.location.href = "movie.php?id="+data.id;
+});
+
+myTypeahead.on('typeahead:autocompleted',function(evt,data){
+    window.location.href = "movie.php?id="+data.id;
 });
 </script>
