@@ -158,6 +158,10 @@
                     <td itemprop="author"><?php echo array_key_exists("сценарий", $desc)?$desc['сценарий']:@$desc['Writer']; ?></td>
                 </tr>
                 <tr>
+                    <td>продюсер</td>
+                    <td itemprop="author"><?php echo array_key_exists("продюсер", $desc)?$desc['продюсер']:@$desc['Producer']; ?></td>
+                </tr>
+                <tr>
                     <td>актеры</td>
                     <td itemprop="actors"><?php echo array_key_exists("актеры", $desc)?$desc['актеры']:@$desc['Actors']; ?></td>
                 </tr>
