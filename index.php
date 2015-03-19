@@ -43,23 +43,21 @@
 
     $movies = array();
 
-    printTime();    
-    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM `movies` WHERE `movies`.id in (SELECT movieId FROM links)");
+    printTime();
+
+    $q = "SELECT * FROM `movies` WHERE `movies`.id in (SELECT movieId FROM links) AND NOT `movies`.id in (SELECT movieId FROM userignore WHERE userId=$userId)";
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], $q);
+    
     while ($row = mysqli_fetch_assoc($sqlresult))
         $movies[(int)$row['id']] = $row;
     printTime();    
-
-    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT movieId FROM userignore WHERE userId = $userId");
-    $ignore = array();
-    while ($row = mysqli_fetch_assoc($sqlresult))
-        $ignore[$row['movieId']] = true;
 
     if ($login == 'wise guest' || $login == 'guest') {
         $userId = -1;
         $login = false;        
     }
     
-    $keys = sortBySeedLeech($movies, $ignore, $user);
+    $keys = sortBySeedLeech($movies, $user);
     printTime();    
 ?>
 <!DOCTYPE html>

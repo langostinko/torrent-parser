@@ -25,71 +25,71 @@ function cmpByRatingLeech(&$a, &$b) {
     return $a["sortVal"] < $b["sortVal"];
 }
 
-function calcTotalSeedLeech(&$movies, $ignore, $user) {
-    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links ORDER BY seed DESC");
+function calcTotalSeedLeech(&$movies, $user) {
+    $q = "SELECT * FROM links WHERE NOT `links`.movieId in (SELECT movieId FROM userignore WHERE userId={$user['id']}) ORDER BY seed DESC";
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], $q);
     $igList = array();
-    while ($row = mysqli_fetch_assoc($sqlresult))
-        if (!array_key_exists($row['movieId'], $ignore)) {
-            if (in_array($row['movieId'], $igList))
+    while ($row = mysqli_fetch_assoc($sqlresult)) {
+        if (in_array($row['movieId'], $igList))
+            continue;
+        
+        if ($user['onlyNewTor']) {
+            $added = strtotime($row['added_tracker']?$row['added_tracker']:$row['added']);
+            if ( (time() - $added)/(24*60*60) > FRESHLINKSDAYS)
                 continue;
-            
-            if ($user['onlyNewTor']) {
-                $added = strtotime($row['added_tracker']?$row['added_tracker']:$row['added']);
-                if ( (time() - $added)/(24*60*60) > FRESHLINKSDAYS)
-                    continue;
-            }
+        }
 
-            if (qualityToRool($row['quality']) < $user['quality'])
+        if (qualityToRool($row['quality']) < $user['quality'])
+            continue;
+        if (translateQualityToRool($row['translateQuality']) < $user['translateQuality'])
+            continue;
+        if (!is_array($movies[$row['movieId']]['description']))
+            $movies[$row['movieId']]['description'] = json_decode($movies[$row['movieId']]['description'], true);
+        if (array_key_exists("kinopoiskRating", $movies[$row['movieId']]['description'])) {
+            if ((float)$movies[$row['movieId']]['description']['kinopoiskRating'] < $user['minRating'])
                 continue;
-            if (translateQualityToRool($row['translateQuality']) < $user['translateQuality'])
+        } else if ((float)$movies[$row['movieId']]['description']['imdbRating'] < $user['minRating'])
+            continue;
+        if ($user['minVotes']) {
+            $votes = intval(str_replace(",","",$movies[$row['movieId']]['description']['imdbVotes']));;
+            if ($votes < $user['minVotes']) 
                 continue;
-            if (!is_array($movies[$row['movieId']]['description']))
-                $movies[$row['movieId']]['description'] = json_decode($movies[$row['movieId']]['description'], true);
-            if (array_key_exists("kinopoiskRating", $movies[$row['movieId']]['description'])) {
-                if ((float)$movies[$row['movieId']]['description']['kinopoiskRating'] < $user['minRating'])
-                    continue;
-            } else if ((float)$movies[$row['movieId']]['description']['imdbRating'] < $user['minRating'])
-                continue;
-            if ($user['minVotes']) {
-                $votes = intval(str_replace(",","",$movies[$row['movieId']]['description']['imdbVotes']));;
-                if ($votes < $user['minVotes']) 
-                    continue;
-            }
-            if (empty($movies[$row['movieId']]['Release']))
-                $movies[$row['movieId']]['Release'] = strtotime($movies[$row['movieId']]['description']['Released']);
+        }
+        if (empty($movies[$row['movieId']]['Release']))
+            $movies[$row['movieId']]['Release'] = strtotime($movies[$row['movieId']]['description']['Released']);
 
-            if ($user['maxDaysDif']) {
-                if ((time()-$movies[$row['movieId']]['Release'])/(30.417*24*60*60) > $user['maxDaysDif'])
-                    continue;
-            }
-            if (!(array_key_exists("Poster", $movies[$row['movieId']]['description']) && $movies[$row['movieId']]['description']['Poster'] != 'N/A' || array_key_exists("PosterRu", $movies[$row['movieId']]['description'])))
+        if ($user['maxDaysDif']) {
+            if ((time()-$movies[$row['movieId']]['Release'])/(30.417*24*60*60) > $user['maxDaysDif'])
                 continue;
-            $movies[(int)$row['movieId']]['userTake'] = true;
-            @$movies[(int)$row['movieId']]['totalSeed'] += $row['seed'];
-            @$movies[(int)$row['movieId']]['totalLeech'] += $row['leech'];
-            if (!array_key_exists("firstOcc", $movies[(int)$row['movieId']]))
-                $movies[(int)$row['movieId']]['firstOcc'] = strtotime($row['added_tracker']);
-            $movies[(int)$row['movieId']]['firstOcc'] = min($movies[(int)$row['movieId']]['firstOcc'],strtotime($row['added_tracker']));
-            
-            if (qualityToRool($row['quality']) > @$movies[(int)$row['movieId']]['quality']) {
+        }
+        if (!(array_key_exists("Poster", $movies[$row['movieId']]['description']) && $movies[$row['movieId']]['description']['Poster'] != 'N/A' || array_key_exists("PosterRu", $movies[$row['movieId']]['description'])))
+            continue;
+        $movies[(int)$row['movieId']]['userTake'] = true;
+        @$movies[(int)$row['movieId']]['totalSeed'] += $row['seed'];
+        @$movies[(int)$row['movieId']]['totalLeech'] += $row['leech'];
+        if (!array_key_exists("firstOcc", $movies[(int)$row['movieId']]))
+            $movies[(int)$row['movieId']]['firstOcc'] = strtotime($row['added_tracker']);
+        $movies[(int)$row['movieId']]['firstOcc'] = min($movies[(int)$row['movieId']]['firstOcc'],strtotime($row['added_tracker']));
+        
+        if (qualityToRool($row['quality']) > @$movies[(int)$row['movieId']]['quality']) {
+            $movies[(int)$row['movieId']]['quality'] = qualityToRool($row['quality']);
+            $movies[(int)$row['movieId']]['qualityStr'] = $row['quality'];
+            $movies[(int)$row['movieId']]['translateQuality'] = translateQualityToRool($row['translateQuality']);
+            $movies[(int)$row['movieId']]['translateQualityStr'] = $row['translateQuality'];
+        }
+        if (qualityToRool($row['quality']) == $movies[(int)$row['movieId']]['quality'] &&
+            translateQualityToRool($row['translateQuality']) > $movies[(int)$row['movieId']]['translateQuality'] ) {
                 $movies[(int)$row['movieId']]['quality'] = qualityToRool($row['quality']);
                 $movies[(int)$row['movieId']]['qualityStr'] = $row['quality'];
                 $movies[(int)$row['movieId']]['translateQuality'] = translateQualityToRool($row['translateQuality']);
                 $movies[(int)$row['movieId']]['translateQualityStr'] = $row['translateQuality'];
             }
-            if (qualityToRool($row['quality']) == $movies[(int)$row['movieId']]['quality'] &&
-                translateQualityToRool($row['translateQuality']) > $movies[(int)$row['movieId']]['translateQuality'] ) {
-                    $movies[(int)$row['movieId']]['quality'] = qualityToRool($row['quality']);
-                    $movies[(int)$row['movieId']]['qualityStr'] = $row['quality'];
-                    $movies[(int)$row['movieId']]['translateQuality'] = translateQualityToRool($row['translateQuality']);
-                    $movies[(int)$row['movieId']]['translateQualityStr'] = $row['translateQuality'];
-                }
-        }
+    }
       
 }
 
-function sortBySeedLeech(&$movies, $ignore, $user) {
-    calcTotalSeedLeech($movies, $ignore, $user);
+function sortBySeedLeech(&$movies, $user) {
+    calcTotalSeedLeech($movies, $user);
 
     $take = array();
     foreach($movies as $key=>$movie) 
