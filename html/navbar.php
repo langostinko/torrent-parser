@@ -17,7 +17,11 @@
         </p>
         <form class="navbar-form navbar-left hidden-xs" role="search">
           <div class="form-group">
-            <input id="search" type="text" class="form-control typeahead" placeholder="поиск фильма">
+          <?php
+            $vars = getRandomList();
+            $placeholder = $vars[array_rand($vars)];
+          ?>
+            <input id="search" type="text" class="form-control typeahead" placeholder="<?=$placeholder?>">
           </div>
         </form>
     <?php if ($login) { ?>

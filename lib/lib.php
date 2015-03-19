@@ -10,6 +10,36 @@
     session_start();
     setcookie(session_name(),session_id(),time()+$lifetime);
     //
+
+    function printTime() {
+        $time = microtime(true) - $GLOBALS['head_time_start'];
+        echo "<!--time::$time-->\n";
+    }
+
+    function getRandomList() {
+        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT title, description FROM `movies` WHERE `movies`.id in (SELECT movieId FROM links) ORDER BY max_peers DESC LIMIT 20");
+        $vars = array();
+        $rows = array();
+        while ($row = mysqli_fetch_assoc($sqlresult)) {
+            $rows[] = json_decode($row['description'], true);
+        }
+        foreach ($rows as $desc) {
+            if (array_key_exists('жанр', $desc))
+                $genres = explode(", ", $desc['жанр']);
+            foreach ($genres as $value) 
+                if (!in_array($value, $vars))
+                    $vars[] = $value;
+        }
+        foreach ($rows as $desc)
+            if (array_key_exists("titleRu", $desc))
+                $vars[] = mb_strtolower($desc['titleRu'], "utf-8");
+        foreach ($rows as $desc)
+            if (array_key_exists('актеры', $desc)) {
+                $actors = explode(", ", $desc['актеры']);
+                $vars[] = mb_strtolower($actors[0], "utf-8");
+            }
+        return $vars;
+    }
   
     function setSettings(&$user, $settings) {
         $userId = $user['id'];

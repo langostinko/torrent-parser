@@ -1,10 +1,6 @@
 <footer>
     <p>&copy; YanD</p>
-    <!-- <?php 
-    $footer_time_end = microtime(true);
-    $time = $footer_time_end - $head_time_start;
-    echo "in $time seconds\n";
-    ?> -->
+    <?php printTime() ?>
 </footer>
 
 <!-- Yandex.Metrika counter -->

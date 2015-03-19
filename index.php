@@ -42,10 +42,12 @@
     
 
     $movies = array();
-    
-    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies");
+
+    printTime();    
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM `movies` WHERE `movies`.id in (SELECT movieId FROM links)");
     while ($row = mysqli_fetch_assoc($sqlresult))
         $movies[(int)$row['id']] = $row;
+    printTime();    
 
     $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT movieId FROM userignore WHERE userId = $userId");
     $ignore = array();
@@ -58,6 +60,7 @@
     }
     
     $keys = sortBySeedLeech($movies, $ignore, $user);
+    printTime();    
 ?>
 <!DOCTYPE html>
 <html lang="en">
