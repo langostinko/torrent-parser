@@ -130,7 +130,7 @@
             if ($id) {
                 $name = $pName->find('a',0)->plaintext;
                 $year = $pName->find('span',0)->plaintext;
-                $rating = $row->find('div[class=rating]',0)->plaintext;
+                $rating = @$row->find('div[class=rating]',0)->plaintext;
 
                 $needYear = array_key_exists('year', $movie) ? (int)$movie['year'] : $year;
                 if (abs($year - $needYear) <= 1) {
@@ -207,6 +207,8 @@
         $json = json_decode($row['description'], true);
         if (!$json)
             return false;
+        if (!$row['search'])
+            return false;
 
         if (array_key_exists("imdbid", $movie) && $movie['imdbid']) {
             $img = "img/posters/{$movie['imdbid']}.jpg";
@@ -239,8 +241,8 @@
         $html = str_get_html($response);
 
         foreach($html->find('table[class=info]',0)->find("tr") as $row) {
-            $key = trim(iconv('windows-1251', 'UTF-8', $row->find('td',0)->plaintext));
-            $value = trim(iconv('windows-1251', 'UTF-8', $row->find('td',1)->plaintext));
+            $key = trim(iconv('windows-1251', 'UTF-8', $row->find('td',0)->plaintext), "., ");
+            $value = trim(iconv('windows-1251', 'UTF-8', $row->find('td',1)->plaintext), "., ");
             $value = html_entity_decode($value);
             $value = preg_replace('!\s+!', ' ', $value);
             $key = str_replace(array("год"), array("Year"), $key);
@@ -250,7 +252,7 @@
             $desc['жанр'] = trim(str_replace("слова", "", $desc['жанр']),",. ");
 
         $desc['kinopoiskId'] = $kpid;
-        $desc['titleRu'] = html_entity_decode(iconv('windows-1251', 'UTF-8', $html->find('h1[class=moviename-big]',0)->plaintext), ENT_QUOTES, "UTF-8");
+        $desc['titleRu'] = html_entity_decode(trim(iconv('windows-1251', 'UTF-8', $html->find('h1[class=moviename-big]',0)->plaintext), "., "), ENT_QUOTES, "UTF-8");
         $desc['kinopoiskRating'] = iconv('windows-1251', 'UTF-8', $html->find('span[class=rating_ball]',0)->plaintext);
         $prem = $html->find('td[id=div_world_prem_td2]',0);
         if (!($prem && $prem->find('div[class=prem_ical]',0)))
@@ -297,6 +299,13 @@
         }
         return false;
     }
+
+    function generateSearchTags($desc) {
+        $resutl = array();
+        $keys = array("Title", "Year", "Genre", "Director", "Writer", "Actors", "Country", 
+            "titleRu", "страна", "режиссер", "сценарий", "продюсер", "жанр", "актеры");
+        return implode(";", array_intersect_key($desc, array_flip($keys)));
+    }
     
     function addMovie(&$movie) {
         if (!$movie)
@@ -322,7 +331,7 @@
 
         $q = "UPDATE movies SET updated=now()";            
 
-        if (!(array_key_exists("kpid", $movie) && $movie['kpid']) && array_key_exists("kinopoiskId", $movie['description']) )
+        if (!(array_key_exists("kpid", $movie) && $movie['kpid']) && is_array($movie['description']) && array_key_exists("kinopoiskId", $movie['description']) )
             $movie['kpid'] = $movie['description']['kinopoiskId'];
 
         if (array_key_exists("imdbid", $movie) && $movie['imdbid']) {
@@ -336,9 +345,9 @@
         }
         
         $title = false;
-        if (array_key_exists('Title', $movie['description']))
+        if (is_array($movie['description']) && array_key_exists('Title', $movie['description']))
             $title = $movie['description']['Title'];
-        if (array_key_exists('titleRu', $movie['description']))
+        if (is_array($movie['description']) && array_key_exists('titleRu', $movie['description']))
             $title = $movie['description']['titleRu'];
         $description = mysqli_real_escape_string($GLOBALS['mysqli'], json_encode($movie['description'], JSON_UNESCAPED_UNICODE));
 
@@ -352,7 +361,10 @@
             $id = $row['id'];
             $movie['id'] = $id;
 
-            $q .= ", title='$title', description='$description'";
+            $search = generateSearchTags($movie['description']);
+            $search = mysqli_real_escape_string($GLOBALS['mysqli'], $search);
+
+            $q .= ", title='$title', description='$description', search='$search'";
             mysqli_query($GLOBALS['mysqli'],  "$q WHERE id=$id");
             echo mysqli_error($GLOBALS['mysqli']);
             return true;
