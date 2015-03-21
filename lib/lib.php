@@ -17,7 +17,7 @@
     }
 
     function getRandomList() {
-        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT title, description FROM `movies` WHERE `movies`.id in (SELECT movieId FROM links) ORDER BY max_peers DESC LIMIT 20");
+        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT title, description FROM `movies` WHERE `movies`.id in (SELECT movieId FROM links) ORDER BY max_peers DESC LIMIT 40");
         $vars = array();
         $rows = array();
         while ($row = mysqli_fetch_assoc($sqlresult)) {

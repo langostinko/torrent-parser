@@ -33,12 +33,6 @@ function calcTotalSeedLeech(&$movies, $user) {
         if (in_array($row['movieId'], $igList))
             continue;
         
-        if ($user['onlyNewTor']) {
-            $added = strtotime($row['added_tracker']?$row['added_tracker']:$row['added']);
-            if ( (time() - $added)/(24*60*60) > FRESHLINKSDAYS)
-                continue;
-        }
-
         if (qualityToRool($row['quality']) < $user['quality'])
             continue;
         if (translateQualityToRool($row['translateQuality']) < $user['translateQuality'])
@@ -64,12 +58,20 @@ function calcTotalSeedLeech(&$movies, $user) {
         }
         if (!(array_key_exists("Poster", $movies[$row['movieId']]['description']) && $movies[$row['movieId']]['description']['Poster'] != 'N/A' || array_key_exists("PosterRu", $movies[$row['movieId']]['description'])))
             continue;
-        $movies[(int)$row['movieId']]['userTake'] = true;
+
         @$movies[(int)$row['movieId']]['totalSeed'] += $row['seed'];
         @$movies[(int)$row['movieId']]['totalLeech'] += $row['leech'];
         if (!array_key_exists("firstOcc", $movies[(int)$row['movieId']]))
             $movies[(int)$row['movieId']]['firstOcc'] = strtotime($row['added_tracker']);
         $movies[(int)$row['movieId']]['firstOcc'] = min($movies[(int)$row['movieId']]['firstOcc'],strtotime($row['added_tracker']));
+
+        if ($user['onlyNewTor']) {
+            $added = strtotime($row['added_tracker']?$row['added_tracker']:$row['added']);
+            if ( (time() - $added)/(24*60*60) > FRESHLINKSDAYS)
+                continue;
+        }
+
+        $movies[(int)$row['movieId']]['userTake'] = true;
         
         if (qualityToRool($row['quality']) > @$movies[(int)$row['movieId']]['quality']) {
             $movies[(int)$row['movieId']]['quality'] = qualityToRool($row['quality']);
