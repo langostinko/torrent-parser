@@ -150,7 +150,6 @@
                     <td>качество</td>
                     <td>перевод</td>
                     <td>фильм</td>
-                    <td>скачать торрент</td>
                     <td>размер</td>
                     <td>сиды</td>
                     <td>личеры</td>
@@ -164,15 +163,10 @@
                         $torrents[] = $row;
 
                     foreach($torrents as $cur) {
-                        if (!is_array($movies[$cur['movieId']]['description']))
-                            $movies[$cur['movieId']]['description'] = json_decode($movies[$cur['movieId']]['description'], true);
                         echo "<tr>\n";
                         echo "\t<td data-order='" . qualityToRool($cur['quality']) . "'>".$cur['quality']."</td>\n";
                         echo "\t<td data-order='" . translateQualityToRool($cur['translateQuality']) . "'>".$cur['translateQuality']."</td>\n";
-                        echo "\t<td><a target='_blank' href='/movie.php?id=".$cur['movieId']."'><div class='fullDiv'>";
-                        echo array_key_exists("titleRu",$movies[$cur['movieId']]['description']) ? $movies[$cur['movieId']]['description']['titleRu'] : $movies[$cur['movieId']]['description']['Title'];
-                        echo "</div></a></td>\n";
-                        echo "\t<td><a target='_blank' href='".$cur['link']."'>".$cur['description']."</a></td>\n";
+                        echo "\t<td><a target='_blank' href='/movie.php?id=".$cur['movieId']."'>".$cur['description']."</a></td>\n";
                         echo "\t<td>".$cur['size']."</td>\n";
                         echo "\t<td>".$cur['seed']."</td>\n";
                         echo "\t<td>".$cur['leech']."</td>\n";

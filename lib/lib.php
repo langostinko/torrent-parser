@@ -76,6 +76,10 @@
             return true;
         
         //login as guest by default
+        if (array_key_exists('new_movies', $_GET)) {
+            echo "asdfasdfas!\n";
+            $guestLogin = 'new_movies';
+        }
         $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM users WHERE login='$guestLogin'" );
         $_SESSION['user'] = mysqli_fetch_assoc($sqlresult);
         $_SESSION['expires'] = time() + 30*24*60*60;
