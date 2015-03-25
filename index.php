@@ -32,6 +32,7 @@
                         "onlyNewTor"=>(int)!empty($_POST['onlyNewTor']), 
                         "quality"=>(int)!empty($_POST['quality']),
                         "translateQuality"=>(int)$_POST['translateQuality'],
+                        "sortType" => (int)$_POST['sortType'],
                         )
                 );
                 //Login();
@@ -79,7 +80,7 @@
                 searching: false,
                 paging: false,
                 ordering: true,
-                order: [[ 7, "desc" ]],
+                order: [[ 6, "desc" ]],
                 info: false,
             });
             $(".movieDelete").click(function( event ) {

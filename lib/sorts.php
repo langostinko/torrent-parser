@@ -110,9 +110,10 @@ function sortBySeedLeech(&$movies, $user) {
     else
         usort($take, "cmpByLeech");
     */
-    if (array_key_exists("underrated", $_GET))
+    
+    if ($user['sotyType'] == 2 || array_key_exists("underrated", $_GET))
         usort($take, "cmpByRatingLeech");
-    else if (array_key_exists("last", $_GET))
+    else if ($user['sortType'] == 1)
         usort($take, "cmpByOcc");
     else
         usort($take, "cmpBySeedLeech");

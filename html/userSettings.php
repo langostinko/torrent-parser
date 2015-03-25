@@ -6,7 +6,7 @@
         <label class="sr-only" for="minRating">рейтинг</label>
         <div class="input-group">
             <div class="input-group-addon">рейтинг ≥</div>
-            <input name="minRating" type="number" class="form-control" id="minRating" placeholder="0.0" min=0 max=10 step=0.1 value='<?php echo $user['minRating']; ?>'>
+            <input name="minRating" type="number" class="form-control" style="width: 60px" id="minRating" placeholder="0.0" min=0 max=10 step=0.1 value='<?php echo $user['minRating']; ?>'>
         </div>
       </div>
       <div class="form-group" style="display: none;">
@@ -17,10 +17,10 @@
         </div>
       </div>
       <div class="form-group">
-        <label class="sr-only" for="maxDaysDif">прошло месяцев с премьеры</label>
+        <label class="sr-only" for="maxDaysDif">месяцев с премьеры</label>
         <div class="input-group">
-            <div class="input-group-addon">прошло месяцев с премьеры ≤</div>
-            <input name="maxDaysDif" type="number" class="form-control" id="maxDaysDif" placeholder="0" min=0 max=9000 step=1 value='<?php echo $user['maxDaysDif']; ?>'>
+            <div class="input-group-addon">месяцев с премьеры ≤</div>
+            <input name="maxDaysDif" type="number" class="form-control" style="width: 60px" id="maxDaysDif" placeholder="0" min=0 max=9000 step=1 value='<?php echo $user['maxDaysDif']; ?>'>
         </div>
       </div>
       <div class="form-group">
@@ -38,7 +38,7 @@
         </div>
       </div>
       <div class="form-group">
-        <label class="sr-only" for="translateQuality">Перевод не хуже, чем</label>
+        <label class="sr-only" for="translateQuality">перевод не хуже, чем</label>
         <div class="input-group">
             <div class="input-group-addon">перевод не хуже, чем</div>
             <select name="translateQuality" class="form-control">
@@ -47,6 +47,16 @@
               <option value="2" <?php echo $user['translateQuality']==2?"selected":""; ?>>любительский</option>
               <option value="1" <?php echo $user['translateQuality']==1?"selected":""; ?>>с TS</option>
               <option value="0" <?php echo $user['translateQuality']==0?"selected":""; ?>>оригинал</option>
+            </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="sr-only" for="sortType">сортировка по</label>
+        <div class="input-group">
+            <div class="input-group-addon">сортировка по</div>
+            <select name="sortType" class="form-control">
+              <option value="0" <?php echo $user['sortType']==0?"selected":""; ?>>пирам</option>
+              <option value="1" <?php echo $user['sortType']==1?"selected":""; ?>>новизне</option>
             </select>
         </div>
       </div>

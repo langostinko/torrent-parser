@@ -49,8 +49,9 @@
         $onlyNewTor = $user['onlyNewTor'] = $settings['onlyNewTor'];
         $minVotes = $user['minVotes'] = $settings['minVotes'];
         $translateQuality = $user['translateQuality'] = $settings['translateQuality'];
+        $sortType = $user['sortType'] = $settings['sortType'];
         if ($userId != 3)
-            mysqli_query($GLOBALS['mysqli'], "UPDATE users SET quality=$quality, minRating=$minRating, maxDaysDif=$maxDaysDif, onlyNewTor=$onlyNewTor, minVotes=$minVotes, translateQuality=$translateQuality WHERE id=$userId");
+            mysqli_query($GLOBALS['mysqli'], "UPDATE users SET quality=$quality, minRating=$minRating, maxDaysDif=$maxDaysDif, onlyNewTor=$onlyNewTor, minVotes=$minVotes, translateQuality=$translateQuality, sortType=$sortType WHERE id=$userId");
         $_SESSION["user"] = $user;
     }
 
