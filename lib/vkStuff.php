@@ -45,9 +45,9 @@
                           'client_secret' => \pass\VK::$client_secret,
                           'code'=>$_GET['code'],
                           'redirect_uri'=>\pass\VK::$redirect_uri);
-            $result = file_get_contents("https://oauth.vk.com/access_token?".http_build_query($data));
+            $result = @file_get_contents("https://oauth.vk.com/access_token?".http_build_query($data));
             $result = json_decode($result, true);
-            if (array_key_exists('access_token', $result)) {
+            if (@array_key_exists('access_token', $result)) {
                 $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM users WHERE vkid=" . $result['user_id']);
                 if (!mysqli_num_rows($sqlresult))
                     mysqli_query($GLOBALS['mysqli'], "INSERT INTO users (vkid) VALUES(" . $result['user_id'] . ")");

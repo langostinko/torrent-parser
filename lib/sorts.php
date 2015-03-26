@@ -20,8 +20,10 @@ function cmpBySeedLeech(&$a, &$b) {
 }
 
 function cmpByRatingLeech(&$a, &$b) {
-    $a['sortVal'] = exp(-($a["totalLeech"]+$a["totalSeed"])/5000.0)*exp($a['kinopoiskRating']);
-    $b['sortVal'] = exp(-($b["totalLeech"]+$b["totalSeed"])/5000.0)*exp($b['kinopoiskRating']);
+    $aPeer = max($a["totalLeech"]+$a["totalSeed"],$a['max_peers']);
+    $bPeer = max($b["totalLeech"]+$b["totalSeed"],$b['max_peers']);
+    $a['sortVal'] = exp(-$aPeer/5000.0)*exp($a['kinopoiskRating']);
+    $b['sortVal'] = exp(-$bPeer/5000.0)*exp($b['kinopoiskRating']);
     return $a["sortVal"] < $b["sortVal"];
 }
 
@@ -100,6 +102,7 @@ function sortBySeedLeech(&$movies, $user) {
                     "id"=>$key,
                     "totalSeed"=>$movie['totalSeed'],
                     "totalLeech"=>$movie['totalLeech'],
+                    "max_peers"=>$movie['max_peers'],
                     "firstOcc"=>$movie['firstOcc'],
                     "imdbRating"=>(float)@$movie['description']['imdbRating'],
                     "kinopoiskRating"=>(float)@$movie['description']['kinopoiskRating'],
