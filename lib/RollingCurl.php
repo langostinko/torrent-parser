@@ -5,6 +5,8 @@ Released under Apache License 2.0
 Maintained by Alexander Makarov, http://rmcreative.ru/
 $Id$
 */
+include_once(__DIR__."/defines.php");
+
 /**
  * Class that represent a single curl request
  */
@@ -80,7 +82,11 @@ class RollingCurl {
 		CURLOPT_SSL_VERIFYPEER => 0,
         CURLOPT_RETURNTRANSFER => 1,
         CURLOPT_CONNECTTIMEOUT => 30,
-        CURLOPT_TIMEOUT => 30
+        CURLOPT_TIMEOUT => 30,
+        //PROXY
+        CURLOPT_PROXY => PROXY,
+        CURLOPT_FOLLOWLOCATION => 1,
+        CURLOPT_RETURNTRANSFER => 1,
 	);
 	
     /**
