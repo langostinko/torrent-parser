@@ -142,7 +142,6 @@ function updateLinks(){
         usleep(100*1000);
     }
     echo count($result) . " links updated\n";
-    exit();
 }
 
 function updateMovies(){

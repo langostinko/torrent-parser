@@ -1,5 +1,6 @@
 <?php
 include_once(__DIR__."/AbstractLoader.php");
+include_once(__DIR__.'/../defines.php');
 include_once(__DIR__.'/../lib.php');
 include_once(__DIR__.'/../simple_html_dom.php');
 
@@ -105,7 +106,12 @@ class RutorLoader extends AbstractLoader {
     function load() {
         $this->result = array();
 
-        \RollingCurl::$rc->get($this->link, null, null, array("callback"=>array($this, "getRutorCallback")) );
+        \RollingCurl::$rc->get($this->link, null, 
+            array(//PROXY
+                CURLOPT_PROXY => PROXY,
+                CURLOPT_FOLLOWLOCATION => 1,
+                CURLOPT_RETURNTRANSFER => 1), 
+            array("callback"=>array($this, "getRutorCallback")) );
     }
 
     function getResult() {
