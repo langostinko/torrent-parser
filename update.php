@@ -1,8 +1,8 @@
 <?php
 include_once __DIR__."/lib/lib.php";
-include_once __DIR__."/lib/libPirate.php";
-include_once __DIR__."/lib/libRutor.php";
-include_once __DIR__."/lib/libSeedoff.php";
+include_once __DIR__."/lib/loaders/RutorLoader.php";
+include_once __DIR__."/lib/loaders/NNMLoader.php";
+include_once __DIR__."/lib/loaders/libSeedoff.php";
 require_once __DIR__."/lib/RollingCurl.php";
 
 function deleteBanned() {
@@ -62,59 +62,76 @@ function updateLinks(){
     // the window size determines how many simultaneous requests to allow.  
     RollingCurl::$rc->window_size = 10;
 
+    //List of tracker loaders
+    $loaders = array();
     $rutorMain = RUTORROOT;
-    $resRutor1 = new Rutor;
-    $resRutor1->getRutor("$rutorMain/browse/0/1/0/2/");
-    $resRutor2 = new Rutor;
-    $resRutor2->getRutor("$rutorMain/browse/1/1/0/2/");
-    $resRutor3 = new Rutor;
-    $resRutor3->getRutor("$rutorMain/browse/2/1/0/2/");
-    $resRutor4 = new Rutor;
-    $resRutor4->getRutor("$rutorMain/browse/3/1/0/2/");
-    $resRutor5 = new Rutor;
-    $resRutor5->getRutor("$rutorMain/browse/4/1/0/2/");
-    $resRutor6 = new Rutor;
-    $resRutor6->getRutor("$rutorMain/browse/5/1/0/2/");
-    $resRutor7 = new Rutor;
-    $resRutor7->getRutor("$rutorMain/browse/6/1/0/2/");
-    $resRutor8 = new Rutor;
-    $resRutor8->getRutor("$rutorMain/browse/7/1/0/2/");
-    $resRutor9 = new Rutor;
-    //$resRutor9->getRutor("$rutorMain/browse/8/1/0/2/");
-    $resRutor10 = new Rutor;
-    //$resRutor10->getRutor("$rutorMain/browse/9/1/0/2/");
-    $resRutor11 = new Rutor;
-    $resRutor11->getRutor("$rutorMain/browse/0/7/0/2/");
-    $resRutor12 = new Rutor;
-    $resRutor12->getRutor("$rutorMain/browse/0/5/0/2");
-    flush();
+    $loaders[] = new RutorLoader("$rutorMain/browse/0/1/0/2/");
+    $loaders[] = new RutorLoader("$rutorMain/browse/0/1/0/2/");
+    $loaders[] = new RutorLoader("$rutorMain/browse/1/1/0/2/");
+    $loaders[] = new RutorLoader("$rutorMain/browse/2/1/0/2/");
+    $loaders[] = new RutorLoader("$rutorMain/browse/3/1/0/2/");
+    $loaders[] = new RutorLoader("$rutorMain/browse/4/1/0/2/");
+    $loaders[] = new RutorLoader("$rutorMain/browse/5/1/0/2/");
+    $loaders[] = new RutorLoader("$rutorMain/browse/6/1/0/2/");
+    $loaders[] = new RutorLoader("$rutorMain/browse/7/1/0/2/");
+    $loaders[] = new RutorLoader("$rutorMain/browse/8/1/0/2/");
+    $loaders[] = new RutorLoader("$rutorMain/browse/9/1/0/2/");
+    $loaders[] = new RutorLoader("$rutorMain/browse/0/7/0/2/");
+    $loaders[] = new RutorLoader("$rutorMain/browse/0/5/0/2");
     
-    $resSeedoff = array();
-    $resSeedoff = seedoff\getSeedoff();
-    $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=14&options=0&order=5&by=2&pages=2"));
-    $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=14&options=0&order=5&by=2&pages=3"));
-    /*$resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=14&options=0&order=5&by=2&pages=4"));
-    $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=14&options=0&order=5&by=2&pages=5"));
-    $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=14&options=0&order=5&by=2&pages=6"));*/
-    $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=64&options=0&order=5&by=2&pages=1"));
-    //$resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=64&options=0&order=5&by=2&pages=2"));
-    flush();
+    $NNMData = array(
+        "prev_sd" => 0,
+        "prev_a" => 0,
+        "prev_my" => 0,
+        "prev_n" => 0,
+        "prev_shc" => 0,
+        "prev_shf" => 1,
+        "prev_sha" => 1,
+        "prev_shs" => 0,
+        "prev_shr" => 0,
+        "prev_sht" => 0,
+        "f[0]" => 270,
+        "f[1]" => 218,
+        "o" => 10,
+        "s" => 2,
+        "tm" => -1,
+        "ta" => -1,
+        "sns" => -1,
+        "sds" => -1,
+        "nm" => "",
+        "pn" => "");
+    $loaders[] = new NNMLoader("http://nnm-club.me/forum/tracker.php", $NNMData);
 
+    /*
     $resPirate1 = new Pirate;
     $resPirate1->getPirateBay("https://pirateproxy.sx/browse/207/0/7");
     $resPirate2 = new Pirate;
     $resPirate2->getPirateBay("https://pirateproxy.sx/browse/207/1/7");
     $resPirate3 = new Pirate;
     $resPirate3->getPirateBay("https://pirateproxy.sx/browse/201/0/7");
+    $resPirate = array_merge($resPirate1->result, $resPirate2->result, $resPirate3->result, $resRutor, $resSeedoff);
     flush();
+    */
+
+    foreach ($loaders as $loader)
+        $loader->load();
 
     RollingCurl::$rc->execute();
-    $resRutor = array_merge($resRutor1->result, $resRutor2->result, $resRutor3->result, $resRutor4->result, $resRutor5->result, 
-                            $resRutor6->result, $resRutor7->result, $resRutor8->result, $resRutor9->result, $resRutor10->result,
-                            $resRutor11->result, $resRutor12->result);
-    $resPirate = array_merge($resPirate1->result, $resPirate2->result, $resPirate3->result, $resRutor, $resSeedoff);
     
-    foreach($resPirate as $cur) {
+    //result array with torrent infos
+    $result = array();
+    foreach ($loaders as $loader) {
+        $result += $loader->getResult();
+    }
+
+    $resSeedoff = array();
+    $resSeedoff = seedoff\getSeedoff();
+    $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=14&options=0&order=5&by=2&pages=2"));
+    $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=14&options=0&order=5&by=2&pages=3"));
+    $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=64&options=0&order=5&by=2&pages=1"));
+    $result += $resSeedoff;
+
+    foreach($result as $cur) {
         if (trySkip($cur))
             continue;
     
@@ -124,7 +141,8 @@ function updateLinks(){
         addLink($cur);
         usleep(100*1000);
     }
-    echo count($resPirate) . " links updated\n";
+    echo count($result) . " links updated\n";
+    exit();
 }
 
 function updateMovies(){

@@ -1,12 +1,16 @@
 <?php
-include_once('lib.php');
+include_once(__DIR__."/AbstractLoader.php");
+include_once(__DIR__.'/../lib.php');
+include_once(__DIR__.'/../simple_html_dom.php');
 
-class Rutor {
+class RutorLoader extends AbstractLoader {
 
-    public $result;
+    private $result;
+    private $link;
     
-    function __construct() {
+    function __construct($link) {
         $this->result = array();
+        $this->link = $link;
     }
 
     function processTd($html, &$movie){
@@ -83,7 +87,6 @@ class Rutor {
             return;
         }
 
-        include_once('simple_html_dom.php');
 		$html = str_get_html($response);
 		if (!$html) {
 		    echo "\tfailed to convert DOM\n";
@@ -99,10 +102,14 @@ class Rutor {
 		echo "\t " . count($this->result) . " new links found\n";
     }
 
-    function getRutor($link = "http://alt.rutor.org/browse/0/1/0/2/"){
+    function load() {
         $this->result = array();
 
-        \RollingCurl::$rc->get($link, null, null, array("callback"=>array($this, "getRutorCallback")) );
+        \RollingCurl::$rc->get($this->link, null, null, array("callback"=>array($this, "getRutorCallback")) );
+    }
+
+    function getResult() {
+        return (array)($this->result);
     }
 
 }

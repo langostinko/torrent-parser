@@ -84,9 +84,9 @@ class RollingCurl {
         CURLOPT_CONNECTTIMEOUT => 30,
         CURLOPT_TIMEOUT => 30,
         //PROXY
-        CURLOPT_PROXY => PROXY,
+        /*CURLOPT_PROXY => PROXY,
         CURLOPT_FOLLOWLOCATION => 1,
-        CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_RETURNTRANSFER => 1,*/
 	);
 	
     /**

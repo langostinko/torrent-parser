@@ -1,7 +1,8 @@
 <?php
     namespace seedoff;
 
-    include_once('lib.php');    
+    include_once(__DIR__.'/../lib.php');
+    include_once(__DIR__.'/../simple_html_dom.php');
     
     $result = array();
     
@@ -57,7 +58,6 @@
         global $result;
         $result = array();
 
-        include_once('simple_html_dom.php');
 		$html = file_get_html($link);
 		if (!$html) {
 		    echo "failed\n";
