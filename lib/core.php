@@ -294,7 +294,7 @@
                     $json['Poster'] = $img;
             } else
                 unset($json['Poster']);
-            array_merge(@$desc, $json);
+            $desc = array_merge(@$desc, $json);
             return true;
         }
         return false;
