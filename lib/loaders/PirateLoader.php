@@ -3,7 +3,7 @@ include_once(__DIR__."/AbstractLoader.php");
 include_once(__DIR__.'/../lib.php');
 include_once(__DIR__.'/../simple_html_dom.php');
 
-class Pirate extends AbstractLoader {
+class PirateLoader extends AbstractLoader {
     
     public $result;
     private $link;

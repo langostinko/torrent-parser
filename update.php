@@ -2,6 +2,7 @@
 include_once __DIR__."/lib/lib.php";
 include_once __DIR__."/lib/loaders/RutorLoader.php";
 include_once __DIR__."/lib/loaders/NNMLoader.php";
+include_once __DIR__."/lib/loaders/PirateLoader.php";
 include_once __DIR__."/lib/loaders/libSeedoff.php";
 require_once __DIR__."/lib/RollingCurl.php";
 
@@ -66,7 +67,6 @@ function updateLinks(){
     $loaders = array();
     $rutorMain = RUTORROOT;
     $loaders[] = new RutorLoader("$rutorMain/browse/0/1/0/2/");
-    $loaders[] = new RutorLoader("$rutorMain/browse/0/1/0/2/");
     $loaders[] = new RutorLoader("$rutorMain/browse/1/1/0/2/");
     $loaders[] = new RutorLoader("$rutorMain/browse/2/1/0/2/");
     $loaders[] = new RutorLoader("$rutorMain/browse/3/1/0/2/");
@@ -123,7 +123,7 @@ function updateLinks(){
     //result array with torrent infos
     $result = array();
     foreach ($loaders as $loader) {
-        $result += $loader->getResult();
+        $result = array_merge($result, $loader->getResult());
     }
 
     $resSeedoff = array();
@@ -131,7 +131,7 @@ function updateLinks(){
     $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=14&options=0&order=5&by=2&pages=2"));
     $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=14&options=0&order=5&by=2&pages=3"));
     $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=64&options=0&order=5&by=2&pages=1"));
-    $result += $resSeedoff;
+    $result = array_merge($result, $resSeedoff);
 
     foreach($result as $cur) {
         if (trySkip($cur))
