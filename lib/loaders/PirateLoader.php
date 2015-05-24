@@ -1,9 +1,17 @@
 <?php
-include_once('lib.php');
+include_once(__DIR__."/AbstractLoader.php");
+include_once(__DIR__.'/../lib.php');
+include_once(__DIR__.'/../simple_html_dom.php');
 
-class Pirate {
+class Pirate extends AbstractLoader {
     
     public $result;
+    private $link;
+    
+    function __construct($link) {
+        $this->result = array();
+        $this->link = $link;
+    }
 
     function processDesc($str, &$movie){
         $str = html_entity_decode($str);
@@ -26,7 +34,7 @@ class Pirate {
         $res = $html->find('div.detName a',0);
         if (!$res)
             return false;
-        $link = "http://thepiratebay.se".$res->href;
+        $link = PIRATEROOT.$res->href;
         $movie['link'] = $link;
         if (trySkip($movie)) {
             return false;
@@ -68,8 +76,6 @@ class Pirate {
             return;
         }
 
-        include_once('simple_html_dom.php');
-
         $html = str_get_html($response);
 		if (!$html) {
 		    echo "\tfailed to convert DOM\n";
@@ -90,9 +96,14 @@ class Pirate {
 		echo "\t " . count($this->result) . " new links found\n";
     }
 
-    function getPirateBay($link = "http://thepiratebay.se/browse/201/0/7/0", $cnt = 50){
+    function load($cnt = 50) {
         $this->result = array();
-        \RollingCurl::$rc->get($link, null, null, array("callback"=>array($this, "getPirateCallback"), "cnt"=>$cnt) );
+
+        \RollingCurl::$rc->get($this->link, null, null, array("callback"=>array($this, "getPirateCallback"), "cnt"=>$cnt) );
+    }
+
+    function getResult() {
+        return (array)($this->result);
     }
     
 }

@@ -102,6 +102,8 @@ function updateLinks(){
         "pn" => "");
     $loaders[] = new NNMLoader("http://nnm-club.me/forum/tracker.php", $NNMData);
 
+    $pirateMain = PIRATEROOT;
+    $loaders[] = new PirateLoader("$pirateMain/browse/201/0/7/0");
     /*
     $resPirate1 = new Pirate;
     $resPirate1->getPirateBay("https://pirateproxy.sx/browse/207/0/7");
