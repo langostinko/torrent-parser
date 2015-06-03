@@ -48,7 +48,8 @@
 <html lang="en">
 <?php
     $title = array_key_exists("titleRu",$desc) ? $desc['titleRu'] : $desc['Title'];
-    $metaDescription = "скачать торрент " . $bestQuality['quality'] . ", перевод " . $bestQuality['translateQuality'];
+    $metaDescription = "скачать торрент " . $bestQuality['quality'] . ", перевод: " . $bestQuality['translateQuality'] . ", Кинопоиск: " . @$desc['kinopoiskRating'] . ", премьера: " . date("j M Y",$movie['Release']);
+    $imgSrc = array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster'];
     @$metaTitle .= "$title - свежие торренты";
     include "html/head.php";
 ?>
@@ -99,7 +100,8 @@
     <div class="container" itemscope itemtype="http://schema.org/Movie">
     <?php if ($movie) { ?>
         <div class="movLeft">
-            <img itemprop="image" class="bigPoster" src='<?php echo array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster']; ?>' />
+            <link rel="image_src" href='<?php echo $imgSrc; ?>' >
+            <img itemprop="image" class="bigPoster" src='<?php echo $imgSrc; ?>' />
             <table class="movDesc table table-condensed">
             <tbody>
                 <tr class="movDescName">
@@ -167,6 +169,42 @@
                 </tr>
             </tbody>
             </table>
+
+        <?php if (isAdmin($user['id'])) {?>
+        <!-- VK Share -->
+        <code id="vkResult"></code>
+        <script type="text/javascript">
+        function postVK() {
+            $.post( "ajax.php", { method: "vkUploadPhoto", movieId: <?=$movieId?> })
+                .done(function( data ) {
+                $('#vkResult').html(data);
+                obj = JSON.parse(data);
+                VK.Api.call(
+                    'wall.post', 
+                    {
+                        //owner_id: 19309348,
+                        owner_id: -87710543,
+                        from_group: 1,
+                        message: "<?=$title;?>\n\n" + 
+                                "качество: <?=$bestQuality['quality']?> <?=$bestQuality['translateQuality']?>\n" + 
+                                "премьера: <?=date("j M Y",$movie['Release'])?>\n" + 
+                                "Кинопоиск: <?=@$desc['kinopoiskRating']?>\n" + 
+                                "жанр: <?=array_key_exists("жанр", $desc)?$desc['жанр']:@$desc['Genre']?>\n" + 
+                        //        "режиссер: <?=array_key_exists("режиссер", $desc)?$desc['режиссер']:@$desc['Director']?>\n" + 
+                        //        "актеры: <?=array_key_exists("актеры", $desc)?$desc['актеры']:@$desc['Actors']?>\n" +
+                                "<?="http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"?>",
+                        attachments:  "photo" + obj.response[0].owner_id + "_" + obj.response[0].id + ",<?="http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"?>",
+                    }, 
+                    function(r) {
+                        $('#vkResult').html(JSON.stringify(r));
+                    }
+                );
+            });
+        }
+        </script>
+        <input type="button" value="VK" onclick="postVK()"/>
+        <?php } ?>
+        
         </div>
         <div class="movRight">
             <div id="movieTrailerDiv" class="embed-responsive embed-responsive-16by9" style="display:none;">

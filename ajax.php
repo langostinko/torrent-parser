@@ -33,6 +33,9 @@ if ($user && $login != 'wise guest' && array_key_exists('method', $_POST))
         case "unIgnoreMovie":
             unIgnoreMovie((int)$user['id'], (int)$_POST['movieId']);
             break;
+        case "vkUploadPhoto":
+            echo vkUploadPhoto((int)$_POST['movieId'], $user['token']);
+            break;
         default:
             echo "method not specified\n";
     }    

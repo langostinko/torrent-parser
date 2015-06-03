@@ -38,6 +38,42 @@
         return $result;
     }
     
+    function vkUploadPhoto($movieId, $token) {
+        //get URL to post image
+        $data = array('group_id' => 87710543,
+                      'v' => 5.33,
+                      'access_token'=>$token);
+        $result = file_get_contents("https://api.vk.com/method/photos.getWallUploadServer?".http_build_query($data));
+        $result = json_decode($result, true);
+
+        //post image
+        $target_url = $result['response']['upload_url'];
+        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT description FROM movies WHERE id=$movieId");
+        $row = mysqli_fetch_assoc($sqlresult);
+        $desc = json_decode($row['description'], true);
+        $imgSrc = array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster'];
+        $file_name_with_full_path = realpath($imgSrc);
+        $post = array('photo'=>'@'.$file_name_with_full_path);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL,$target_url);
+        curl_setopt($ch, CURLOPT_POST,1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        $result = curl_exec($ch);
+        curl_close ($ch);
+        $result = json_decode($result, true);
+
+        //save image
+        $data = array('group_id' => 87710543,
+                      'photo' => $result['photo'],
+                      'server' => $result['server'],
+                      'hash' => $result['hash'],
+                      'v' => 5.33,
+                      'access_token'=>$token);
+        $result = file_get_contents("https://api.vk.com/method/photos.saveWallPhoto?".http_build_query($data));
+        return $result;
+    }
+    
     function vkAuth(){
         //vk auth
         if (array_key_exists("code", $_GET)) {

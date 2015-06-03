@@ -10,6 +10,10 @@
     session_start();
     setcookie(session_name(),session_id(),time()+$lifetime);
     //
+    
+    function isAdmin($id) {
+        return $id == 25;
+    }
 
     function printTime() {
         $time = microtime(true) - $GLOBALS['head_time_start'];
@@ -77,10 +81,8 @@
             return true;
         
         //login as guest by default
-        if (array_key_exists('new_movies', $_GET)) {
-            echo "asdfasdfas!\n";
+        if (array_key_exists('new_movies', $_GET))
             $guestLogin = 'new_movies';
-        }
         $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM users WHERE login='$guestLogin'" );
         $_SESSION['user'] = mysqli_fetch_assoc($sqlresult);
         $_SESSION['expires'] = time() + 30*24*60*60;

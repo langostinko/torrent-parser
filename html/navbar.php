@@ -51,7 +51,7 @@
     <?php } else { ?>
      <form class="navbar-form navbar-right" role="form" action='https://oauth.vk.com/authorize' method='get'>  
          <input type='hidden' name='client_id' value='4586424'/>
-         <input type='hidden' name='scope' value=''/>
+         <input type='hidden' name='scope' value='<?php echo array_key_exists("admin", $_GET)?"4":""; ?>'/>
          <input type='hidden' name='redirect_uri' value='<?php echo \pass\VK::$redirect_uri; ?>'/>
          <input type='hidden' name='response_type' value='code'/>
          <input type='hidden' name='v' value='5.25'/>
