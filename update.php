@@ -61,7 +61,7 @@ function updateLinks(){
     
     RollingCurl::$rc = new RollingCurl("main_callback");
     // the window size determines how many simultaneous requests to allow.  
-    RollingCurl::$rc->window_size = 10;
+    RollingCurl::$rc->window_size = 5;
 
     //List of tracker loaders
     $loaders = array();

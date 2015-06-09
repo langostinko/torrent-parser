@@ -6,6 +6,7 @@ Maintained by Alexander Makarov, http://rmcreative.ru/
 $Id$
 */
 include_once(__DIR__."/defines.php");
+include_once(__DIR__."/ProxyFinder.php");
 
 /**
  * Class that represent a single curl request
@@ -81,6 +82,7 @@ class RollingCurl {
     protected $options = array(
 		CURLOPT_SSL_VERIFYPEER => 0,
         CURLOPT_RETURNTRANSFER => 1,
+        CURLOPT_FOLLOWLOCATION => 1,
         CURLOPT_CONNECTTIMEOUT => 30,
         CURLOPT_TIMEOUT => 30,
 	);
@@ -193,12 +195,12 @@ class RollingCurl {
      */
     public function execute($window_size = null) {
         // rolling curl window must always be greater than 1
-        if (sizeof($this->requests) == 1) {
+        /*if (sizeof($this->requests) == 1) {
             return $this->single_curl();
-        } else {
+        } else {*/
             // start the rolling curl. window_size is the max number of simultaneous connections
             return $this->rolling_curl($window_size);
-        }
+        //}
     }
     /**
      * Performs a single curl request
@@ -261,14 +263,24 @@ class RollingCurl {
             while($done = curl_multi_info_read($master)) {
                 // get the info and content returned on the request
                 $info = curl_getinfo($done['handle']);
-                $output = curl_multi_getcontent($done['handle']);
-                // send the return values to the callback function.
-                $callback = $this->callback;
-                if (is_callable($callback)){
-	            $key = (string)$done['handle'];
-                    $request = $this->requests[$this->requestMap[$key]];
-                    unset($this->requestMap[$key]);
-                    call_user_func($callback, $output, $info, $request);
+                $key = (string)$done['handle'];
+                $request = $this->requests[$this->requestMap[$key]];
+                $options = $this->get_options($request);
+                //try with proxy
+                if ($info['http_code'] != 200 && $proxy = ProxyFinder::findProxy($info['url'], $options[CURLOPT_PROXY])) {
+                    $options[CURLOPT_PROXY] = $proxy;
+                    $request->options = $options;
+                    echo "try " . $info['url'] . " with proxy: $proxy\n";
+                    $this->requests[] = $request;
+                    $running = 1;
+                } else {
+                    $output = curl_multi_getcontent($done['handle']);
+                    // send the return values to the callback function.
+                    $callback = $this->callback;
+                    if (is_callable($callback)){
+                        unset($this->requestMap[$key]);
+                        call_user_func($callback, $output, $info, $request);
+                    }
                 }
                 // start a new request (it's important to do this before removing the old one)
                 if ($i < sizeof($this->requests) && isset($this->requests[$i]) && $i < count($this->requests)) {
