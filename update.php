@@ -91,7 +91,6 @@ function updateLinks(){
         "prev_shr" => 0,
         "prev_sht" => 0,
         "f[0]" => 270,
-        "f[1]" => 218,
         "o" => 10,
         "s" => 2,
         "tm" => -1,
@@ -100,6 +99,11 @@ function updateLinks(){
         "sds" => -1,
         "nm" => "",
         "pn" => "");
+    $loaders[] = new NNMLoader("http://nnm-club.me/forum/tracker.php", $NNMData);
+    $NNMData["f[0]"] = 218;
+    $loaders[] = new NNMLoader("http://nnm-club.me/forum/tracker.php", $NNMData);
+    $NNMData["f[0]"] = 217;
+    $NNMData["f[1]"] = 954;
     $loaders[] = new NNMLoader("http://nnm-club.me/forum/tracker.php", $NNMData);
 
     $pirateMain = PIRATEROOT;
