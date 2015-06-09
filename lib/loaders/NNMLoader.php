@@ -40,7 +40,7 @@ class NNMLoader extends AbstractLoader {
         if ($pos !== FALSE)
             $title = trim(substr($title, 0, $pos));
         $pos = strrpos($title, '/') + 1;
-        if ($pos != 1)
+        if ($pos > 4)
             $title = trim(substr($title, $pos));
         extractString($title, $movie);
         return true;
