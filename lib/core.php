@@ -328,6 +328,8 @@
         if (!$row)
             $row['description'] = "";
         $movie['description'] = json_decode($row['description'], true);
+        if (!$movie['description'])
+            $movie['description'] = array();
 
         $q = "UPDATE movies SET updated=now()";            
 
