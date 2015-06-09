@@ -135,13 +135,13 @@
                     <meta itemprop="worstRating" content="0"/>
                     </td>
                 </tr>
-                <tr itemtype="http://schema.org/AggregateRating" itemscope itemprop="aggregateRating">
+                <!--<tr itemtype="http://schema.org/AggregateRating" itemscope itemprop="aggregateRating">
                     <td>Metascore</td>
                     <td itemprop="ratingValue"><?php echo @$desc['Metascore']; ?>
                     <meta itemprop="bestRating" content="100"/>
                     <meta itemprop="worstRating" content="0"/>
                     </td>
-                </tr>
+                </tr>-->
                 <tr>
                     <td>премьера</td>
                     <td><?php echo date("j M Y",$movie['Release']); ?></td>
@@ -155,17 +155,22 @@
                     <td>режиссер</td>
                     <td itemprop="director"><?php echo array_key_exists("режиссер", $desc)?$desc['режиссер']:@$desc['Director']; ?></td>
                 </tr>
-                <tr>
+                <!--<tr>
                     <td>сценарист</td>
                     <td itemprop="author"><?php echo array_key_exists("сценарий", $desc)?$desc['сценарий']:@$desc['Writer']; ?></td>
                 </tr>
                 <tr>
                     <td>продюсер</td>
                     <td itemprop="author"><?php echo array_key_exists("продюсер", $desc)?$desc['продюсер']:@$desc['Producer']; ?></td>
-                </tr>
+                </tr>-->
                 <tr>
                     <td>актеры</td>
                     <td itemprop="actors"><?php echo array_key_exists("актеры", $desc)?$desc['актеры']:@$desc['Actors']; ?></td>
+                </tr>
+                <tr>
+                    <td colspan="2"> 
+                        <span itemprop="description"><?php echo array_key_exists('plotRu', $desc)?$desc['plotRu']:""; ?></span>
+                    </td>
                 </tr>
             </tbody>
             </table>
