@@ -150,11 +150,11 @@
 
     function extractTranslate($str, &$movie){
     	$result = array();
-    	$res = preg_match_all('/[\|\]] *[\W](лицензия|чистый звук|звук с ts|Звук с CAMRip|iTunes|BaibaKo|line)[\W]/isuU', $str.' ', $result);
+    	$res = preg_match_all('/[\|\[] *(лицензия|чистый звук|звук с ts|Звук с CAMRip|iTunes|BaibaKo|line)[\W]/isuU', $str.' ', $result);
     	if (!$result[0])
-        	$res = preg_match_all('/[\|\]].*[\W](Есарев|Матвеев)[\W]/isuU', $str.' ', $result);
+        	$res = preg_match_all('/[\|\[].*(Есарев|Матвеев)[\W]/isuU', $str.' ', $result);
     	if (!$result[0])
-        	$res = preg_match_all('/[\|\]] *[\W](l|l1|l2|p|p2|D|A|А|sub|vo)[\W]/isuU', $str.' ', $result);
+        	$res = preg_match_all('/[\|\[] *(l|l1|l2|p|p2|D|A|А|sub|vo)[\W]/isuU', $str.' ', $result);
     	if ($result[0])
             $movie['translateQuality'] = mb_strtoupper($result[1][0], 'UTF-8');
     }
