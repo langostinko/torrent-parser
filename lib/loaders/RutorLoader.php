@@ -25,7 +25,7 @@ class RutorLoader extends AbstractLoader {
         $title = html_entity_decode($res->plaintext, ENT_QUOTES, "UTF-8");
         $movie['description'] = $title;
         $pos = strrpos($title, '/') + 1;
-        if ($pos != 1)
+        if ($pos > 4)
             $title = trim(substr($title, $pos));
 
         $result = array();
