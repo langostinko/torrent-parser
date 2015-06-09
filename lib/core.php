@@ -253,6 +253,7 @@
 
         $desc['kinopoiskId'] = $kpid;
         $desc['titleRu'] = html_entity_decode(trim(iconv('windows-1251', 'UTF-8', $html->find('h1[class=moviename-big]',0)->plaintext), "., "), ENT_QUOTES, "UTF-8");
+        $desc['plotRu'] = html_entity_decode(iconv('windows-1251', 'UTF-8', $html->find('div[itemprop=description]',0)->plaintext), ENT_QUOTES, "UTF-8");
         $desc['kinopoiskRating'] = iconv('windows-1251', 'UTF-8', $html->find('span[class=rating_ball]',0)->plaintext);
         $prem = $html->find('td[id=div_world_prem_td2]',0);
         if (!($prem && $prem->find('div[class=prem_ical]',0)))
