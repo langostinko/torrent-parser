@@ -167,7 +167,8 @@ function updateMovies(){
     
     $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM `movies` WHERE `movies`.id in (SELECT movieId FROM links)");
     while ($row = mysqli_fetch_assoc($sqlresult))
-        if (!trySkipMovie($row)) {
+        if ($reason = trySkipMovie($row)) {
+            echo "Reason: $reason\n";
             addMovie($row);
             echo "\t" . $row['title'] . "\n";
             print_r($row);

@@ -149,81 +149,87 @@
     }
 
     function extractTranslate($str, &$movie){
-    	$result = array();
-    	$res = preg_match_all('/[\|\[] *(лицензия|чистый звук|звук с ts|Звук с CAMRip|iTunes|BaibaKo|line)[\W]/isuU', $str.' ', $result);
-    	if (!$result[0])
-        	$res = preg_match_all('/[\|\[].*(Есарев|Матвеев)[\W]/isuU', $str.' ', $result);
-    	if (!$result[0])
-        	$res = preg_match_all('/[\|\[] *(l|l1|l2|p|p2|D|A|А|sub|vo)[\W]/isuU', $str.' ', $result);
-    	if ($result[0])
+        $result = array();
+        $res = preg_match_all('/[\|\[] *(лицензия|чистый звук|звук с ts|Звук с CAMRip|iTunes|BaibaKo|line)[\W]/isuU', $str.' ', $result);
+        if (!$result[0])
+            $res = preg_match_all('/[\|\[].*(Есарев|Матвеев)[\W]/isuU', $str.' ', $result);
+        if (!$result[0])
+            $res = preg_match_all('/[\|\[] *(l|l1|l2|p|p2|D|A|А|sub|vo)[\W]/isuU', $str.' ', $result);
+        if ($result[0])
             $movie['translateQuality'] = mb_strtoupper($result[1][0], 'UTF-8');
     }
 
     function extractString($str, &$movie){
         $str = str_replace("."," ",$str);
         $str = str_replace("_"," ",$str);
-    	
-    	$result = array();
-    	$res = preg_match_all('/\d\d\d\d/isuU', $str, $result, PREG_OFFSET_CAPTURE);
-    	$pos = strlen($str);
-    	if ($result[0])
+        
+        $result = array();
+        $res = preg_match_all('/\d\d\d\d/isuU', $str, $result, PREG_OFFSET_CAPTURE);
+        $pos = strlen($str);
+        if ($result[0])
             foreach ($result[0] as $value) 
                 if ($value[0] > 1920 && $value[0] < 2050) {
-            	    $movie['year'] = $value[0];
-            	    $pos = $value[1];
+                    $movie['year'] = $value[0];
+                    $pos = $value[1];
                 }
-    	$res = preg_match_all('/[\W](dvdrip|dvdscr|hdrip|нdrip|ts|tc|cam|brrip|webrip|bdrip|camrip|hdts|hdcam|hdtv|hdtvrip|telecine|web-dl|web-dlrip|bluray|bdremux|bd-remux)[\W]/isuU', $str.' ', $result, PREG_OFFSET_CAPTURE);
-    	if ($result[0]) {
+        $res = preg_match_all('/[\W](dvdrip|dvdscr|hdrip|нdrip|ts|tc|cam|brrip|webrip|bdrip|camrip|hdts|hdcam|hdtv|hdtvrip|telecine|web-dl|web-dlrip|bluray|bdremux|bd-remux)[\W]/isuU', $str.' ', $result, PREG_OFFSET_CAPTURE);
+        if ($result[0]) {
             $movie['quality'] = strtoupper($result[1][0][0]);
             $movie['quality'] = str_replace("НDRIP", "HDRIP", $movie['quality']);//н as h
             $pos = min($pos, $result[1][0][1]);
-    	}
-    	
-    	$res = preg_match_all('/french/isuU', $str, $result, PREG_OFFSET_CAPTURE);
-    	if ($result[0] && $result[0][0][1])
+        }
+        
+        $res = preg_match_all('/french/isuU', $str, $result, PREG_OFFSET_CAPTURE);
+        if ($result[0] && $result[0][0][1])
                 $pos = min($pos, $result[0][0][1]);
 
-    	$left = substr($str, 0, $pos);
+        $left = substr($str, 0, $pos);
         $left = preg_replace('/[\[\]\(\)]/', '', $left);
         $left = trim($left);
         $movie['title_approx'] = html_entity_decode($left, ENT_QUOTES, "UTF-8");
     }
     
     function trySkipMovie(&$movie) {
+        static $cache = false;
+        if (!$cache) {
+            $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT id, imdbid, kpid FROM movies WHERE updated > date_add(current_timestamp, interval -3 day)");
+            while ($row = mysqli_fetch_assoc($sqlresult)) {
+                $cache[$row['imdbid']] = $row['id'];
+                $cache[$row['kpid']] = $row['id'];
+            }
+        }
+
         $row = false;
         $idTypes = array("imdbid", "kpid");
         foreach ($idTypes as $idName) 
-            if (array_key_exists($idName, $movie) && $movie[$idName]) {
-                $id = mysqli_real_escape_string($GLOBALS['mysqli'], $movie[$idName]);
-                $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies WHERE $idName='$id' AND updated > date_add(current_timestamp, interval -3 day)");
-                if (mysqli_num_rows($sqlresult)) {
-                    $row = mysqli_fetch_assoc($sqlresult);
-                    break;
-                }
+            if (array_key_exists($idName, $movie) && $movie[$idName] && array_key_exists($movie[$idName], $cache)) {
+                $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies WHERE id=" . $cache[$movie[$idName]]);
+                $row = mysqli_fetch_assoc($sqlresult);
+                break;
             }
         if (!$row)
-            return false;
+            return "row not found in mysql";
 
         $json = json_decode($row['description'], true);
         if (!$json)
-            return false;
+            return "no json description";
         if (!$row['search'])
-            return false;
+            return "no search column";
 
         if (array_key_exists("imdbid", $movie) && $movie['imdbid']) {
             $img = "img/posters/{$movie['imdbid']}.jpg";
             $realImg = dirname( __FILE__ ) . "/../$img";
             if (array_key_exists("Poster", $json) && (!file_exists($realImg) or !filesize($realImg)) )
-                return false;
+                return "poster '$realImg' not downloaded";
         }
         if (array_key_exists("kpid", $movie) && $movie['kpid']) {
             $img = "img/posters/{$movie['kpid']}Ru.jpg";
             $realImg = dirname( __FILE__ ) . "/../$img";
             if (array_key_exists("PosterRu", $json) && (!file_exists($realImg) or !filesize($realImg)) )
-                return false;
+                return "poster '$realImg' not downloaded";
         }
         $movie['id'] = $row['id'];
-        return true;
+        return 0;
     }
     
     function getKinopoiskRating($kinopoiskId) {
@@ -311,7 +317,7 @@
     function addMovie(&$movie) {
         if (!$movie)
             return false;
-        if (trySkipMovie($movie))
+        if (trySkipMovie($movie) === 0)
             return true;
 
         $row = false;
@@ -379,6 +385,7 @@
         if (!is_array($cur) || !array_key_exists("link", $cur))
             return true;
         static $cache = false;
+        static $cachedUpdate = array();
         if (!$cache) {
             $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT md5 FROM links WHERE updated > date_add(current_timestamp, interval -1 day)");
             while ($row = mysqli_fetch_assoc($sqlresult))
@@ -387,7 +394,18 @@
         if ( array_key_exists(md5($cur['link']), $cache) && array_key_exists("seed", $cur) && array_key_exists("leech", $cur) ) {
             $seed = (int)$cur['seed'];
             $leech = (int)$cur['leech'];
-            mysqli_query($GLOBALS['mysqli'], "UPDATE links SET seed=$seed, leech=$leech, updated=NOW() WHERE md5 = '" . md5($cur['link']) . "'");
+            $cachedUpdate[] = array(md5($cur['link']), $seed, $leech);
+            if (count($cachedUpdate) >= 10) {
+                $query = "INSERT INTO links (md5,seed,leech) VALUES ";
+                for ($i = 0; $i < count($cachedUpdate); $i++) {
+                    $query .= "(\""  . $cachedUpdate[$i][0] . "\", " . $cachedUpdate[$i][1] . ", " . $cachedUpdate[$i][2] . ")";
+                    if ($i != count($cachedUpdate) - 1)
+                        $query .= ", ";
+                }
+                $query .= " ON DUPLICATE KEY UPDATE seed=VALUES(seed),leech=VALUES(leech)";
+                $cachedUpdate = array();
+                mysqli_query($GLOBALS['mysqli'], $query);
+            }
             return true;
         }
         return array_key_exists(md5($cur['link']), $cache);
