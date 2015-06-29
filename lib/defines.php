@@ -15,4 +15,6 @@
     //define("PROXY", "113.255.61.57:80");
     //define("PROXY", "183.207.229.200:80");
     //define("PROXY", null);
+
+    $BANNED = array(1288);    
 ?>

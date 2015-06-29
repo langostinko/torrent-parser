@@ -10,6 +10,7 @@
     $login = $user['login'] ? $user['login'] : $user['vkid'];
     
     $movieId = array_key_exists('id', $_GET) ? (int)$_GET['id'] : -1;
+    $ban = in_array($movieId, $BANNED);
     $movie = false;
     $desc = false;
     $ignore = false;
@@ -215,6 +216,9 @@
             <div id="movieTrailerDiv" class="embed-responsive embed-responsive-16by9" style="display:none;">
                 <iframe id="movieTrailer" class="embed-responsive-item" allowfullscreen></iframe>
             </div>
+            <?php if ($ban) { ?>
+                <b>Ссылки на торренты удалены по просьбе правообладателя</b>
+            <?php } ?>
             <table id='torrentTable' class='table table-striped table-hover' cellspacing="0" width="100%">
                 <thead>
                     <th>качество</th>
@@ -228,10 +232,14 @@
                 <tbody>
                 <?php
                     foreach($torrents as $cur) {
+                        $aS = "<a target='_blank' href='".$cur['link']."'>";
+                        $aE = "</a>";
+                        if ($ban)
+                            $aS = $aE = "";
                         echo "<tr>\n";
-                        echo "\t<td data-order='" . qualityToRool($cur['quality']) . "'><a target='_blank' href='".$cur['link']."'>".$cur['quality']."</a></td>\n";
-                        echo "\t<td data-order='" . translateQualityToRool($cur['translateQuality']) . "'><a target='_blank' href='".$cur['link']."'>".$cur['translateQuality']."</a></td>\n";
-                        echo "\t<td class='hidden-xs'><a target='_blank' href='".$cur['link']."'>".$cur['description']."</a></td>\n";
+                        echo "\t<td data-order='" . qualityToRool($cur['quality']) . "'>$aS".$cur['quality']."$aE</td>\n";
+                        echo "\t<td data-order='" . translateQualityToRool($cur['translateQuality']) . "'>$aS".$cur['translateQuality']."$aE</td>\n";
+                        echo "\t<td class='hidden-xs'>$aS".$cur['description']."$aE</td>\n";
                         echo "\t<td>".$cur['size']."</td>\n";
                         echo "\t<td>".$cur['seed']."</td>\n";
                         echo "\t<td class='hidden-xs'>".$cur['leech']."</td>\n";
