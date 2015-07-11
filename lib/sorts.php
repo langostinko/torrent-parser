@@ -35,6 +35,8 @@ function calcTotalSeedLeech(&$movies, $user) {
         if (in_array($row['movieId'], $igList))
             continue;
         
+        if (!$movies[$row['movieId']]['description'])
+            continue;
         if (qualityToRool($row['quality']) < $user['quality'])
             continue;
         if (translateQualityToRool($row['translateQuality']) < $user['translateQuality'])
