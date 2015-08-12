@@ -27,13 +27,13 @@
         while ($row = mysqli_fetch_assoc($sqlresult)) {
             $rows[] = json_decode($row['description'], true);
         }
-        foreach ($rows as $desc) {
-            if (array_key_exists('жанр', $desc))
+        foreach ($rows as $desc)
+            if (array_key_exists('жанр', $desc)) {
                 $genres = explode(", ", $desc['жанр']);
-            foreach ($genres as $value) 
-                if (!in_array($value, $vars))
-                    $vars[] = $value;
-        }
+                foreach ($genres as $value) 
+                    if (!in_array($value, $vars))
+                        $vars[] = $value;
+            }
         foreach ($rows as $desc)
             if (array_key_exists("titleRu", $desc))
                 $vars[] = mb_strtolower($desc['titleRu'], "utf-8");
