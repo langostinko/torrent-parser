@@ -5,13 +5,13 @@ connect();
 if (array_key_exists("search", $_GET)) {
     $result = array();
     $request = mysqli_escape_string($GLOBALS['mysqli'], $_GET['search']);
-    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM `movies` WHERE search LIKE '%$request%' AND `movies`.id in (SELECT movieId FROM links) ORDER BY max_peers DESC LIMIT 10");
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM `movies` WHERE search LIKE '%$request%' AND `movies`.id in (SELECT movieId FROM links) ORDER BY sum_peers DESC LIMIT 10");
     while ($row = mysqli_fetch_assoc($sqlresult)) {
         $desc = json_decode($row['description'], True);
         $result[] = array(
             "id"=>$row['id'],
             "value"=>array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title'], 
-            "max_peers"=>$row['max_peers'],
+            "sum_peers"=>$row['sum_peers'],
             "year"=> $desc['Year'],
         );
     }

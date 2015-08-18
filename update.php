@@ -66,7 +66,7 @@ function updateLinks(){
     //List of tracker loaders
     $loaders = array();
     $rutorMain = RUTORROOT;
-    $loaders[] = new RutorLoader("$rutorMain/browse/0/1/0/2/");
+    $loaders[] = new RutorLoader("$rutorMain/browse/0/1/0/2/");//foreign movies
     $loaders[] = new RutorLoader("$rutorMain/browse/1/1/0/2/");
     $loaders[] = new RutorLoader("$rutorMain/browse/2/1/0/2/");
     $loaders[] = new RutorLoader("$rutorMain/browse/3/1/0/2/");
@@ -76,8 +76,13 @@ function updateLinks(){
     $loaders[] = new RutorLoader("$rutorMain/browse/7/1/0/2/");
     $loaders[] = new RutorLoader("$rutorMain/browse/8/1/0/2/");
     $loaders[] = new RutorLoader("$rutorMain/browse/9/1/0/2/");
-    $loaders[] = new RutorLoader("$rutorMain/browse/0/7/0/2/");
-    $loaders[] = new RutorLoader("$rutorMain/browse/0/5/0/2");
+    $loaders[] = new RutorLoader("$rutorMain/browse/10/1/0/2/");
+    $loaders[] = new RutorLoader("$rutorMain/browse/11/1/0/2/");
+    $loaders[] = new RutorLoader("$rutorMain/browse/12/1/0/2/");
+    $loaders[] = new RutorLoader("$rutorMain/browse/13/1/0/2/");
+    $loaders[] = new RutorLoader("$rutorMain/browse/0/7/0/2/");//multiplication
+    $loaders[] = new RutorLoader("$rutorMain/browse/0/5/0/2");//russian movies
+    $loaders[] = new RutorLoader("$rutorMain/browse/1/5/0/2");
     
     $NNMData = array(
         "prev_sd" => 0,
@@ -160,7 +165,7 @@ function updateMovies(){
           WHERE `translateQuality` != \"ORIGINAL\"
           GROUP BY movieId
         ) x ON c.id = x.movieId
-        SET c.max_peers = GREATEST(c.max_peers, x.total)    
+        SET c.sum_peers = x.total
     "
     );
     echo mysqli_error($GLOBALS['mysqli']);
