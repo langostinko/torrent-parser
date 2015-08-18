@@ -314,10 +314,10 @@
         return implode(";", array_intersect_key($desc, array_flip($keys)));
     }
     
-    function addMovie(&$movie) {
+    function addMovie(&$movie, $force = false) {
         if (!$movie)
             return false;
-        if (trySkipMovie($movie) === 0)
+        if (!$force && trySkipMovie($movie) === 0)
             return true;
 
         $row = false;

@@ -179,7 +179,7 @@
 
         <?php if (isAdmin($user['id'])) {?>
         <!-- VK Share -->
-        <code id="vkResult"></code>
+        <pre id="vkResult"></pre>
         <script type="text/javascript">
         function postVK() {
             $.post( "ajax.php", { method: "vkUploadPhoto", movieId: <?=$movieId?> })
@@ -208,8 +208,15 @@
                 );
             });
         }
+        function updateMovie() {
+            $.post("ajax.php", { method: "updateMovie", imdbid: "<?=$movie['imdbid']?>", kpid: "<?=$movie['kpid']?>" })
+                .done(function(data) {
+                    $('#vkResult').html(data);
+                });
+        }
         </script>
         <input type="button" value="VK" onclick="postVK()"/>
+        <input type="button" value="Update" onclick="updateMovie()"/>
         <?php } ?>
         
         </div>
@@ -232,6 +239,7 @@
                 </thead>
                 <tbody>
                 <?php
+                    if ($torrents)
                     foreach($torrents as $cur) {
                         $aS = "<a target='_blank' href='".$cur['link']."'>";
                         $aE = "</a>";

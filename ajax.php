@@ -36,6 +36,14 @@ if ($user && $login != 'wise guest' && array_key_exists('method', $_POST))
         case "vkUploadPhoto":
             echo vkUploadPhoto((int)$_POST['movieId'], $user['token']);
             break;
+        case "updateMovie":
+            $movie = array();
+            if ($_POST['imdbid']) $movie['imdbid'] = $_POST['imdbid'];
+            if ($_POST['kpid']) $movie['kpid'] = $_POST['kpid'];
+            $res = addMovie($movie, true);
+            echo $res?"UPDATED\n":"NOT UPDATED\n";
+            print_r($movie);
+            break;
         default:
             echo "method not specified\n";
     }    

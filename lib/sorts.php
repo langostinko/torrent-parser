@@ -43,7 +43,7 @@ function calcTotalSeedLeech(&$movies, $user) {
             continue;
         if (!is_array($movies[$row['movieId']]['description']))
             $movies[$row['movieId']]['description'] = json_decode($movies[$row['movieId']]['description'], true);
-        if (array_key_exists("kinopoiskRating", $movies[$row['movieId']]['description'])) {
+        if (array_key_exists("kinopoiskRating", $movies[$row['movieId']]['description']) && $movies[$row['movieId']]['description']['kinopoiskRating']) {
             if ((float)$movies[$row['movieId']]['description']['kinopoiskRating'] < $user['minRating'])
                 continue;
         } else if ((float)$movies[$row['movieId']]['description']['imdbRating'] < $user['minRating'])
@@ -116,7 +116,7 @@ function sortBySeedLeech(&$movies, $user) {
         usort($take, "cmpByLeech");
     */
     
-    if ($user['sotyType'] == 2 || array_key_exists("underrated", $_GET))
+    if ($user['sortType'] == 2 || array_key_exists("underrated", $_GET))
         usort($take, "cmpByRatingLeech");
     else if ($user['sortType'] == 1)
         usort($take, "cmpByOcc");
