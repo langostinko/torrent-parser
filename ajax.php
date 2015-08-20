@@ -44,6 +44,12 @@ if ($user && $login != 'wise guest' && array_key_exists('method', $_POST))
             echo $res?"UPDATED\n":"NOT UPDATED\n";
             print_r($movie);
             break;
+        case "getIds":
+            $movie = array();
+            if ($_POST['year']) $movie['year'] = (int)$_POST['year'];
+            getIds($_POST['title'], $movie);
+            print_r($movie);
+            break;
         default:
             echo "method not specified\n";
     }    

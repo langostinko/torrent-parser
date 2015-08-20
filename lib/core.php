@@ -58,8 +58,19 @@
         print_r($json);
     }
 
+    function strtr_utf8($str, $from, $to) {
+        $keys = array();
+        $values = array();
+        preg_match_all('/./u', $from, $keys);
+        preg_match_all('/./u', $to, $values);
+        $mapping = array_combine($keys[0], $values[0]);
+        return strtr($str, $mapping);
+    }
+
     function searchIMDB($title, &$movie){
-        $title = strtolower($title);
+        $title = strtr_utf8($title, 
+          "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÝßàáâãäåçèéêëìíîïñòóôõöøùúûüýÿ",
+          "AAAAAACEEEEIIIINOOOOOOYSaaaaaaceeeeiiiinoooooouuuuyy");
         $link = "http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=" . urlencode($title);
 
         $file = file_get_contents($link);
@@ -96,9 +107,33 @@
         return $response;
 
     }
+    
+    function charset_decode_utf_8 ($string) {
+        /* Only do the slow convert if there are 8-bit characters */
+        /* avoid using 0xA0 (\240) in ereg ranges. RH73 does not like that */
+        if (!preg_match("/[\200-\237]/", $string)
+         && !preg_match("/[\241-\377]/", $string)
+        ) {
+            return $string;
+        }
+    
+        // decode three byte unicode characters
+        $string = preg_replace("/([\340-\357])([\200-\277])([\200-\277])/e",
+            "'&#'.((ord('\\1')-224)*4096 + (ord('\\2')-128)*64 + (ord('\\3')-128)).';'",
+            $string
+        );
+    
+        // decode two byte unicode characters
+        $string = preg_replace("/([\300-\337])([\200-\277])/e",
+            "'&#'.((ord('\\1')-192)*64+(ord('\\2')-128)).';'",
+            $string
+        );
+    
+        return $string;
+    }
 
     function searchKinopoisk($title, &$movie){
-        $link = "http://www.kinopoisk.ru/index.php?first=no&what=&kp_query=".urlencode($title);
+        $link = "http://www.kinopoisk.ru/index.php?first=no&what=&kp_query=".urlencode(charset_decode_utf_8($title));
         $response = getKinopoiskLink($link);
 
         //search for HTTP 302
@@ -135,6 +170,8 @@
                 $needYear = array_key_exists('year', $movie) ? (int)$movie['year'] : $year;
                 if (abs($year - $needYear) <= 1) {
                     $movie['movie']['kpid'] = $id;
+                    $movie['movie']['titleRu'] = iconv('windows-1251', 'UTF-8', $name);
+                    $movie['movie']['yearRu'] = $year;
                     return;
                 }
             }

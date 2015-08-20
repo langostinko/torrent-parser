@@ -21,6 +21,11 @@
     if ($movieId != -1) {
         $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies WHERE id = $movieId");
         $movie = mysqli_fetch_assoc($sqlresult);
+        if (!$movie) {
+            header('HTTP/1.0 404 Not Found');
+            echo "Not Found";
+            exit();
+        }
         $desc = json_decode($movie['description'], true);
 
         $movie['Release'] = strtotime($desc['Released']);

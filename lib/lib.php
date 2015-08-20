@@ -90,26 +90,6 @@
         return false;
     }
 
-    function auth() {
-        $result = array();
-        if (!isset($_SERVER['PHP_AUTH_USER'])) {
-            header('WWW-Authenticate: Basic realm="use guest:guest"');
-        } else {
-            $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM users WHERE login='".$_SERVER['PHP_AUTH_USER']."'" );
-            if ($sqlresult && mysqli_num_rows($sqlresult)) {
-                $row = mysqli_fetch_assoc($sqlresult);
-                if (md5($_SERVER['PHP_AUTH_PW']) == $row['pass'])
-                    $result = $row;
-            }
-        }  
-        if (!$result) {
-            header('HTTP/1.0 401 Unauthorized');
-            echo "bad password\n";
-            exit(0);
-        }
-        return $result;
-    }
-    
     function connect(){
         global $mysqli;
     	$host = \pass\SQL::$host;
