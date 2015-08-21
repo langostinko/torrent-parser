@@ -12,10 +12,10 @@
     </div>
     <div class="navbar-collapse collapse">
         <p class="navbar-text" style="margin: 10px 15px">
-            <a title="мы на Пикабу" href="http://pikabu.ru/profile/freshs" target='_blank' ><img style="height:30px" src="img/pk_64.png"/></a>
-            <a title="мы в ВК" href="https://vk.com/freshswagru" target='_blank' ><img style="height:30px" src="img/vk_64.png"/></a>
+            <a title="мы на Пикабу" href="http://pikabu.ru/profile/freshs" target='_blank' ><img style="height:30px" alt="мы на Пикабу" src="img/pk_64.png"/></a>
+            <a title="мы в ВК" href="https://vk.com/freshswagru" target='_blank' ><img style="height:30px" alt="мы в ВК" src="img/vk_64.png"/></a>
         </p>
-        <form class="navbar-form navbar-left hidden-xs" role="search">
+        <form class="navbar-form navbar-left hidden-xs">
           <div class="form-group">
           <?php
             $vars = getRandomList();
@@ -49,7 +49,7 @@
         </li>
       </ul>
     <?php } else { ?>
-     <form class="navbar-form navbar-right" role="form" action='https://oauth.vk.com/authorize' method='get'>  
+     <form class="navbar-form navbar-right" action='https://oauth.vk.com/authorize' method='get'>  
          <input type='hidden' name='client_id' value='4586424'/>
          <input type='hidden' name='scope' value='<?php echo array_key_exists("admin", $_GET)?"4":""; ?>'/>
          <input type='hidden' name='redirect_uri' value='<?php echo \pass\VK::$redirect_uri; ?>'/>

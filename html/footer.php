@@ -1,7 +1,4 @@
-<footer>
-    <p>&copy; YanD</p>
-    <?php printTime() ?>
-</footer>
+<?php printTime() ?>
 
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">

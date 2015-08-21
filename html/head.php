@@ -29,8 +29,8 @@
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.css">
 
     <!-- DataTables -->
-    <script type="text/javascript" charset="utf8" src="js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.js"></script>
    
     <?php if (isAdmin($user['id'])) {?>
     <!-- VK -->

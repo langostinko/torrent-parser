@@ -61,10 +61,12 @@
 <html lang="en">
     <?php
         include "html/head.php";
+    ?>
+  <body>
+    <?php
         include "html/userSettings.php";
     ?>
 
-  <body>
     <script type="text/javascript">
         var userId = <?php echo $userId; ?>;
 
@@ -88,7 +90,7 @@
               ignoreMovie($(this).attr('movieId'));
             });
         });  
-  </script>
+    </script>
 
     
     <?php
@@ -98,16 +100,17 @@
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
-      <div id='main' class="container-fluid" style="padding: 0">
+        <div id='main' class="container-fluid" style="padding: 0">
         <?php
             $cnt = 0;
             foreach($keys as $key=>$movieSorted) {
                 $movie = $movies[$movieSorted['id']];
                 $desc = $movie['description'];
+                $movieTitle = htmlspecialchars(array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']);
                 ?>
                 <div class='movie moviePos<?php echo $movie['id']; ?>'>
                     <a title="<?php echo array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']; echo " (".$movie['totalSeed']."↑ ".$movie['totalLeech']."↓)"; ?>" target='_blank' href="movie.php?id=<?php echo $movie['id']; ?>">
-                        <img class='poster' src='<?php echo array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster']; ?>' />
+                        <img class='poster' alt='<?=$movieTitle?>' src='<?php echo array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster']; ?>' />
                     </a>
                     <?php if (array_key_exists("kinopoiskId", $desc)) {?>
                         <a title="открыть на Кинопоиске" target='_blank' href='<?php echo "http://www.kinopoisk.ru/film/".$desc['kinopoiskId'];?>/'> 
@@ -123,13 +126,11 @@
                         </div>
                     </a>
                     <div class='movieTitle'>
-                        <?php echo array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']; ?>
+                        <?php echo $movieTitle; ?>
                         <div class='movieQuality'>
                             <span class="glyphicon glyphicon-facetime-video"></span> <?php echo $movie['qualityStr']; ?>
                             <span class="glyphicon glyphicon-volume-up"></span> <?php echo $movie['translateQualityStr'];/*translateQualityToStr($movie['translateQuality']);*/ ?>
                         </div>
-                    <!--
-                    -->
                     </div>
                     <?php if ($login) { ?>
                     <a title="не показывать (в корзину)" target='_blank' href='#'> 
@@ -146,8 +147,9 @@
         ?>    
 
             <h2 class="hidden-xs">Свежие торренты</h2>
-            <table id='torrentTable' class='table table-striped table-hover hidden-xs' cellspacing="0" width="100%">
+            <table id='torrentTable' class='table table-striped table-hover hidden-xs'>
                 <thead>
+                  <tr>
                     <td>качество</td>
                     <td>перевод</td>
                     <td>фильм</td>
@@ -155,6 +157,7 @@
                     <td>сиды</td>
                     <td>личеры</td>
                     <td>добавлено</td>
+                  </tr>
                 </thead>
                 <tbody>
                 <?php
@@ -184,8 +187,5 @@
         include "html/footer.php";
     ?>
 
-
-    </div> <!-- /container -->
-    
   </body>
 </html>

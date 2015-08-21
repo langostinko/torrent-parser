@@ -1,6 +1,6 @@
 <div id="userSettings" <?php if (array_key_exists('showSettings', $_SESSION) && $_SESSION['showSettings'] === "no") echo "style='display: none;'" ?>>
 <div class="container">
-    <form class="form-inline" role="form" action='.' method='post'>
+    <form class="form-inline" action='.' method='post'>
         <input type='hidden' name="method" value="setSettings"/>
       <div class="form-group">
         <label class="sr-only" for="minRating">рейтинг</label>
