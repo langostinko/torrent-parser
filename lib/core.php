@@ -315,9 +315,9 @@
         $img = "img/posters/{$kpid}Ru.jpg";
         $realImg = dirname( __FILE__ ) . "/../$img";
         $url = "http://st.kp.yandex.net/images/film_iphone/iphone360_$kpid.jpg";
-        if ( !(file_exists($realImg) && filesize($realImg)) )
+        if ( !(file_exists($realImg) && filesize($realImg) > 4000) )
             file_put_contents($realImg, file_get_contents($url));
-        if (file_exists($realImg) && filesize($realImg))
+        if (file_exists($realImg) && filesize($realImg) > 4000)
             $desc['PosterRu'] = $img;            
         
         return true;
