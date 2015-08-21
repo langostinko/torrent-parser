@@ -106,14 +106,15 @@
     <div class="jumbotron">
     <div class="container" itemscope itemtype="http://schema.org/Movie">
     <?php if ($movie) { ?>
+        <?php $movieTitle = htmlspecialchars(array_key_exists('titleRu', $desc)?$desc['titleRu']:$desc['Title']); ?>
         <div class="movLeft">
             <link rel="image_src" href='<?php echo $imgSrc; ?>' >
-            <img itemprop="image" class="bigPoster" src='<?php echo $imgSrc; ?>' />
+            <img itemprop="image" alt="<?=$movieTitle?>" class="bigPoster" src='<?php echo $imgSrc; ?>' />
             <table class="movDesc table table-condensed">
             <tbody>
                 <tr class="movDescName">
                     <td itemprop="name" colspan="2">
-                        <?php echo array_key_exists('titleRu', $desc)?$desc['titleRu']:$desc['Title']; ?>
+                        <?php echo $movieTitle; ?>
                     </td>
                 </tr>
                 <tr> 
