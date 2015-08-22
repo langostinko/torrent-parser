@@ -267,13 +267,13 @@
         </div>
         <div style="clear:both"></div>
     <?php } else
-        echo "movie with this id not found"
+        echo "movie with this id not found";
     ?>
 
+    </div>
     <?php
         include "html/footer.php";
     ?>
-    </div>
     </div>
 
   </body>

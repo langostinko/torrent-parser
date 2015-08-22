@@ -1,3 +1,4 @@
+<h6 class="text-center">admin@freshswag.ru</h6>
 <?php printTime() ?>
 
 <!-- Yandex.Metrika counter -->

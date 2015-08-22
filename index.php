@@ -181,11 +181,10 @@
                 </tbody>
             </table>      
         </div>
+        <?php
+            include "html/footer.php";
+        ?>
     </div>
-
-    <?php
-        include "html/footer.php";
-    ?>
 
   </body>
 </html>
