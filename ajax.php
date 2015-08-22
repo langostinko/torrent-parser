@@ -37,18 +37,30 @@ if ($user && $login != 'wise guest' && array_key_exists('method', $_POST))
             echo vkUploadPhoto((int)$_POST['movieId'], $user['token']);
             break;
         case "updateMovie":
-            $movie = array();
-            if ($_POST['imdbid']) $movie['imdbid'] = $_POST['imdbid'];
-            if ($_POST['kpid']) $movie['kpid'] = $_POST['kpid'];
-            $res = addMovie($movie, true);
-            echo $res?"UPDATED\n":"NOT UPDATED\n";
-            print_r($movie);
+            if (isAdmin($user['id'])) {
+                $movie = array();
+                if ($_POST['imdbid']) $movie['imdbid'] = $_POST['imdbid'];
+                if ($_POST['kpid']) $movie['kpid'] = $_POST['kpid'];
+                $res = addMovie($movie, true);
+                echo $res?"UPDATED\n":"NOT UPDATED\n";
+                print_r($movie);
+            } else echo "access denied";
             break;
         case "getIds":
-            $movie = array();
-            if ($_POST['year']) $movie['year'] = (int)$_POST['year'];
-            getIds($_POST['title'], $movie);
-            print_r($movie);
+            if (isAdmin($user['id'])) {
+                $movie = array();
+                if ($_POST['year']) $movie['year'] = (int)$_POST['year'];
+                getIds($_POST['title'], $movie);
+                print_r($movie);
+                if ($_POST['movieId']) {
+                    $movieId = (int)$_POST['movieId'];
+                    $kpid = mysqli_real_escape_string($GLOBALS['mysqli'], $movie['movie']['kpid']);
+                    $imdbid = mysqli_real_escape_string($GLOBALS['mysqli'], $movie['movie']['imdbid']);
+                    echo "Updating movie $movieId: kp $kpid, imdb $imdbid\n";
+                    mysqli_query($GLOBALS['mysqli'], "UPDATE movies SET kpid='$kpid', imdbid='$imdbid' WHERE id = $movieId");
+                    echo mysqli_error($GLOBALS['mysqli']);
+                }
+            } else echo "access denied";
             break;
         default:
             echo "method not specified\n";

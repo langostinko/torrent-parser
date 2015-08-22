@@ -34,10 +34,11 @@
     <div class="form-group">
         <input id="getIdsTitle" class="form-control" type="text" value="getIdsTitle"/>
         <input id="getIdsYear" class="form-control" type="number" value="getIdsYear"/>
+        <input id="setIdsId" class="form-control" type="number" value="0"/>
         <input id="getIdsBtn" class="btn btn-default" type="submit"/>
         <script type="text/javascript">
             $("#getIdsBtn").click(function() {
-                $.post( "ajax.php", { method: "getIds", title: $("#getIdsTitle").val(), year: $("#getIdsYear").val() })
+                $.post( "ajax.php", { method: "getIds", title: $("#getIdsTitle").val(), year: $("#getIdsYear").val(), movieId: $("#setIdsId").val() })
                 .done(function( data ) {
                     $('#response').html(data);
                 });
