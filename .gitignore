@@ -10,3 +10,15 @@ lib/pass.php
 
 #tmp files
 tmp.php
+
+#php 3rdparty
+bin/
+
+#logs
+logs/
+
+#robots
+robots.txt
+
+#htaccess
+.htaccess
