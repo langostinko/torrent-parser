@@ -262,11 +262,17 @@
         $desc['titleRu'] = html_entity_decode(trim(iconv('windows-1251', 'UTF-8', $html->find('h1[class=moviename-big]',0)->plaintext), "., "), ENT_QUOTES, "UTF-8");
         $desc['plotRu'] = html_entity_decode(iconv('windows-1251', 'UTF-8', $html->find('div[itemprop=description]',0)->plaintext), ENT_QUOTES, "UTF-8");
         $desc['kinopoiskRating'] = iconv('windows-1251', 'UTF-8', $html->find('span[class=rating_ball]',0)->plaintext);
-        $prem = $html->find('td[id=div_world_prem_td2]',0);
-        if (!($prem && $prem->find('div[class=prem_ical]',0)))
-            $prem = $html->find('td[id=div_rus_prem_td2]',0);
-        if ($prem && $prem->find('div[class=prem_ical]',0))
-            $desc['Released'] = iconv('windows-1251', 'UTF-8', $prem->find('div[class=prem_ical]',0)->getAttribute("data-date-premier-start-link"));
+        
+        $prem = $html->find('div[data-ical-type=world]',0);
+        if (!$prem)
+            $prem = $html->find('div[data-ical-type=rus]',0);
+        if ($prem)
+            $desc['Released'] = iconv('windows-1251', 'UTF-8', $prem->getAttribute("data-date-premier-start-link"));
+            
+        $dvd = $html->find('div[data-ical-type=dvd]',0);
+        if ($dvd)
+            $desc['ReleaseDVD'] = iconv('windows-1251', 'UTF-8', $dvd->getAttribute("data-date-premier-start-link"));
+            
         $act = $html->find('div[id=actorList]',0);
         if ($act && $act->find('ul',0)) {
             $act = $act->find('ul',0);

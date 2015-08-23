@@ -155,6 +155,12 @@
                     <td><?php echo date("j M Y",$movie['Release']); ?></td>
                     <meta itemprop="datePublished" content="<?php echo date("c",$movie['Release']); ?>"/>
                 </tr>
+                <?php if (array_key_exists("ReleaseDVD", $desc)) { ?>
+                <tr>
+                    <td>на DVD</td>
+                    <td><?php echo date("j M Y",strtotime($desc['ReleaseDVD'])); ?></td>
+                </tr>
+                <?php } ?>
                 <tr>
                     <td>жанр</td>
                     <td itemprop="genre"><?php echo array_key_exists("жанр", $desc)?$desc['жанр']:@$desc['Genre']; ?></td>
