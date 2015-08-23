@@ -1,5 +1,5 @@
 <?php
-include_once __DIR__."/lib/lib.php";
+require_once __DIR__."/lib/lib.php";
 include_once __DIR__."/lib/loaders/RutorLoader.php";
 include_once __DIR__."/lib/loaders/NNMLoader.php";
 include_once __DIR__."/lib/loaders/PirateLoader.php";
@@ -54,7 +54,8 @@ function main_callback($response, $info, $request) {
 }
 
 function updateLinks(){
-    echo "UPDATE LINKS\n";
+    global $logger;
+    $logger->info('UPDATE LINKS');    
     $resPirate = array();
     
     //parallel RollingCurl
@@ -152,7 +153,7 @@ function updateLinks(){
         addLink($cur);
         usleep(100*1000);
     }
-    echo count($result) . " links updated\n";
+    $logger->info(count($result) . " links updated");
 }
 
 function updateMovies(){
