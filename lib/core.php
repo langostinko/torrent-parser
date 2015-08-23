@@ -193,7 +193,7 @@
     function trySkipMovie(&$movie) {
         static $cache = false;
         if (!$cache) {
-            $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT id, imdbid, kpid FROM movies WHERE updated > date_add(current_timestamp, interval -3 day)");
+            $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT id, imdbid, kpid FROM movies WHERE updated > date_add(current_timestamp, interval -".UPDATEMOVIESEVERYDAYS." day)");
             while ($row = mysqli_fetch_assoc($sqlresult)) {
                 $cache[$row['imdbid']] = $row['id'];
                 $cache[$row['kpid']] = $row['id'];
@@ -209,7 +209,7 @@
                 break;
             }
         if (!$row)
-            return "row not found in mysql";
+            return "row not found in mysql cache / scheduled update";
 
         $json = json_decode($row['description'], true);
         if (!$json)

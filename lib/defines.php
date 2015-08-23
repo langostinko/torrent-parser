@@ -2,6 +2,7 @@
     require_once __DIR__."/../bin/vendor/autoload.php";
 
     ///List of defines - constants
+    define("UPDATEMOVIESEVERYDAYS", 1);
     define("DELETELINKSAFTERDAYS", 7);
     define("ADDLINKSPASTDAYS", 180);
     define("FRESHLINKSDAYS", 21);
