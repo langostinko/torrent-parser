@@ -386,12 +386,15 @@
     }
     
     function trySkip($cur) {
+        global $logger;
         if (!is_array($cur) || !array_key_exists("link", $cur))
             return true;
         static $cache = false;
         static $cachedUpdate = array();
         if (!$cache) {
             $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT md5 FROM links WHERE updated > date_add(current_timestamp, interval -365 day)");
+            if (mysqli_errno($GLOBALS['mysqli']))
+                $logger->error(mysqli_error($GLOBALS['mysqli']));
             while ($row = mysqli_fetch_assoc($sqlresult))
                 $cache[$row['md5']] = true;
         }
@@ -406,9 +409,11 @@
                     if ($i != count($cachedUpdate) - 1)
                         $query .= ", ";
                 }
-                $query .= " ON DUPLICATE KEY UPDATE seed=VALUES(seed),leech=VALUES(leech)";
+                $query .= " ON DUPLICATE KEY UPDATE seed=VALUES(seed),leech=VALUES(leech),updated=now()";
                 $cachedUpdate = array();
                 mysqli_query($GLOBALS['mysqli'], $query);
+                if (mysqli_errno($GLOBALS['mysqli']))
+                    $logger->error(mysqli_error($GLOBALS['mysqli']));
             }
             return true;
         }
