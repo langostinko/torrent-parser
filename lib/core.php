@@ -132,7 +132,7 @@
                 $rating = @$row->find('div[class=rating]',0)->plaintext;
 
                 $needYear = array_key_exists('year', $movie) ? (int)$movie['year'] : $year;
-                if (abs($year - $needYear) <= 1) {
+                if (abs($year - $needYear) <= 2) {
                     $movie['movie']['kpid'] = $id;
                     $movie['movie']['titleRu'] = iconv('windows-1251', 'UTF-8', $name);
                     $movie['movie']['yearRu'] = $year;
@@ -318,9 +318,9 @@
     function addMovie(&$movie, $force = false) {
         global $logger;
         if (!$movie)
-            return false;
+            return "illegal argument";
         if (!$force && trySkipMovie($movie) === 0)
-            return true;
+            return 0;
 
         $row = false;
         $idTypes = array("imdbid", "kpid");
@@ -380,9 +380,9 @@
             mysqli_query($GLOBALS['mysqli'],  "$q WHERE id=$id");
             if (mysqli_errno($GLOBALS['mysqli']))
                 $logger->error(mysqli_error($GLOBALS['mysqli']));
-            return true;
+            return 0;
         }
-        return false;
+        return "title, description, released or year not found";
     }
     
     function trySkip($cur) {
@@ -422,8 +422,8 @@
     
     function addLink($cur) {
         global $logger;
-        if (!addMovie($cur['movie']))
-            return false;
+        if ( ($res = addMovie($cur['movie'])) !== 0)
+            return "could not add movie: $res";
         $hash = md5($cur['link']);
         $link = mysqli_real_escape_string($GLOBALS['mysqli'], $cur['link']);
 
@@ -449,6 +449,6 @@
         mysqli_query($GLOBALS['mysqli'], "UPDATE links SET movieId=$id, description='$description', quality='$quality', translateQuality='$translateQuality', size=$size, seed=$seed, leech=$leech, updated=now(), added_tracker='$added_tracker' WHERE md5 = '$hash'");
         if (mysqli_errno($GLOBALS['mysqli']))
             $logger->error(mysqli_error($GLOBALS['mysqli']));
-        return true;
+        return 0;
     }
 ?>

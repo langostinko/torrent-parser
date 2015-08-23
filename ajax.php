@@ -42,7 +42,7 @@ if ($user && $login != 'wise guest' && array_key_exists('method', $_POST))
                 if ($_POST['imdbid']) $movie['imdbid'] = $_POST['imdbid'];
                 if ($_POST['kpid']) $movie['kpid'] = $_POST['kpid'];
                 $res = addMovie($movie, true);
-                echo $res?"UPDATED\n":"NOT UPDATED\n";
+                echo ($res===0)?"UPDATED\n":"NOT UPDATED: $res\n";
                 print_r($movie);
             } else echo "access denied";
             break;

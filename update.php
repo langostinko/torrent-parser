@@ -152,9 +152,11 @@ function updateLinks(){
             continue;
     
         getIds($cur['title_approx'], $cur);
-        $logger->info("add link: " . $cur['description'] . "\t" . $cur['link']);
+        $logger->info("add link: " . $cur['title_approx'] . "::" . $cur['description'] . "::" . $cur['link']);
     
-        addLink($cur);
+        $res = addLink($cur);
+        if ($res !== 0)
+            $logger->warning("link was not added: $res");
         usleep(100*1000);
     }
     $logger->info(count($result) . " links updated");
@@ -180,9 +182,10 @@ function updateMovies(){
     $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM `movies` WHERE `movies`.id in (SELECT movieId FROM links)");
     while ($row = mysqli_fetch_assoc($sqlresult))
         if ($reason = trySkipMovie($row)) {
-            $logger->info("Reason: $reason");
-            addMovie($row);
-            $logger->info("\t" . $row['title']);
+            $logger->info($row['title'] . ": $reason");
+            $res = addMovie($row);
+            if ($res !== 0)
+                $logger->warning($res);
             //$logger->info(print_r($row, true));
         }
 }

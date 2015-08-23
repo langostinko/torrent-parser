@@ -30,7 +30,7 @@ class RutorLoader extends AbstractLoader {
 
         $result = array();
         $res1 = preg_match_all('/\[S\d+/isU', $title, $result, PREG_OFFSET_CAPTURE);
-        $res2 = preg_match_all('/\[[\d-x ,]+\]/isU', $title, $result, PREG_OFFSET_CAPTURE);
+        $res2 = preg_match_all('/\[[\d\-x ,из]+\]/isU', $title, $result, PREG_OFFSET_CAPTURE);
         if ($res1 || $res2) {//that's a series
             $this->logger->info("skip series: " . $title);
             return false;
