@@ -53,14 +53,15 @@
     }
 
     function getSeedoff($link = "http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=14&options=0&order=5&by=2&pages=1"){
-        echo "fetching $link\n";
+        global $logger;
+        $logger->info("fetching $link");
         //$file = file_get_contents($link);
         global $result;
         $result = array();
 
 		$html = file_get_html($link);
 		if (!$html) {
-		    echo "failed\n";
+		    $logger->warning("failed to get link");
 		    return $result;
 		}
 

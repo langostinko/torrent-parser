@@ -31,7 +31,7 @@ class NNMLoader extends AbstractLoader {
         $res1 = preg_match_all('/\[S\d+/isU', $title, $result, PREG_OFFSET_CAPTURE);
         $res2 = preg_match_all('/\[[\d-x ,]+\]/isU', $title, $result, PREG_OFFSET_CAPTURE);
         if ($res1 || $res2) {//that's a series
-            echo "\tskip $title\n";
+            $this->logger->info("skip series: " . $title);
             return false;
         }
 
@@ -79,11 +79,13 @@ class NNMLoader extends AbstractLoader {
     }
     
     function callback($response, $info) {
-        echo $info['http_code'] . " :: " . $info['url'] . " fetched in " . $info['total_time'] . "\n";
+        $msg = $info['http_code'] . " :: " . $info['url'] . " fetched in " . $info['total_time'];
         if ($info['http_code'] != 200) {
-            echo "\terror\n";
+            $this->logger->warning($msg);
             return;
         }
+        $this->logger->info($msg);
+
         $response = iconv("windows-1251", "UTF-8", $response);
 
         $result = array();
@@ -92,7 +94,7 @@ class NNMLoader extends AbstractLoader {
             $this->processTr($tr);
         }
 
-        echo "\t " . count($this->result) . " new links found\n";
+		$this->logger->info(count($this->result) . " new links found");
     }
 
     function load() {

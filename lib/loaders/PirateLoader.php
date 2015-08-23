@@ -70,15 +70,16 @@ class PirateLoader extends AbstractLoader {
     }
     
     function getPirateCallback($response, $info, $request) {
-        echo $info['http_code'] . " :: " . $info['url'] . " fetched in " . $info['total_time'] . "\n";
+        $msg = $info['http_code'] . " :: " . $info['url'] . " fetched in " . $info['total_time'];
         if ($info['http_code'] != 200) {
-            echo "\terror\n";
+            $this->logger->warning($msg);
             return;
         }
+        $this->logger->info($msg);
 
         $html = str_get_html($response);
 		if (!$html) {
-		    echo "\tfailed to convert DOM\n";
+		    $this->logger->warning("failed to convert DOM");
 		    return;
 		}
 
@@ -93,7 +94,7 @@ class PirateLoader extends AbstractLoader {
 			if ($got >= $cnt)
 			    break;
 		}
-		echo "\t " . count($this->result) . " new links found\n";
+		$this->logger->info(count($this->result) . " new links found");
     }
 
     function load($cnt = 50) {

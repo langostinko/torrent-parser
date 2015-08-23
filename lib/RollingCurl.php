@@ -270,7 +270,8 @@ class RollingCurl {
                 if ($info['http_code'] != 200 && $proxy = ProxyFinder::findProxy($info['url'], $options[CURLOPT_PROXY])) {
                     $options[CURLOPT_PROXY] = $proxy;
                     $request->options = $options;
-                    echo "try " . $info['url'] . " with proxy: $proxy\n";
+                    global $logger;
+                    $logger->info("try " . $info['url'] . " with proxy: $proxy");
                     $this->requests[] = $request;
                     $running = 1;
                 } else {

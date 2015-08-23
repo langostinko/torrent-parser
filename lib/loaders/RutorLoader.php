@@ -32,7 +32,7 @@ class RutorLoader extends AbstractLoader {
         $res1 = preg_match_all('/\[S\d+/isU', $title, $result, PREG_OFFSET_CAPTURE);
         $res2 = preg_match_all('/\[[\d-x ,]+\]/isU', $title, $result, PREG_OFFSET_CAPTURE);
         if ($res1 || $res2) {//that's a series
-            echo "\tskip $title\n";
+            $this->logger->info("skip series: " . $title);
             return false;
         }
 
@@ -82,15 +82,16 @@ class RutorLoader extends AbstractLoader {
     }
     
     function getRutorCallback($response, $info) {
-        echo $info['http_code'] . " :: " . $info['url'] . " fetched in " . $info['total_time'] . "\n";
+        $msg = $info['http_code'] . " :: " . $info['url'] . " fetched in " . $info['total_time'];
         if ($info['http_code'] != 200) {
-            echo "\terror\n";
+            $this->logger->warning($msg);
             return;
         }
+        $this->logger->info($msg);
 
 		$html = str_get_html($response);
 		if (!$html) {
-		    echo "\tfailed to convert DOM\n";
+		    $this->logger->warning("failed to convert DOM");
 		    return;
 		}
 
@@ -100,7 +101,7 @@ class RutorLoader extends AbstractLoader {
 			    $this->processTr($row);
 		}
 		
-		echo "\t " . count($this->result) . " new links found\n";
+		$this->logger->info(count($this->result) . " new links found");
     }
 
     function load() {

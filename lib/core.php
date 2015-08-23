@@ -41,23 +41,6 @@
         return true;
     }
 
-    function suggestIMDB($title) {
-        //debug
-        $title = strtolower($title);
-        $title = str_replace(' ', '_', $title);
-        $char = $title[0];
-        $link = "http://sg.media-imdb.com/suggests/$char/$title.json";
-        echo "$link\n";
-
-        $file = file_get_contents($link);
-        $pos = strlen($title) + 6;
-        $file = substr($file, $pos, strlen($file) - $pos - 1);
-        echo "'$file'";
-        
-        $json = json_decode($file, true);
-        print_r($json);
-    }
-
     function strtr_utf8($str, $from, $to) {
         $keys = array();
         $values = array();
@@ -333,6 +316,7 @@
     }
     
     function addMovie(&$movie, $force = false) {
+        global $logger;
         if (!$movie)
             return false;
         if (!$force && trySkipMovie($movie) === 0)
@@ -344,7 +328,8 @@
             if (array_key_exists($idName, $movie) && $movie[$idName]) {
                 $id = mysqli_real_escape_string($GLOBALS['mysqli'], $movie[$idName]);
                 $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies WHERE $idName='$id'");
-                echo mysqli_error($GLOBALS['mysqli']);
+                if (mysqli_errno($GLOBALS['mysqli']))
+                    $logger->error(mysqli_error($GLOBALS['mysqli']));
                 if (mysqli_num_rows($sqlresult)) {
                     $row = mysqli_fetch_assoc($sqlresult);
                     break;
@@ -393,7 +378,8 @@
 
             $q .= ", title='$title', description='$description', search='$search'";
             mysqli_query($GLOBALS['mysqli'],  "$q WHERE id=$id");
-            echo mysqli_error($GLOBALS['mysqli']);
+            if (mysqli_errno($GLOBALS['mysqli']))
+                $logger->error(mysqli_error($GLOBALS['mysqli']));
             return true;
         }
         return false;
@@ -430,16 +416,19 @@
     }
     
     function addLink($cur) {
+        global $logger;
         if (!addMovie($cur['movie']))
             return false;
         $hash = md5($cur['link']);
         $link = mysqli_real_escape_string($GLOBALS['mysqli'], $cur['link']);
 
         $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE md5 = '$hash'");
-        echo mysqli_error($GLOBALS['mysqli']);
+        if (mysqli_errno($GLOBALS['mysqli']))
+            $logger->error(mysqli_error($GLOBALS['mysqli']));
         if (!mysqli_num_rows($sqlresult)) {
             $sqlresult = mysqli_query($GLOBALS['mysqli'], "INSERT INTO links(link,md5) VALUES('$link', '$hash')");
-            echo mysqli_error($GLOBALS['mysqli']);
+            if (mysqli_errno($GLOBALS['mysqli']))
+                $logger->error(mysqli_error($GLOBALS['mysqli']));
         }
 
         $id = $cur['movie']['id'];
@@ -453,7 +442,8 @@
             $cur['added_tracker'] = time();
         $added_tracker = date("Y-m-d H:i:s",(int)$cur['added_tracker']);
         mysqli_query($GLOBALS['mysqli'], "UPDATE links SET movieId=$id, description='$description', quality='$quality', translateQuality='$translateQuality', size=$size, seed=$seed, leech=$leech, updated=now(), added_tracker='$added_tracker' WHERE md5 = '$hash'");
-        echo mysqli_error($GLOBALS['mysqli']);
+        if (mysqli_errno($GLOBALS['mysqli']))
+            $logger->error(mysqli_error($GLOBALS['mysqli']));
         return true;
     }
 ?>

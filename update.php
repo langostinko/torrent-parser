@@ -7,30 +7,32 @@ include_once __DIR__."/lib/loaders/libSeedoff.php";
 require_once __DIR__."/lib/RollingCurl.php";
 
 function deleteBanned() {
+    global $logger;
     $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT MIN(seed) FROM links WHERE link LIKE '%rutor.org%' AND updated > date_add(current_timestamp, interval -2 hour)");
     $row = mysqli_fetch_assoc($sqlresult);
     $minSeed = (int)$row['MIN(seed)'] * 2;
     $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT link FROM links WHERE link LIKE '%rutor.org%' AND updated < date_add(current_timestamp, interval -2 hour) AND seed > $minSeed");
-    echo mysqli_num_rows($sqlresult) . " old banned Rutor deleted\n";
+    $logger->info(mysqli_num_rows($sqlresult) . " old banned Rutor deleted");
     while ($row = mysqli_fetch_assoc($sqlresult))
-        echo "\t" . $row['link'] . "\n";
+        $logger->info("\t" . $row['link']);
     mysqli_query($GLOBALS['mysqli'], "DELETE FROM links WHERE link LIKE '%rutor.org%' AND updated < date_add(current_timestamp, interval -2 hour) AND seed > $minSeed");
 
     $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT MIN(seed) FROM links WHERE link LIKE '%seedoff.net%' AND updated > date_add(current_timestamp, interval -2 hour)");
     $row = mysqli_fetch_assoc($sqlresult);
     $minSeed = (int)$row['MIN(seed)'] * 2;
     $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT link FROM links WHERE link LIKE '%seedoff.net%' AND updated < date_add(current_timestamp, interval -2 hour) AND seed > $minSeed");
-    echo mysqli_num_rows($sqlresult) . " old banned Seedoff deleted\n";
+    $logger->info(mysqli_num_rows($sqlresult) . " old banned Seedoff deleted");
     while ($row = mysqli_fetch_assoc($sqlresult))
-        echo "\t" . $row['link'] . "\n";
+        $logger->info("\t" . $row['link']);
     mysqli_query($GLOBALS['mysqli'], "DELETE FROM links WHERE link LIKE '%seedoff.net%' AND updated < date_add(current_timestamp, interval -2 hour) AND seed > $minSeed");
 }
 
 function deleteOld(){
+    global $logger;
     $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE updated < date_add(current_timestamp, interval -".DELETELINKSAFTERDAYS." day)");
-    echo mysqli_num_rows($sqlresult) . " old links deleted\n";
+    $logger->info(mysqli_num_rows($sqlresult) . " old links deleted");
     while ($row = mysqli_fetch_assoc($sqlresult))
-        echo "\t".$row['link']."\n";
+        $logger->info("\t" . $row['link']);
     mysqli_query($GLOBALS['mysqli'], "DELETE FROM links WHERE updated < date_add(current_timestamp, interval -".DELETELINKSAFTERDAYS." day)");
     return;
     
@@ -43,8 +45,8 @@ function deleteOld(){
         if (!array_key_exists($row['id'], $actual)) {
             $img = "img/posters/".$row['imdbid'].".jpg";
             $realImg = dirname( __FILE__ ) . "/$img";
-            echo "\t".$row['title'];
-            echo unlink($realImg) ? " :: poster deleted\n" : " :: poster not found\n";
+            $logger->info("\t" . $row['title']);
+            $logger->info(unlink($realImg) ? " :: poster deleted" : " :: poster not found");
             mysqli_query($GLOBALS['mysqli'], "DELETE FROM movies WHERE id = " . $row['id']);
         }
 }
@@ -125,8 +127,10 @@ function updateLinks(){
     flush();
     */
 
-    foreach ($loaders as $loader)
+    foreach ($loaders as $loader) {
+        $loader->setLogger($logger);
         $loader->load();
+    }
 
     RollingCurl::$rc->execute();
     
@@ -148,7 +152,7 @@ function updateLinks(){
             continue;
     
         getIds($cur['title_approx'], $cur);
-        echo "\t".$cur['description'] . "\t" . $cur['link'] . "\n";
+        $logger->info("add link: " . $cur['description'] . "\t" . $cur['link']);
     
         addLink($cur);
         usleep(100*1000);
@@ -157,7 +161,8 @@ function updateLinks(){
 }
 
 function updateMovies(){
-    echo "UPDATE MOVIES\n";
+    global $logger;
+    $logger->info("UPDATE MOVIES");
     $sqlresult = mysqli_query($GLOBALS['mysqli'], 
     "   UPDATE movies c
         INNER JOIN (
@@ -169,15 +174,16 @@ function updateMovies(){
         SET c.sum_peers = x.total
     "
     );
-    echo mysqli_error($GLOBALS['mysqli']);
+    if (mysqli_errno($GLOBALS['mysqli']))
+        $logger->error(mysqli_error($GLOBALS['mysqli']));
     
     $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM `movies` WHERE `movies`.id in (SELECT movieId FROM links)");
     while ($row = mysqli_fetch_assoc($sqlresult))
         if ($reason = trySkipMovie($row)) {
-            echo "Reason: $reason\n";
+            $logger->info("Reason: $reason");
             addMovie($row);
-            echo "\t" . $row['title'] . "\n";
-            print_r($row);
+            $logger->info("\t" . $row['title']);
+            //$logger->info(print_r($row, true));
         }
 }
 
@@ -185,20 +191,17 @@ header('Content-Type: text/plain; charset=UTF-8');
 connect();
 set_time_limit(5*60);
 
+$logger->info("update script started");
+
 $time_start = microtime(true);
 
 updateLinks();
-echo "\n";
 deleteBanned();
-echo "\n";
 deleteOld();
-echo "\n";
 updateMovies();
-echo "\n";
 
 $time_end = microtime(true);
 $time = $time_end - $time_start;
-echo "in $time seconds\n";
 
-
+$logger->info("update script finished in $time seconds");
 ?>
