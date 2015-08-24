@@ -30,7 +30,7 @@
     <div class="container">
     
     <pre id="response"></pre>
-    
+
     <div class="form-group">
         <input id="getIdsTitle" class="form-control" type="text" value="getIdsTitle"/>
         <input id="getIdsYear" class="form-control" type="number" value="getIdsYear"/>
@@ -45,6 +45,16 @@
             });
         </script>
     </div>
+    
+    <pre id="logs"></pre>
+    <script type="text/javascript">
+        window.setInterval(function(){
+            $.post( "ajax.php", { method: "getLogs" })
+            .done(function( data ) {
+                $('#logs').html(data);
+            });
+        }, 5000);
+    </script>
 
     <?php
         include "html/footer.php";

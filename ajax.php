@@ -62,6 +62,12 @@ if ($user && $login != 'wise guest' && array_key_exists('method', $_POST))
                 }
             } else echo "access denied";
             break;
+        case "getLogs":
+            if (isAdmin($user['id'])) {
+                $log = `tail -n 100 logs/\$(ls -t logs | head -1)`;
+                echo $log;
+            } else echo "access denied";
+            break;
         default:
             echo "method not specified\n";
     }    
