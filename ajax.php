@@ -34,7 +34,9 @@ if ($user && $login != 'wise guest' && array_key_exists('method', $_POST))
             unIgnoreMovie((int)$user['id'], (int)$_POST['movieId']);
             break;
         case "vkUploadPhoto":
-            echo vkUploadPhoto((int)$_POST['movieId'], $user['token']);
+            if (isAdmin($user['id'])) {
+                echo vkUploadPhoto((int)$_POST['movieId'], $user['token']);
+            } else echo "access denied";
             break;
         case "updateMovie":
             if (isAdmin($user['id'])) {

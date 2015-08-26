@@ -45,6 +45,8 @@
                       'access_token'=>$token);
         $result = file_get_contents("https://api.vk.com/method/photos.getWallUploadServer?".http_build_query($data));
         $result = json_decode($result, true);
+        if (array_key_exists('error', $result))
+            return print_r($result, true);
 
         //post image
         $target_url = $result['response']['upload_url'];
