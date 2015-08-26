@@ -150,6 +150,10 @@
     }
 
     function extractTranslate($str, &$movie){
+        $GLOBALS['logger']->debug("str: $str");
+        $str = str_replace(" c ", " с ", $str);
+        $str = preg_replace("/3(..)/", "З$1", $str);
+        $GLOBALS['logger']->debug("str: $str");
         $result = array();
         $res = preg_match_all('/[\|\[] *(лицензия|чистый звук|звук с ts|Звук с CAMRip|iTunes|BaibaKo|line)[\W]/isuU', $str.' ', $result);
         if (!$result[0])
