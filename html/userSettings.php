@@ -57,6 +57,7 @@
             <select name="sortType" class="form-control">
               <option value="0" <?php echo $user['sortType']==0?"selected":""; ?>>пирам</option>
               <option value="1" <?php echo $user['sortType']==1?"selected":""; ?>>новизне</option>
+              <option value="2" <?php echo $user['sortType']==2?"selected":""; ?>>рейтингу</option>
             </select>
         </div>
       </div>

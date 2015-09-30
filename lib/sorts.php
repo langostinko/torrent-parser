@@ -19,6 +19,12 @@ function cmpBySeedLeech(&$a, &$b) {
     return $a["sortVal"] < $b["sortVal"];
 }
 
+function cmpByRating(&$a, &$b) {
+    $a['sortVal'] = (float) ( (array_key_exists("kinopoiskRating", $a)&&$a['kinopoiskRating'])?$a['kinopoiskRating']:$a['imdbRating'] );
+    $b['sortVal'] = (float) ( (array_key_exists("kinopoiskRating", $b)&&$b['kinopoiskRating'])?$b['kinopoiskRating']:$b['imdbRating'] );
+    return $a["sortVal"] < $b["sortVal"];
+}
+
 function cmpByRatingLeech(&$a, &$b) {
     $aPeer = max($a["totalLeech"]+$a["totalSeed"],$a['sum_peers']);
     $bPeer = max($b["totalLeech"]+$b["totalSeed"],$b['sum_peers']);
@@ -116,8 +122,10 @@ function sortBySeedLeech(&$movies, $user) {
         usort($take, "cmpByLeech");
     */
     
-    if ($user['sortType'] == 2 || array_key_exists("underrated", $_GET))
+    if ($user['sortType'] == 3 || array_key_exists("underrated", $_GET))
         usort($take, "cmpByRatingLeech");
+    else if ($user['sortType'] == 2)
+        usort($take, "cmpByRating");
     else if ($user['sortType'] == 1)
         usort($take, "cmpByOcc");
     else
