@@ -1,4 +1,15 @@
 <?php
+    function getImgFromLink($link) {
+        $prefix = "img/trackers";
+        if (strpos($link, RUTORROOT) !== false)
+            return "$prefix/rutor.ico";
+        if (strpos($link, "seedoff") !== false)
+            return "$prefix/seedoff.ico";
+        if (strpos($link, "nnm-club") !== false)
+            return "$prefix/nnm-club.ico";
+        return "$prefix/torrent.ico";
+    }
+
     function qualityToRool($qual) {
         if (in_array($qual, 
             array("DVDSCR","TS","CAM","CAMRIP","HDTS","HDCAM","TELECINE","TC","",)
@@ -150,10 +161,8 @@
     }
 
     function extractTranslate($str, &$movie){
-        $GLOBALS['logger']->debug("str: $str");
         $str = str_replace(" c ", " с ", $str);
         $str = preg_replace("/3(..)/", "З$1", $str);
-        $GLOBALS['logger']->debug("str: $str");
         $result = array();
         $res = preg_match_all('/[\|\[] *(лицензия|чистый звук|звук с ts|Звук с CAMRip|iTunes|BaibaKo|line)[\W]/isuU', $str.' ', $result);
         if (!$result[0])

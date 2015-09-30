@@ -260,7 +260,7 @@
                         echo "<tr>\n";
                         echo "\t<td data-order='" . qualityToRool($cur['quality']) . "'>$aS".$cur['quality']."$aE</td>\n";
                         echo "\t<td data-order='" . translateQualityToRool($cur['translateQuality']) . "'>$aS".$cur['translateQuality']."$aE</td>\n";
-                        echo "\t<td class='hidden-xs'>$aS".$cur['description']."$aE</td>\n";
+                        echo "\t<td class='hidden-xs'><img style='width: 12px; vertical-align: baseline' src='".getImgFromLink($cur['link'])."'/> $aS".$cur['description']."$aE</td>\n";
                         echo "\t<td>".$cur['size']."</td>\n";
                         echo "\t<td>".$cur['seed']."</td>\n";
                         echo "\t<td class='hidden-xs'>".$cur['leech']."</td>\n";

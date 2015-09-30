@@ -15,7 +15,7 @@ class RutorLoader extends AbstractLoader {
     }
 
     function processTd($html, &$movie){
-        $res = $html->find('a',1);
+        $res = $html->find('a',2);
         if (!$res)
             return false;
         $movie['link'] = RUTORROOT.$res->href;
