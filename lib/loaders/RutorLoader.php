@@ -35,6 +35,11 @@ class RutorLoader extends AbstractLoader {
             $this->logger->info("skip series: " . $title);
             return false;
         }
+        $res1 = preg_match_all('/\| трейлер/isuU', $title, $result, PREG_OFFSET_CAPTURE);
+        if ($res1) {//that's a trailer
+            $this->logger->info("skip trailer: " . $title);
+            return false;
+        }
 
         extractString($title, $movie);
         extractTranslate($title, $movie);
