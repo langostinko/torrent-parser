@@ -4,6 +4,8 @@ torrent-parser.sublime-workspace
 
 #movie posters
 img/posters/
+#trackers icons
+img/trackers
 
 #passwords
 lib/pass.php
