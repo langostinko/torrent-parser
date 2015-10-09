@@ -19,6 +19,9 @@ bin/
 #logs
 logs/
 
+#cookies for curl
+kinopoisk_cookies.jar
+
 #robots
 robots.txt
 

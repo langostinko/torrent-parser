@@ -93,6 +93,7 @@
     }
 
     function getKinopoiskLink($link) {
+        return false;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $link);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -125,6 +126,8 @@
 
         include_once(__DIR__.'/simple_html_dom.php');
         $html = str_get_html($response);
+        if (!$html)
+            return false;
 
         foreach($html->find('div[class=element]') as $row) {
             $pName = $row->find('p[class=name]',0);
