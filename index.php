@@ -129,7 +129,9 @@
                         <?php echo $movieTitle; ?>
                         <div class='movieQuality'>
                             <span class="glyphicon glyphicon-facetime-video"></span> <?php echo $movie['qualityStr']; ?>
+                            <?php if ($movie['translateQualityStr']) { ?>
                             <span class="glyphicon glyphicon-volume-up"></span> <?php echo $movie['translateQualityStr'];/*translateQualityToStr($movie['translateQuality']);*/ ?>
+                            <?php } ?>
                         </div>
                     </div>
                     <?php if ($login) { ?>

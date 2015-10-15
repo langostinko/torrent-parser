@@ -93,7 +93,6 @@
     }
 
     function getKinopoiskLink($link) {
-        return false;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $link);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -207,25 +206,42 @@
     }
     
     function trySkipMovie(&$movie) {
-        static $cache = false;
-        if (!$cache) {
+        static $cacheOld = false;
+        static $cacheFresh = false;
+        if (!$cacheFresh) {
             $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT id, imdbid, kpid FROM movies WHERE updated > date_add(current_timestamp, interval -".UPDATEMOVIESEVERYDAYS." day)");
             while ($row = mysqli_fetch_assoc($sqlresult)) {
-                $cache[$row['imdbid']] = $row['id'];
-                $cache[$row['kpid']] = $row['id'];
+                $cacheFresh[$row['imdbid']] = $row['id'];
+                $cacheFresh[$row['kpid']] = $row['id'];
+            }
+            $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT id, imdbid, kpid FROM movies WHERE updated <= date_add(current_timestamp, interval -".UPDATEMOVIESEVERYDAYS." day)");
+            while ($row = mysqli_fetch_assoc($sqlresult)) {
+                $cacheOld[$row['imdbid']] = $row['id'];
+                $cacheOld[$row['kpid']] = $row['id'];
             }
         }
 
         $row = false;
-        $idTypes = array("imdbid", "kpid");
-        foreach ($idTypes as $idName) 
-            if (array_key_exists($idName, $movie) && $movie[$idName] && array_key_exists($movie[$idName], $cache)) {
-                $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies WHERE id=" . $cache[$movie[$idName]]);
+        $fresh = false;
+        $idTypes = array("kpid", "imdbid");
+        foreach ($idTypes as $idName) {
+            if (array_key_exists($idName, $movie) && $movie[$idName] && array_key_exists($movie[$idName], $cacheFresh)) {
+                $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies WHERE id=" . $cacheFresh[$movie[$idName]]);
                 $row = mysqli_fetch_assoc($sqlresult);
+                $fresh = true;
                 break;
             }
+            if (array_key_exists($idName, $movie) && $movie[$idName] && array_key_exists($movie[$idName], $cacheOld)) {
+                $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies WHERE id=" . $cacheOld[$movie[$idName]]);
+                $row = mysqli_fetch_assoc($sqlresult);
+                $fresh = false;
+                break;
+            }
+        }
         if (!$row)
-            return "row not found in mysql cache / scheduled update";
+            return "row not found in mysql cache";
+        if (!$fresh)
+            return "scheduled update";
 
         $json = json_decode($row['description'], true);
         if (!$json)
@@ -345,7 +361,7 @@
             return 0;
 
         $row = false;
-        $idTypes = array("imdbid", "kpid");
+        $idTypes = array("kpid", "imdbid");
         foreach ($idTypes as $idName) 
             if (array_key_exists($idName, $movie) && $movie[$idName]) {
                 $id = mysqli_real_escape_string($GLOBALS['mysqli'], $movie[$idName]);
