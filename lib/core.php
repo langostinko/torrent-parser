@@ -34,13 +34,13 @@
     
     function translateQualityToRool($qual) {
         if (in_array($qual,
-            array("ORIGINAL","SUB",)
+            array("ORIGINAL",)
         )) return 0;
         if (in_array($qual,
             array("ЗВУК С TS","ЗВУК С CAMRIP",)
         )) return 1;
         if (in_array($qual,
-            array("L","L1","L2","A","ЕСАРЕВ","МАТВЕЕВ","VO")
+            array("L","L1","L2","A","ЕСАРЕВ","МАТВЕЕВ","VO","SUB")
         )) return 2;
         if (in_array($qual,
             array("P","P2","BAIBAKO",)
@@ -430,7 +430,7 @@
         static $cache = false;
         static $cachedUpdate = array();
         if (!$cache) {
-            $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT md5 FROM links WHERE updated > date_add(current_timestamp, interval -365 day)");
+            $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT md5 FROM links");
             if (mysqli_errno($GLOBALS['mysqli']))
                 $logger->error(mysqli_error($GLOBALS['mysqli']));
             while ($row = mysqli_fetch_assoc($sqlresult))
