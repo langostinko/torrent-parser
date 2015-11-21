@@ -63,8 +63,8 @@
     
     function translit_utf8($str) {
         return strtr_utf8($str, 
-          "ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÝßàáâãäåçèéêëìíîïñòóôõöøùúûüýÿ",
-          "AAAAAACEEEEIIIINOOOOOOYSaaaaaaceeeeiiiinoooooouuuuyy");
+          "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÝßàáâãäåæçèéêëìíîïñòóôõöøùúûüýÿ",
+          "AAAAAAACEEEEIIIINOOOOOOYSaaaaaaaceeeeiiiinoooooouuuuyy");
     }
 
     function searchIMDB($title, &$movie){
