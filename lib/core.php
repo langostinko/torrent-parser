@@ -45,7 +45,10 @@
         if (in_array($qual,
             array("P","P2","BAIBAKO",)
         )) return 3;
-        return 4;
+        if (in_array($qual,
+            array("ЧИСТЫЙ ЗВУК","LINE",)
+        )) return 4;
+        return 5;
     }
     
     function checkTranslateQuality($qual, $rool) {
