@@ -91,9 +91,10 @@
             });
         });  
     </script>
-
     
     <?php
+        // Head tabs
+        // this requires global $liactive pointing at active tab
         $liactive = "home";
         include "html/navbar.php";
     ?>
@@ -101,87 +102,16 @@
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
         <div id='main' class="container-fluid" style="padding: 0">
-        <?php
-            $cnt = 0;
-            foreach($keys as $key=>$movieSorted) {
-                $movie = $movies[$movieSorted['id']];
-                $desc = $movie['description'];
-                $movieTitle = htmlspecialchars(array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']);
-                ?>
-                <div class='movie moviePos<?php echo $movie['id']; ?>'>
-                    <a title="<?php echo array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']; echo " (".$movie['totalSeed']."↑ ".$movie['totalLeech']."↓)"; ?>" target='_blank' href="movie.php?id=<?php echo $movie['id']; ?>">
-                        <img class='poster' alt='<?=$movieTitle?>' src='<?php echo array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster']; ?>' />
-                    </a>
-                    <?php if (array_key_exists("kinopoiskId", $desc)) {?>
-                        <a title="открыть на Кинопоиске" target='_blank' href='<?php echo "http://www.kinopoisk.ru/film/".$desc['kinopoiskId'];?>/'> 
-                    <?php } else { ?>
-                        <a title="открыть на IMDB" target='_blank' href='<?php echo "http://www.imdb.com/title/".$movie['imdbid'];?>/'> 
-                    <?php } ?>
-                        <div class='movieInfo'>
-                            <div class='movieRating'><?php echo sprintf("%.1f", (array_key_exists("kinopoiskRating", $desc)&&$desc['kinopoiskRating'])?$desc['kinopoiskRating']:$desc['imdbRating'] ); ?></div>
-                            <div class='movieRelease'>
-                                <?php echo date("M'y",$movie['Release']); ?>
-                                <!--<?php echo $movie['totalSeed']."↑ ".$movie['totalLeech']."↓"; ?>-->
-                            </div>
-                        </div>
-                    </a>
-                    <div class='movieTitle'>
-                        <?php echo $movieTitle; ?>
-                        <div class='movieQuality'>
-                            <span class="glyphicon glyphicon-facetime-video"></span> <?php echo $movie['qualityStr']; ?>
-                            <?php if ($movie['translateQualityStr']) { ?>
-                            <span class="glyphicon glyphicon-volume-up"></span> <?php echo $movie['translateQualityStr'];/*translateQualityToStr($movie['translateQuality']);*/ ?>
-                            <?php } ?>
-                        </div>
-                    </div>
-                    <?php if ($login) { ?>
-                    <a title="не показывать (в корзину)" target='_blank' href='#'> 
-                        <div class='movieDelete' movieId='<?php echo $movie['id']; ?>'>
-                            <span class="glyphicon glyphicon-remove-circle"></span>
-                        </div>
-                    </a>
-                    <?php } ?>
-                </div>
-                <?php
-                    if (++$cnt >= 48)
-                        break;
-            }    
-        ?>    
+            <?php
+                // Divs with movies' posters
+                // this requires global $keys
+                include "html/movieDivs.php"; 
+            ?>
 
-            <h2 class="hidden-xs">Свежие торренты</h2>
-            <table id='torrentTable' class='table table-striped table-hover hidden-xs'>
-                <thead>
-                  <tr>
-                    <td>качество</td>
-                    <td>перевод</td>
-                    <td>фильм</td>
-                    <td>размер</td>
-                    <td>сиды</td>
-                    <td>личеры</td>
-                    <td>добавлено</td>
-                  </tr>
-                </thead>
-                <tbody>
-                <?php
-                    $torrents = array();
-                    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE 1 ORDER BY added DESC LIMIT 10");
-                    while ($row = mysqli_fetch_assoc($sqlresult))
-                        $torrents[] = $row;
-
-                    foreach($torrents as $cur) {
-                        echo "<tr>\n";
-                        echo "\t<td data-order='" . qualityToRool($cur['quality']) . "'>".$cur['quality']."</td>\n";
-                        echo "\t<td data-order='" . translateQualityToRool($cur['translateQuality']) . "'>".$cur['translateQuality']."</td>\n";
-                        echo "\t<td><a target='_blank' href='/movie.php?id=".$cur['movieId']."'>".$cur['description']."</a></td>\n";
-                        echo "\t<td>".$cur['size']."</td>\n";
-                        echo "\t<td>".$cur['seed']."</td>\n";
-                        echo "\t<td>".$cur['leech']."</td>\n";
-                        echo "\t<td data-order='" . strtotime($cur['added']) . "'>".date("M j H:i:s", strtotime($cur['added']))."</td>\n";
-                        echo "</tr>\n";
-                    }
-                ?>
-                </tbody>
-            </table>      
+            <?php
+                // Fresh torrents table
+                include "html/freshTorrents.php"; 
+            ?>
         </div>
         <?php
             include "html/footer.php";
