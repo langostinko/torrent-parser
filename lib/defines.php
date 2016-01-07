@@ -20,6 +20,6 @@
     //define("PROXY", "183.207.229.200:80");
     //define("PROXY", null);
 
-    $BANNED = array(1288, 518, 1421, 662, 1499, 1598, 373, 1225);
+    $BANNED = array(1288, 518, 1421, 662, 1499, 1598, 373, 1225, 2503);
     $logger = new Katzgrau\KLogger\Logger(LOGDIR);
 ?>
