@@ -108,6 +108,26 @@
         return $response;
 
     }
+    
+    function getKinopoiskMoviesList($userId) {
+        $link = "http://www.kinopoisk.ru/user/$userId/movies/list/sort/default/vector/desc/perpage/100/";
+        $response = getKinopoiskLink($link);
+        
+        include_once(__DIR__.'/simple_html_dom.php');
+        $html = str_get_html($response);
+        if (!$html)
+            return false;
+
+        $result = array();
+        foreach($html->find('li[class=item]') as $row) {
+            $movieId = array();
+            $res = preg_match_all('/film_(\d+)/isu', $row->id, $movieId);
+            if ($movieId && count($movieId[0]))
+                array_push($result, (int)$movieId[1][0]);
+        }
+        
+        return $result;
+    }
 
     function searchKinopoisk($title, &$movie){
         $title = translit_utf8($title);

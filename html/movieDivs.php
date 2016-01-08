@@ -32,7 +32,7 @@
                     <?php } ?>
                 </div>
             </div>
-            <?php if ($login) { ?>
+            <?php if ($login && !defined("KPPAGE")) { ?>
             <a title="не показывать (в корзину)" target='_blank' href='#'> 
                 <div class='movieDelete' movieId='<?php echo $movie['id']; ?>'>
                     <span class="glyphicon glyphicon-remove-circle"></span>

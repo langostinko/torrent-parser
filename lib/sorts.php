@@ -35,6 +35,9 @@ function cmpByRatingLeech(&$a, &$b) {
 
 function calcTotalSeedLeech(&$movies, $user) {
     $q = "SELECT * FROM links WHERE NOT `links`.movieId in (SELECT movieId FROM userignore WHERE userId={$user['id']}) ORDER BY seed DESC";
+    if (defined("KPPAGE"))
+        $q = "SELECT * FROM links WHERE `links`.movieId in ( " . $user["sqlIn"] . " ) ORDER BY seed DESC";
+
     $sqlresult = mysqli_query($GLOBALS['mysqli'], $q);
     $igList = array();
     while ($row = mysqli_fetch_assoc($sqlresult)) {
@@ -49,23 +52,30 @@ function calcTotalSeedLeech(&$movies, $user) {
             continue;
         if (!is_array($movies[$row['movieId']]['description']))
             $movies[$row['movieId']]['description'] = json_decode($movies[$row['movieId']]['description'], true);
-        if (array_key_exists("kinopoiskRating", $movies[$row['movieId']]['description']) && $movies[$row['movieId']]['description']['kinopoiskRating']) {
-            if ((float)$movies[$row['movieId']]['description']['kinopoiskRating'] < $user['minRating'])
+        
+        if (!defined("KPPAGE")) {
+            if (array_key_exists("kinopoiskRating", $movies[$row['movieId']]['description']) && $movies[$row['movieId']]['description']['kinopoiskRating']) {
+                if ((float)$movies[$row['movieId']]['description']['kinopoiskRating'] < $user['minRating'])
+                    continue;
+            } else if ((float)$movies[$row['movieId']]['description']['imdbRating'] < $user['minRating'])
                 continue;
-        } else if ((float)$movies[$row['movieId']]['description']['imdbRating'] < $user['minRating'])
-            continue;
-        if ($user['minVotes']) {
-            $votes = intval(str_replace(",","",$movies[$row['movieId']]['description']['imdbVotes']));;
-            if ($votes < $user['minVotes']) 
-                continue;
+            if ($user['minVotes']) {
+                $votes = intval(str_replace(",","",$movies[$row['movieId']]['description']['imdbVotes']));;
+                if ($votes < $user['minVotes']) 
+                    continue;
+            }
         }
+
         if (empty($movies[$row['movieId']]['Release']))
             $movies[$row['movieId']]['Release'] = strtotime($movies[$row['movieId']]['description']['Released']);
 
-        if ($user['maxDaysDif']) {
-            if ((time()-$movies[$row['movieId']]['Release'])/(30.417*24*60*60) > $user['maxDaysDif'])
-                continue;
+        if (!defined("KPPAGE")) {
+            if ($user['maxDaysDif']) {
+                if ((time()-$movies[$row['movieId']]['Release'])/(30.417*24*60*60) > $user['maxDaysDif'])
+                    continue;
+            }
         }
+
         if (!(array_key_exists("Poster", $movies[$row['movieId']]['description']) && $movies[$row['movieId']]['description']['Poster'] != 'N/A' || array_key_exists("PosterRu", $movies[$row['movieId']]['description'])))
             continue;
 

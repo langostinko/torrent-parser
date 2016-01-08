@@ -8,7 +8,10 @@
         <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand" style="font-family: Georgia, 'Times New Roman', Times, serif;" href=".">FRESH SWAG</a>
-      <span class="navbarDesc"></span>
+      <p class="navbar-text" style="margin: 10px 15px">
+        <a title="Импорт из КиноПоиска" href="kp.php" ><img style="height:30px" alt="Импорт из КиноПоиска" src="img/kp_64.png"/></a>
+      </p>
+      <!--span class="navbarDesc"></span-->
     </div>
     <div class="navbar-collapse collapse">
         <p class="navbar-text" style="margin: 10px 15px">
@@ -40,6 +43,9 @@
                 $( "#userSettings" ).slideUp( "fast" );
               } return;
               '>settings</a>
+        </li>
+        <li <?php if ($liactive=='kp') echo "class='active'"; ?>>
+            <a href='kp.php'>кинопоиск</a>
         </li>
         <li <?php if ($liactive=='history') echo "class='active'"; ?>>
             <a href='user.php'>корзина</a>

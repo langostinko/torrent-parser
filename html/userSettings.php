@@ -1,28 +1,40 @@
 <div id="userSettings" <?php if (array_key_exists('showSettings', $_SESSION) && $_SESSION['showSettings'] === "no") echo "style='display: none;'" ?>>
 <div class="container">
-    <form class="form-inline" action='.' method='post'>
+    <form class="form-inline" 
+          action='<?=defined("KPPAGE")?"kp.php":"."?>' 
+          method='post'>
         <input type='hidden' name="method" value="setSettings"/>
-      <div class="form-group">
-        <label class="sr-only" for="minRating">рейтинг</label>
-        <div class="input-group">
-            <div class="input-group-addon">рейтинг ≥</div>
-            <input name="minRating" type="number" class="form-control" style="width: 60px" id="minRating" placeholder="0.0" min=0 max=10 step=0.1 value='<?php echo $user['minRating']; ?>'>
-        </div>
-      </div>
-      <div class="form-group" style="display: none;">
-        <label class="sr-only" for="minVotes">голосов IMDB</label>
-        <div class="input-group">
-            <div class="input-group-addon">голосов IMDB ≥</div>
-            <input name="minVotes" type="number" class="form-control" id="minVotes" placeholder="0" min=0 max=9000000 step=1 value='<?php echo $user['minVotes']; ?>'>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="sr-only" for="maxDaysDif">месяцев с премьеры</label>
-        <div class="input-group">
-            <div class="input-group-addon">месяцев с премьеры ≤</div>
-            <input name="maxDaysDif" type="number" class="form-control" style="width: 60px" id="maxDaysDif" placeholder="0" min=0 max=9000 step=1 value='<?php echo $user['maxDaysDif']; ?>'>
-        </div>
-      </div>
+      <?php if (!defined("KPPAGE")) { ?>
+          <div class="form-group">
+            <label class="sr-only" for="minRating">рейтинг</label>
+            <div class="input-group">
+                <div class="input-group-addon">рейтинг ≥</div>
+                <input name="minRating" type="number" class="form-control" style="width: 60px" id="minRating" placeholder="0.0" min=0 max=10 step=0.1 value='<?php echo $user['minRating']; ?>'>
+            </div>
+          </div>
+          <div class="form-group" style="display: none;">
+            <label class="sr-only" for="minVotes">голосов IMDB</label>
+            <div class="input-group">
+                <div class="input-group-addon">голосов IMDB ≥</div>
+                <input name="minVotes" type="number" class="form-control" id="minVotes" placeholder="0" min=0 max=9000000 step=1 value='<?php echo $user['minVotes']; ?>'>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="sr-only" for="maxDaysDif">месяцев с премьеры</label>
+            <div class="input-group">
+                <div class="input-group-addon">месяцев с премьеры ≤</div>
+                <input name="maxDaysDif" type="number" class="form-control" style="width: 60px" id="maxDaysDif" placeholder="0" min=0 max=9000 step=1 value='<?php echo $user['maxDaysDif']; ?>'>
+            </div>
+          </div>
+      <?php } else { ?>
+          <div class="form-group">
+            <label class="sr-only" for="kpID">Кинопоиск ID</label>
+            <div class="input-group">
+                <div class="input-group-addon">Кинопоиск ID</div>
+                <input name="kpID" type="number" class="form-control" style="width: 120px" id="kpID" placeholder="0" value='<?php echo $user['kpID']; ?>'>
+            </div>
+          </div>
+      <?php } ?>
       <div class="form-group">
         <div class="checkbox">
             <label>

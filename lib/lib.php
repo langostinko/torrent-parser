@@ -48,14 +48,28 @@
     function setSettings(&$user, $settings) {
         $userId = $user['id'];
         $quality = $user['quality'] = $settings['quality'];
-        $minRating = $user['minRating'] = $settings['minRating'];
-        $maxDaysDif = $user['maxDaysDif'] = $settings['maxDaysDif'];
+
+        $minRating = $user['minRating'];
+        if (array_key_exists('minRating', $settings))
+            $minRating = $user['minRating'] = $settings['minRating'];
+
+        $maxDaysDif = $user['maxDaysDif'];
+        if (array_key_exists('maxDaysDif', $settings))
+            $maxDaysDif = $user['maxDaysDif'] = $settings['maxDaysDif'];
+
+        $minVotes = $user['minVotes'];
+        if (array_key_exists('minVotes', $settings))
+            $minVotes = $user['minVotes'] = $settings['minVotes'];
+
+        $kpID = $user['kpID'];
+        if (array_key_exists('kpID', $settings))
+            $kpID = $user['kpID'] = $settings['kpID'];
+
         $onlyNewTor = $user['onlyNewTor'] = $settings['onlyNewTor'];
-        $minVotes = $user['minVotes'] = $settings['minVotes'];
         $translateQuality = $user['translateQuality'] = $settings['translateQuality'];
         $sortType = $user['sortType'] = $settings['sortType'];
         if ($userId != 3)
-            mysqli_query($GLOBALS['mysqli'], "UPDATE users SET quality=$quality, minRating=$minRating, maxDaysDif=$maxDaysDif, onlyNewTor=$onlyNewTor, minVotes=$minVotes, translateQuality=$translateQuality, sortType=$sortType WHERE id=$userId");
+            mysqli_query($GLOBALS['mysqli'], "UPDATE users SET quality=$quality, minRating=$minRating, maxDaysDif=$maxDaysDif, onlyNewTor=$onlyNewTor, minVotes=$minVotes, translateQuality=$translateQuality, sortType=$sortType, kpID=$kpID WHERE id=$userId");
         $_SESSION["user"] = $user;
     }
 
