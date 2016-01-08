@@ -110,7 +110,7 @@
     }
     
     function getKinopoiskMoviesList($userId) {
-        $link = "http://www.kinopoisk.ru/user/$userId/movies/list/sort/default/vector/desc/perpage/100/";
+        $link = "http://www.kinopoisk.ru/user/$userId/movies/list/perpage/200/";
         $response = getKinopoiskLink($link);
         
         include_once(__DIR__.'/simple_html_dom.php');

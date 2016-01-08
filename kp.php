@@ -35,8 +35,9 @@
     $movieKPIdList = getKinopoiskMoviesList($user['kpID']);
 
     $sqlIn = "";
-    foreach($movieKPIdList as $id)
-        $sqlIn .= $id . ",";
+    if (!empty($movieKPIdList))
+        foreach($movieKPIdList as $id)
+            $sqlIn .= $id . ",";
     $sqlIn .= "-1";
     $q = "SELECT * FROM `movies` WHERE `movies`.kpid in ( " . $sqlIn . " ) AND `movies`.id in (SELECT movieId FROM links)";
     $sqlresult = mysqli_query($GLOBALS['mysqli'], $q);
@@ -75,11 +76,20 @@
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
         <div id='main' class="container-fluid" style="padding: 0">
+            <?php if (!$user['kpID']) { ?>
+                <p>
+                    укажите Kinopoisk ID для импорта списка Ваших фильмов из http://www.kinopoisk.ru/user/{ВАШ_KINOPOISK_ID}/movies/
+                </p>
+                <p>
+                    импортируются максимум 200 фильмов
+                </p>
+            <?php } else if (empty($keys)) { ?>
+                <p>
+                    Ваших фильмов нет (либо они непопулярны) на торрентах
+                </p>
+            <?php } ?>
+            
             <?php
-                if (!$user['kpID'])
-                    echo "Укажите Kinopoisk ID для импорта списка Ваших фильмов из http://www.kinopoisk.ru/user/{ВАШ_KINOPOISK_ID}/movies/";
-                else if (empty($keys))
-                    echo "Ваших фильмов нет (либо непопулярны) на торрентах";
                 // Divs with movies' posters
                 // this requires global $keys
                 include "html/movieDivs.php"; 
