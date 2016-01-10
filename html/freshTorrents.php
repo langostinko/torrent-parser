@@ -14,7 +14,7 @@
     <tbody>
     <?php
         $torrents = array();
-        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE 1 ORDER BY added DESC LIMIT 10");
+        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE type=0 ORDER BY added DESC LIMIT 10");
         while ($row = mysqli_fetch_assoc($sqlresult))
             $torrents[] = $row;
 
@@ -32,3 +32,31 @@
     ?>
     </tbody>
 </table>      
+<?php if (isAdmin($user['id'])) { ?>
+<h2 class="hidden-xs">Легальные поступления</h2>
+<table id='torrentTable' class='table table-striped table-hover hidden-xs'>
+    <thead>
+      <tr>
+        <td>фильм</td>
+        <td>цена</td>
+        <td>добавлено</td>
+      </tr>
+    </thead>
+    <tbody>
+    <?php
+        $legals = array();
+        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE type=1 ORDER BY added DESC LIMIT 10");
+        while ($row = mysqli_fetch_assoc($sqlresult))
+            $legals[] = $row;
+
+        foreach($legals as $cur) {
+            echo "<tr>\n";
+            echo "\t<td><a target='_blank' href='/movie.php?id=".$cur['movieId']."'>".$cur['description']."</a></td>\n";
+            echo "\t<td>".$cur['size']."</td>\n";
+            echo "\t<td data-order='" . strtotime($cur['added']) . "'>".date("M j H:i:s", strtotime($cur['added']))."</td>\n";
+            echo "</tr>\n";
+        }
+    ?>
+    </tbody>
+</table>      
+<?php } ?>

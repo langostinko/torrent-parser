@@ -16,6 +16,7 @@
     $desc = false;
     $ignore = false;
     $torrents = false;
+    $legals = false;
     $bestQuality = array('quality'=>"CAMRIP", 'translateQuality'=>"ORIGINAL");
 
     if ($movieId != -1) {
@@ -33,7 +34,7 @@
         $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT movieId FROM userignore WHERE userId = $userId AND movieId = $movieId ORDER BY id DESC");
         $ignore = (bool)mysqli_fetch_assoc($sqlresult);
 
-        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE movieId = $movieId ORDER BY seed DESC LIMIT 500");
+        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE movieId = $movieId AND type=0 ORDER BY seed DESC LIMIT 500");
         while ($row = mysqli_fetch_assoc($sqlresult)) {
             if (qualityToRool($row['quality']) > qualityToRool($bestQuality['quality'])
             || (qualityToRool($row['quality']) == qualityToRool($bestQuality['quality']) && translateQualityToRool($row['translateQuality']) > translateQualityToRool($bestQuality['translateQuality']) ) ) {
@@ -41,6 +42,16 @@
                 $bestQuality['translateQuality'] = $row['translateQuality'];
             }
             $torrents[] = $row;
+        }
+
+        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE movieId = $movieId AND type=1 LIMIT 500");
+        while ($row = mysqli_fetch_assoc($sqlresult)) {
+            if (qualityToRool($row['quality']) > qualityToRool($bestQuality['quality'])
+            || (qualityToRool($row['quality']) == qualityToRool($bestQuality['quality']) && translateQualityToRool($row['translateQuality']) > translateQualityToRool($bestQuality['translateQuality']) ) ) {
+                $bestQuality['quality'] = $row['quality'];
+                $bestQuality['translateQuality'] = $row['translateQuality'];
+            }
+            $legals[] = $row;
         }
     }
     $bestQuality['quality'] = mb_strtolower($bestQuality['quality'], "UTF-8");
@@ -64,6 +75,19 @@
   <body>
     <script src="js/googleApiAuth.js"></script>
     <script type="text/javascript">
+
+        <?php if ($legals) { ?>
+        $(document).ready(function() {
+            $('#legalTable').DataTable({
+                searching: false,
+                paging: false,
+                ordering: true,
+                order: [[ 1, "asc" ]],
+                autoWidth: true,
+                info: false
+            });
+        });
+        <?php } ?>
 
         $(document).ready(function() {
             $('#torrentTable').DataTable({
@@ -236,6 +260,33 @@
             <div id="movieTrailerDiv" class="embed-responsive embed-responsive-16by9" style="display:none;">
                 <iframe id="movieTrailer" class="embed-responsive-item" allowfullscreen></iframe>
             </div>
+
+            <?php if ($legals) { ?>
+            <table id='legalTable' class='table table-striped table-hover bg-success' cellspacing="0" width="100%">
+                <thead>
+                    <th>легальный просмотр</th>
+                    <th>цена (beta)</th>
+                    <th class='hidden-xs'>дата</th>
+                </thead>
+                <tbody>
+                <?php
+                    foreach($legals as $cur) {
+                        $aS = "<a target='_blank' href='".$cur['link']."'>";
+                        $aE = "</a>";
+                        if ($ban)
+                            $aS = $aE = "";
+                        echo "<tr>\n";
+                        echo "\t<td class='hidden-xs'><img style='width: 12px; vertical-align: baseline' src='".getImgFromLink($cur['link'])."'/> $aS".$cur['description']."$aE</td>\n";
+                        echo "\t<td>~".$cur['size']."</td>\n";
+                        echo "\t<td data-order='" . strtotime($cur['added']) . "' class='hidden-xs'>".date("M\&\\nb\sp;j", strtotime($cur['added_tracker']?$cur['added_tracker']:$cur['added']))."</td>\n";
+                        echo "</tr>\n";
+                    }
+                ?>
+                </tbody>
+            </table>
+                
+            <?php } ?>
+
             <?php if ($ban) { ?>
                 <b>Ссылки на торренты недоступны в Вашей стране (<?=$user_country.":".$_SERVER['REMOTE_ADDR']?>) по просьбе правообладателя</b>
             <?php } ?>

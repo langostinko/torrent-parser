@@ -7,6 +7,8 @@
             return "$prefix/seedoff.ico";
         if (strpos($link, "nnm-club") !== false)
             return "$prefix/nnm-club.ico";
+        if (strpos($link, "ivi.ru") !== false)
+            return "$prefix/ivi.png";
         return "$prefix/torrent.ico";
     }
 
@@ -500,14 +502,15 @@
         $id = $cur['movie']['id'];
         $description = mysqli_real_escape_string($GLOBALS['mysqli'], $cur['description']);
         $quality = mysqli_real_escape_string($GLOBALS['mysqli'], $cur['quality']);
-        $translateQuality = array_key_exists('translateQuality',$cur)?$cur['translateQuality']:"";
+        $translateQuality = mysqli_real_escape_string($GLOBALS['mysqli'], array_key_exists('translateQuality',$cur)?$cur['translateQuality']:"");
+        $type = array_key_exists("type", $cur)?((int)$cur['type']):0;
         $size = (float)$cur['size'];
         $seed = (int)$cur['seed'];
         $leech = (int)$cur['leech'];
         if (!array_key_exists('added_tracker', $cur))
             $cur['added_tracker'] = time();
         $added_tracker = date("Y-m-d H:i:s",(int)$cur['added_tracker']);
-        mysqli_query($GLOBALS['mysqli'], "UPDATE links SET movieId=$id, description='$description', quality='$quality', translateQuality='$translateQuality', size=$size, seed=$seed, leech=$leech, updated=now(), added_tracker='$added_tracker' WHERE md5 = '$hash'");
+        mysqli_query($GLOBALS['mysqli'], "UPDATE links SET movieId=$id, description='$description', quality='$quality', translateQuality='$translateQuality', type=$type, size=$size, seed=$seed, leech=$leech, updated=now(), added_tracker='$added_tracker' WHERE md5 = '$hash'");
         if (mysqli_errno($GLOBALS['mysqli']))
             $logger->error(mysqli_error($GLOBALS['mysqli']));
         return 0;

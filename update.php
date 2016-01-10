@@ -3,6 +3,7 @@ require_once __DIR__."/lib/lib.php";
 include_once __DIR__."/lib/loaders/RutorLoader.php";
 include_once __DIR__."/lib/loaders/NNMLoader.php";
 include_once __DIR__."/lib/loaders/PirateLoader.php";
+include_once __DIR__."/lib/loaders/IviLoader.php";
 include_once __DIR__."/lib/loaders/libSeedoff.php";
 require_once __DIR__."/lib/RollingCurl.php";
 
@@ -118,6 +119,8 @@ function updateLinks(){
     $loaders[] = new PirateLoader("$pirateMain/browse/201/0/7");
     $loaders[] = new PirateLoader("$pirateMain/browse/207/0/7");
     $loaders[] = new PirateLoader("$pirateMain/browse/207/1/7");
+
+    $loaders[] = new IviLoader(1982); //movie-new
 
     foreach ($loaders as $loader) {
         $loader->setLogger($logger);
