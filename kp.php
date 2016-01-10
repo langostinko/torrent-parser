@@ -78,10 +78,11 @@
         <div id='main' class="container-fluid" style="padding: 0">
             <?php if (!$user['kpID']) { ?>
                 <p>
-                    укажите Kinopoisk ID для импорта списка Ваших фильмов из http://www.kinopoisk.ru/user/{ВАШ_KINOPOISK_ID}/movies/
+                    укажите в фильтре Kinopoisk ID для импорта списка Ваших фильмов из http://www.kinopoisk.ru/user/{ВАШ_KINOPOISK_ID}/movies/
                 </p>
-                <p>
-                    импортируются максимум 200 фильмов
+                <p style="font-size: 14px">
+                    импортируются максимум 200 фильмов <br/>
+                    убедитесь, что Ваши списки "публичные" - не скрыты настройками приватности
                 </p>
             <?php } else if (empty($keys)) { ?>
                 <p>

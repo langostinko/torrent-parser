@@ -13,7 +13,7 @@
     //define("RUTORROOT", "http://new-rutor.org");
     //define("RUTORROOT", "http://rutor.org");
 
-    define("PIRATEROOT", "https://pirateproxy.sx");
+    define("PIRATEROOT", "https://thepiratebay.plus");
 
     define("PROXY", "111.161.126.101:80");
     //define("PROXY", "113.255.61.57:80");

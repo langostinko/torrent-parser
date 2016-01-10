@@ -115,17 +115,9 @@ function updateLinks(){
     $loaders[] = new NNMLoader("http://nnm-club.me/forum/tracker.php", $NNMData);
 
     $pirateMain = PIRATEROOT;
-    $loaders[] = new PirateLoader("$pirateMain/browse/201/0/7/0");
-    /*
-    $resPirate1 = new Pirate;
-    $resPirate1->getPirateBay("https://pirateproxy.sx/browse/207/0/7");
-    $resPirate2 = new Pirate;
-    $resPirate2->getPirateBay("https://pirateproxy.sx/browse/207/1/7");
-    $resPirate3 = new Pirate;
-    $resPirate3->getPirateBay("https://pirateproxy.sx/browse/201/0/7");
-    $resPirate = array_merge($resPirate1->result, $resPirate2->result, $resPirate3->result, $resRutor, $resSeedoff);
-    flush();
-    */
+    $loaders[] = new PirateLoader("$pirateMain/browse/201/0/7");
+    $loaders[] = new PirateLoader("$pirateMain/browse/207/0/7");
+    $loaders[] = new PirateLoader("$pirateMain/browse/207/1/7");
 
     foreach ($loaders as $loader) {
         $loader->setLogger($logger);
