@@ -41,6 +41,11 @@ body {
     font-size: 16px;
 }
 
+.legal {
+    background-color: #005000
+    !important;
+}
+
 .movieQuality {
     font-size: 10px;
 }

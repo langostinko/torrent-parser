@@ -5,9 +5,12 @@
         $movie = $movies[$movieSorted['id']];
         $desc = $movie['description'];
         $movieTitle = htmlspecialchars(array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']);
+        $popup = (array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']) 
+                . " (".$movie['totalSeed']."↑ ".$movie['totalLeech']."↓"
+                . (array_key_exists("price", $movie)?(" ".$movie['price']."₽"):"").")";
         ?>
-        <div class='movie moviePos<?php echo $movie['id']; ?>'>
-            <a title="<?php echo array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']; echo " (".$movie['totalSeed']."↑ ".$movie['totalLeech']."↓)"; ?>" target='_blank' href="movie.php?id=<?php echo $movie['id']; ?>">
+        <div class='movie moviePos<?php echo $movie['id'];?>'>
+            <a title="<?=$popup?>" target='_blank' href="movie.php?id=<?php echo $movie['id']; ?>">
                 <img class='poster' alt='<?=$movieTitle?>' src='<?php echo array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster']; ?>' />
             </a>
             <?php if (array_key_exists("kinopoiskId", $desc)) {?>
@@ -19,11 +22,10 @@
                     <div class='movieRating'><?php echo sprintf("%.1f", (array_key_exists("kinopoiskRating", $desc)&&$desc['kinopoiskRating'])?$desc['kinopoiskRating']:$desc['imdbRating'] ); ?></div>
                     <div class='movieRelease'>
                         <?php echo date("M'y",$movie['Release']); ?>
-                        <!--<?php echo $movie['totalSeed']."↑ ".$movie['totalLeech']."↓"; ?>-->
                     </div>
                 </div>
             </a>
-            <div class='movieTitle'>
+            <div class='movieTitle <?php  if (array_key_exists("price", $movie) && $movie['price']==0) echo " legal" ?>'>
                 <?php echo $movieTitle; ?>
                 <div class='movieQuality'>
                     <span class="glyphicon glyphicon-facetime-video"></span> <?php echo $movie['qualityStr']; ?>

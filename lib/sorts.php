@@ -50,6 +50,8 @@ function calcTotalSeedLeech(&$movies, $user) {
             continue;
         if (translateQualityToRool($row['translateQuality']) < $user['translateQuality'])
             continue;
+        if ($row['type'] == 1)
+            $movies[$row['movieId']]['price'] = array_key_exists('price', $movies[$row['movieId']])?min($movies[$row['movieId']]['price'], $row['size']):$row['size'];
         if (!is_array($movies[$row['movieId']]['description']))
             $movies[$row['movieId']]['description'] = json_decode($movies[$row['movieId']]['description'], true);
         
