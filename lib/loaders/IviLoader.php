@@ -8,10 +8,14 @@ class IviLoader extends AbstractLoader {
 
     private $result;
     private $listId;
+    private $from;
+    private $to;
     
-    function __construct($listId) {
+    function __construct($listId, $from = 0, $to = 99) {
         $this->result = array();
         $this->listId = $listId;
+        $this->from = $from;
+        $this->to = $to;
     }
     
     function getIviCallback($response, $info) {
@@ -83,8 +87,8 @@ class IviLoader extends AbstractLoader {
                 "fake" => 0,
                 "withpreorderable" => 0,
                 "id" => $this->listId,
-                "from" => 0,
-                "to" => 128,
+                "from" => $this->from,
+                "to" => $this->to,
                 "app_version" => 870
             ));
 

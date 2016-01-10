@@ -273,8 +273,6 @@
                     foreach($legals as $cur) {
                         $aS = "<a target='_blank' href='".$cur['link']."'>";
                         $aE = "</a>";
-                        if ($ban)
-                            $aS = $aE = "";
                         echo "<tr>\n";
                         echo "\t<td class='hidden-xs'><img style='width: 12px; vertical-align: baseline' src='".getImgFromLink($cur['link'])."'/> $aS".$cur['description']."$aE</td>\n";
                         echo "\t<td>~".$cur['size']."</td>\n";

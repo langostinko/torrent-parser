@@ -120,7 +120,11 @@ function updateLinks(){
     $loaders[] = new PirateLoader("$pirateMain/browse/207/0/7");
     $loaders[] = new PirateLoader("$pirateMain/browse/207/1/7");
 
+    $loaders[] = new IviLoader(1674, 0, 99); //movies-in-2015
+    $loaders[] = new IviLoader(1674, 100, 199); //movies-in-2015
+    $loaders[] = new IviLoader(1674, 200, 299); //movies-in-2015
     $loaders[] = new IviLoader(1982); //movie-new
+    $loaders[] = new IviLoader(1983); //animation-new
 
     foreach ($loaders as $loader) {
         $loader->setLogger($logger);
