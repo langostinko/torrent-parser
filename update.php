@@ -4,6 +4,7 @@ include_once __DIR__."/lib/loaders/RutorLoader.php";
 include_once __DIR__."/lib/loaders/NNMLoader.php";
 include_once __DIR__."/lib/loaders/PirateLoader.php";
 include_once __DIR__."/lib/loaders/IviLoader.php";
+include_once __DIR__."/lib/loaders/MegogoLoader.php";
 include_once __DIR__."/lib/loaders/libSeedoff.php";
 require_once __DIR__."/lib/RollingCurl.php";
 
@@ -125,6 +126,10 @@ function updateLinks(){
     $loaders[] = new IviLoader(1674, 200, 299); //movies-in-2015
     $loaders[] = new IviLoader(1982); //movie-new
     $loaders[] = new IviLoader(1983); //animation-new
+    
+    $loaders[] = new MegogoLoader("http://megogo.net/ru/premiere/page_1?ajax=true");
+    $loaders[] = new MegogoLoader("http://megogo.net/ru/premiere/page_2?ajax=true");
+    $loaders[] = new MegogoLoader("http://megogo.net/ru/premiere/page_3?ajax=true");
 
     foreach ($loaders as $loader) {
         $loader->setLogger($logger);

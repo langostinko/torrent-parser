@@ -9,6 +9,8 @@
             return "$prefix/nnm-club.ico";
         if (strpos($link, "ivi.ru") !== false)
             return "$prefix/ivi.png";
+        if (strpos($link, "megogo") !== false)
+            return "$prefix/megogo.png";
         return "$prefix/torrent.ico";
     }
 

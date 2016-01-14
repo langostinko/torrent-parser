@@ -36,13 +36,15 @@ class IviLoader extends AbstractLoader {
                 $movie["title"] = $row["title"];
                 $movie["year"] = $row["year"];
                 $movie["size"] = 0;
+                if (in_array("SVOD", $row["content_paid_types"])) {
+                    $movie["description"] = "IVI+ (подписка)";
+                    $movie["size"] = 399;
+                }
                 if (in_array("EST", $row["content_paid_types"]))
                     $movie["size"] = 299;
                 if (in_array("TVOD", $row["content_paid_types"]))
                     $movie["size"] = 199;
                 $movie["description"] = "IVI";
-                if (in_array("SVOD", $row["content_paid_types"]))
-                    $movie["description"] = "IVI+ (подписка)";
                 $movie["description"] .= " : " . $movie["title"] . " (" . $movie["year"] . ")";
 
                 $movie['quality'] = "WEB";
