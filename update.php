@@ -115,10 +115,10 @@ function updateLinks(){
     $NNMData["f[1]"] = 954;
     $loaders[] = new NNMLoader("http://nnm-club.me/forum/tracker.php", $NNMData);
 
-    $pirateMain = PIRATEROOT;
+    /*$pirateMain = PIRATEROOT;
     $loaders[] = new PirateLoader("$pirateMain/browse/201/0/7");
     $loaders[] = new PirateLoader("$pirateMain/browse/207/0/7");
-    $loaders[] = new PirateLoader("$pirateMain/browse/207/1/7");
+    $loaders[] = new PirateLoader("$pirateMain/browse/207/1/7");*/
 
     $loaders[] = new IviLoader(1674, 0, 99); //movies-in-2015
     $loaders[] = new IviLoader(1674, 100, 199); //movies-in-2015
