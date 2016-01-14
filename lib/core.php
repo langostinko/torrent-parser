@@ -11,6 +11,8 @@
             return "$prefix/ivi.png";
         if (strpos($link, "megogo") !== false)
             return "$prefix/megogo.png";
+        if (strpos($link, "play.google.com") !== false)
+            return "$prefix/google_play.png";
         return "$prefix/torrent.ico";
     }
 

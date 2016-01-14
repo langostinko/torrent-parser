@@ -5,6 +5,7 @@ include_once __DIR__."/lib/loaders/NNMLoader.php";
 include_once __DIR__."/lib/loaders/PirateLoader.php";
 include_once __DIR__."/lib/loaders/IviLoader.php";
 include_once __DIR__."/lib/loaders/MegogoLoader.php";
+include_once __DIR__."/lib/loaders/GooglePlayLoader.php";
 include_once __DIR__."/lib/loaders/libSeedoff.php";
 require_once __DIR__."/lib/RollingCurl.php";
 
@@ -130,6 +131,9 @@ function updateLinks(){
     $loaders[] = new MegogoLoader("http://megogo.net/ru/premiere/page_1?ajax=true");
     $loaders[] = new MegogoLoader("http://megogo.net/ru/premiere/page_2?ajax=true");
     $loaders[] = new MegogoLoader("http://megogo.net/ru/premiere/page_3?ajax=true");
+    
+    $loaders[] = new GooglePlayLoader("https://play.google.com/store/movies/top?hl=ru");
+    $loaders[] = new GooglePlayLoader("https://play.google.com/store/movies/collection/movers_shakers?hl=ru");
 
     foreach ($loaders as $loader) {
         $loader->setLogger($logger);
