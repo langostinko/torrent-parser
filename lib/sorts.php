@@ -34,11 +34,14 @@ function cmpByRatingLeech(&$a, &$b) {
 }
 
 function calcTotalSeedLeech(&$movies, $user) {
-    $q = "SELECT * FROM links WHERE NOT `links`.movieId in (SELECT movieId FROM userignore WHERE userId={$user['id']}) ORDER BY seed DESC";
+    $q = "SELECT links.* FROM links LEFT JOIN userignore ON userignore.userId = {$user['id']} AND links.movieId=userignore.movieId WHERE userignore.movieId IS NULL ORDER BY seed DESC";
+
     if (defined("KPPAGE"))
         $q = "SELECT * FROM links WHERE `links`.movieId in ( " . $user["sqlIn"] . " ) ORDER BY seed DESC";
 
+    $head_time_start = microtime(true);
     $sqlresult = mysqli_query($GLOBALS['mysqli'], $q);
+    echo "<!-- query took " . (microtime(true) - $head_time_start) . " -->\n";
     $igList = array();
     while ($row = mysqli_fetch_assoc($sqlresult)) {
         if (in_array($row['movieId'], $igList))
