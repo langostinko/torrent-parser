@@ -112,6 +112,7 @@ function calcTotalSeedLeech(&$movies, $user) {
                 $movies[(int)$row['movieId']]['translateQualityStr'] = $row['translateQuality'];
             }
     }
+    echo "<!-- calc took " . (microtime(true) - $head_time_start) . " -->\n";
       
 }
 

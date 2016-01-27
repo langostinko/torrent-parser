@@ -61,28 +61,32 @@ class MegogoLoader extends AbstractLoader {
 		    if (array_key_exists($key, $movies)) {
 		        $movie = $movies[$key];
 		        if (array_key_exists("price", $price['svod'])) {
-                    $movie["description"] = "MEGOGO (подписка) : " . $movie["title"] . " (" . $movie["year"] . ")";
-		            $movie["size"] = $price['svod']["price"];
-		            $movie["link"].="?type=svod";
-		            $this->result[] = $movie;
+		            $added = &$this->result[];
+		            $added = $movie;
+                    $added["description"] = "MEGOGO (подписка) : " . $movie["title"] . " (" . $movie["year"] . ")";
+		            $added["size"] = $price['svod']["price"];
+		            $added["link"].="?type=svod";
 		        }
 		        if (array_key_exists("price", $price['tvod'])) {
-                    $movie["description"] = "MEGOGO (аренда) : " . $movie["title"] . " (" . $movie["year"] . ")";
-		            $movie["size"] = $price['tvod']["price"];
-		            $movie["link"].="?type=tvod";
-		            $this->result[] = $movie;
+		            $added = &$this->result[];
+		            $added = $movie;
+                    $added["description"] = "MEGOGO (аренда) : " . $movie["title"] . " (" . $movie["year"] . ")";
+		            $added["size"] = $price['tvod']["price"];
+		            $added["link"].="?type=tvod";
 		        }
 		        if (array_key_exists("price", $price['dtr'])) {
-                    $movie["description"] = "MEGOGO (аренда) : " . $movie["title"] . " (" . $movie["year"] . ")";
-		            $movie["size"] = $price['dtr']["price"];
-		            $movie["link"].="?type=dtr";
-		            $this->result[] = $movie;
+		            $added = &$this->result[];
+		            $added = $movie;
+                    $added["description"] = "MEGOGO (аренда) : " . $movie["title"] . " (" . $movie["year"] . ")";
+		            $added["size"] = $price['dtr']["price"];
+		            $added["link"].="?type=dtr";
 		        }
 		        if (array_key_exists("price", $price['dto'])) {
-                    $movie["description"] = "MEGOGO : " . $movie["title"] . " (" . $movie["year"] . ")";
-		            $movie["size"] = $price['dto']["price"];
-		            $movie["link"].="?type=dto";
-		            $this->result[] = $movie;
+		            $added = &$this->result[];
+		            $added = $movie;
+                    $added["description"] = "MEGOGO : " . $movie["title"] . " (" . $movie["year"] . ")";
+		            $added["size"] = $price['dto']["price"];
+		            $added["link"].="?type=dto";
 		        }
     		}
 
