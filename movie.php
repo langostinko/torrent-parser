@@ -103,7 +103,7 @@
         // Search for a specified string.
         function search() {
           var q = '"<?php echo html_entity_decode($title); ?>" <?=$desc['Year']?>';
-          gapi.client.setApiKey('AIzaSyDtncZmxqR9jZlLDT00WbT1FwdYGkoY8G0');
+          gapi.client.setApiKey('AIzaSyBHs2qdWW-24RMwG9IZdtjFh2dxJKFlIi4');
           var request = gapi.client.youtube.search.list({
             q: q + " трейлер",
             part: 'id'

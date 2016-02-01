@@ -41,6 +41,7 @@ class MegogoLoader extends AbstractLoader {
 
             $movie['quality'] = "WEB";
             $movie['translateQuality'] = "ЛИЦЕНЗИЯ";
+            $movie['seed'] = $movie['leech'] = 0;
             $movie['type'] = 1;
             $movies[$megogoId] = $movie;
             $priceReq .= $megogoId . "n";
@@ -66,6 +67,8 @@ class MegogoLoader extends AbstractLoader {
                     $added["description"] = "MEGOGO (подписка) : " . $movie["title"] . " (" . $movie["year"] . ")";
 		            $added["size"] = $price['svod']["price"];
 		            $added["link"].="?type=svod";
+                    if (trySkip($added))
+                        unset($added);
 		        }
 		        if (array_key_exists("price", $price['tvod'])) {
 		            $added = &$this->result[];
@@ -73,6 +76,8 @@ class MegogoLoader extends AbstractLoader {
                     $added["description"] = "MEGOGO (аренда) : " . $movie["title"] . " (" . $movie["year"] . ")";
 		            $added["size"] = $price['tvod']["price"];
 		            $added["link"].="?type=tvod";
+                    if (trySkip($added))
+                        unset($added);
 		        }
 		        if (array_key_exists("price", $price['dtr'])) {
 		            $added = &$this->result[];
@@ -80,6 +85,8 @@ class MegogoLoader extends AbstractLoader {
                     $added["description"] = "MEGOGO (аренда) : " . $movie["title"] . " (" . $movie["year"] . ")";
 		            $added["size"] = $price['dtr']["price"];
 		            $added["link"].="?type=dtr";
+                    if (trySkip($added))
+                        unset($added);
 		        }
 		        if (array_key_exists("price", $price['dto'])) {
 		            $added = &$this->result[];
@@ -87,6 +94,8 @@ class MegogoLoader extends AbstractLoader {
                     $added["description"] = "MEGOGO : " . $movie["title"] . " (" . $movie["year"] . ")";
 		            $added["size"] = $price['dto']["price"];
 		            $added["link"].="?type=dto";
+                    if (trySkip($added))
+                        unset($added);
 		        }
     		}
 

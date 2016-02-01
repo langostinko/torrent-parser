@@ -41,7 +41,9 @@ class GooglePlayLoader extends AbstractLoader {
             $movie['quality'] = "WEB";
             $movie['translateQuality'] = "ЛИЦЕНЗИЯ";
             $movie['type'] = 1;
-            $this->result[] = $movie;
+            $movie['seed'] = $movie['leech'] = 0;
+            if (!trySkip($movie))
+                $this->result[] = $movie;
         }
 
 		$this->logger->info(count($this->result) . " new links found");
