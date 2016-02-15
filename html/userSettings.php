@@ -1,5 +1,5 @@
 <div id="userSettings" <?php if (array_key_exists('showSettings', $_SESSION) && $_SESSION['showSettings'] === "no") echo "style='display: none;'" ?>>
-<div class="container">
+<div class="container-fluid">
     <form class="form-inline" 
           action='<?=defined("KPPAGE")?"kp.php":"."?>' 
           method='post'>
@@ -87,10 +87,10 @@
       <?php if (isAdmin($user['id'])) { ?>
       <div id="additionalOptions" class="hidden">
           <div class="form-group">
-            <label class="sr-only" for="minCost">стоимость</label>
+            <label class="sr-only" for="maxCost">стоимость</label>
             <div class="input-group">
-                <div class="input-group-addon">стоимость ≥</div>
-                <input name="minCost" type="number" class="form-control" style="width: 60px" id="maxDaysDif" placeholder="0" min=0 max=9000 step=1 value='<?php echo $user['minCost']; ?>'>
+                <div class="input-group-addon">стоимость ≤</div>
+                <input name="maxCost" type="number" class="form-control" style="width: 70px" id="maxDaysDif" placeholder="0" min=0 max=1000 step=50 value='<?php echo $user['maxCost']; ?>'>
             </div>
           </div>
       </div>
