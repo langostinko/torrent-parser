@@ -29,19 +29,17 @@
     ?>
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-        <div id='main' class="container-fluid" style="padding: 0">
-            <h2>Очищение кармы</h2>
-            <?php
-                define("allCharity", true);
-                include "html/charity.php";
-            ?>
-            <p>пожертвуйте 50₽ в один из фондов</p>
-        </div>
+    <div id='main' class="container-fluid" style="padding: 0">
+        <h2>Очищение кармы</h2>
         <?php
-            include "html/footer.php";
+            define("allCharity", true);
+            include "html/charity.php";
         ?>
+        <p>пожертвуйте 50₽ в один из фондов</p>
     </div>
+    <?php
+        include "html/footer.php";
+    ?>
 
   </body>
 </html>

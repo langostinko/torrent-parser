@@ -73,33 +73,30 @@
         include "html/navbar.php";
     ?>
 
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-        <div id='main' class="container-fluid" style="padding: 0">
-            <?php if (!$user['kpID']) { ?>
-                <p>
-                    укажите в фильтре Kinopoisk ID для импорта списка Ваших фильмов из http://www.kinopoisk.ru/user/{ВАШ_KINOPOISK_ID}/movies/
-                </p>
-                <p style="font-size: 14px">
-                    импортируются максимум 200 фильмов <br/>
-                    убедитесь, что Ваши списки "публичные" - не скрыты настройками приватности
-                </p>
-            <?php } else if (empty($keys)) { ?>
-                <p>
-                    Ваших фильмов нет (либо они непопулярны) на торрентах
-                </p>
-            <?php } ?>
-            
-            <?php
-                // Divs with movies' posters
-                // this requires global $keys
-                include "html/movieDivs.php"; 
-            ?>
-        </div>
+    <div id='main' class="container-fluid">
+        <?php if (!$user['kpID']) { ?>
+            <p>
+                укажите в фильтре Kinopoisk ID для импорта списка Ваших фильмов из http://www.kinopoisk.ru/user/{ВАШ_KINOPOISK_ID}/movies/
+            </p>
+            <p style="font-size: 14px">
+                импортируются максимум 200 фильмов <br/>
+                убедитесь, что Ваши списки "публичные" - не скрыты настройками приватности
+            </p>
+        <?php } else if (empty($keys)) { ?>
+            <p>
+                Ваших фильмов нет (либо они непопулярны) на торрентах
+            </p>
+        <?php } ?>
+        
         <?php
-            include "html/footer.php";
+            // Divs with movies' posters
+            // this requires global $keys
+            include "html/movieDivs.php"; 
         ?>
     </div>
+    <?php
+        include "html/footer.php";
+    ?>
 
   </body>
 </html>

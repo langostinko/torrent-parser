@@ -96,24 +96,21 @@
         include "html/userSettings.php";
     ?>
 
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-        <div id='main' class="container-fluid" style="padding: 0">
-            <?php
-                // Divs with movies' posters
-                // this requires global $keys
-                include "html/movieDivs.php"; 
-            ?>
-
-            <?php
-                // Fresh torrents table
-                include "html/freshTorrents.php"; 
-            ?>
-        </div>
+    <div id='main' class="container-fluid">
         <?php
-            include "html/footer.php";
+            // Divs with movies' posters
+            // this requires global $keys
+            include "html/movieDivs.php"; 
+        ?>
+
+        <?php
+            // Fresh torrents table
+            //include "html/freshTorrents.php"; 
         ?>
     </div>
+    <?php
+        include "html/footer.php";
+    ?>
 
   </body>
 </html>

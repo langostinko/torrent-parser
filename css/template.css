@@ -1,10 +1,12 @@
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
-  padding-top: 50px;
-  padding-bottom: 20px;
+    padding-top: 50px;
+    padding-bottom: 20px;
+    background-color: #eee;
 }
 
 #main {
+    margin-top: 15px;
     text-align: center;
 }
 
@@ -16,9 +18,7 @@ body {
 }
 
 #userSettings {
-    background-color: #eee;
-    margin-bottom: 15px;
-    padding: 10px;
+    margin: 10px;
 }
 
 .movie {
@@ -159,10 +159,12 @@ table.dataTable thead > tr > th {
 .movLeft {
     float:left; 
     width: 25%; 
+    margin-top: 15px;
     padding-right: 10px;
 }
 
 .movRight {
+    margin-top: 15px;
     float:right;
     width: 75%
 }

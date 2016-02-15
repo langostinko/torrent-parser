@@ -127,7 +127,6 @@
         include "html/navbar.php";
     ?>
     
-    <div class="jumbotron">
     <div class="container" itemscope itemtype="http://schema.org/Movie">
     <?php if ($movie) { ?>
         <?php $movieTitle = htmlspecialchars(array_key_exists('titleRu', $desc)?$desc['titleRu']:$desc['Title']); ?>
@@ -329,7 +328,6 @@
     <?php
         include "html/footer.php";
     ?>
-    </div>
 
   </body>
 </html>

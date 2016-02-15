@@ -74,10 +74,28 @@
             </select>
         </div>
       </div>
-    
-      <button type="submit" class="btn btn-default">
-            Обновить
+      <?php if (isAdmin($user['id'])) { ?>
+      <button class="btn btn-default" title="больше параметров" onclick="$('#additionalOptions').toggleClass('hidden');event.preventDefault();">
+            <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
       </button>
+      <?php } ?>
+    
+      <button type="submit" class="btn btn-primary" title="обновить">
+            <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+      </button>
+      
+      <?php if (isAdmin($user['id'])) { ?>
+      <div id="additionalOptions" class="hidden">
+          <div class="form-group">
+            <label class="sr-only" for="minCost">стоимость</label>
+            <div class="input-group">
+                <div class="input-group-addon">стоимость ≥</div>
+                <input name="minCost" type="number" class="form-control" style="width: 60px" id="maxDaysDif" placeholder="0" min=0 max=9000 step=1 value='<?php echo $user['minCost']; ?>'>
+            </div>
+          </div>
+      </div>
+      <?php } ?>
+      
       <?php if (!$login) { ?>
         <span class="help-block" style="text-align: center; margin-bottom: 0">Войдите, чтобы сохранить настройки и получить возможность удалять просмотренные/неинтересные фильмы</span>
       <?php } ?>
