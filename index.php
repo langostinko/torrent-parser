@@ -63,10 +63,6 @@
         include "html/head.php";
     ?>
   <body>
-    <?php
-        include "html/userSettings.php";
-    ?>
-
     <script type="text/javascript">
         var userId = <?php echo $userId; ?>;
 
@@ -97,6 +93,7 @@
         // this requires global $liactive pointing at active tab
         $liactive = "home";
         include "html/navbar.php";
+        include "html/userSettings.php";
     ?>
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
