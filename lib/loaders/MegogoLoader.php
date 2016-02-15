@@ -68,7 +68,7 @@ class MegogoLoader extends AbstractLoader {
 		            $added["size"] = $price['svod']["price"];
 		            $added["link"].="?type=svod";
                     if (trySkip($added))
-                        unset($added);
+                        array_pop($this->result);
 		        }
 		        if (array_key_exists("price", $price['tvod'])) {
 		            $added = &$this->result[];
@@ -77,7 +77,7 @@ class MegogoLoader extends AbstractLoader {
 		            $added["size"] = $price['tvod']["price"];
 		            $added["link"].="?type=tvod";
                     if (trySkip($added))
-                        unset($added);
+                        array_pop($this->result);
 		        }
 		        if (array_key_exists("price", $price['dtr'])) {
 		            $added = &$this->result[];
@@ -86,7 +86,7 @@ class MegogoLoader extends AbstractLoader {
 		            $added["size"] = $price['dtr']["price"];
 		            $added["link"].="?type=dtr";
                     if (trySkip($added))
-                        unset($added);
+                        array_pop($this->result);
 		        }
 		        if (array_key_exists("price", $price['dto'])) {
 		            $added = &$this->result[];
@@ -95,7 +95,7 @@ class MegogoLoader extends AbstractLoader {
 		            $added["size"] = $price['dto']["price"];
 		            $added["link"].="?type=dto";
                     if (trySkip($added))
-                        unset($added);
+                        array_pop($this->result);
 		        }
     		}
 

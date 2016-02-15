@@ -385,7 +385,7 @@
     function addMovie(&$movie, $force = false) {
         global $logger;
         if (!$movie)
-            return "illegal argument";
+            return "illegal argument (null)";
         if (!$force && trySkipMovie($movie) === 0)
             return 0;
 

@@ -151,24 +151,28 @@ function updateLinks(){
         $result = array_merge($result, $loader->getResult());
     }
 
-    $resSeedoff = array();
-    $resSeedoff = seedoff\getSeedoff();
-    $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=14&options=0&order=5&by=2&pages=2"));
-    $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=14&options=0&order=5&by=2&pages=3"));
-    $resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=64&options=0&order=5&by=2&pages=1"));
-    $result = array_merge($result, $resSeedoff);
+    //$resSeedoff = array();
+    //$resSeedoff = seedoff\getSeedoff();
+    //$resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=14&options=0&order=5&by=2&pages=2"));
+    //$resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=14&options=0&order=5&by=2&pages=3"));
+    //$resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=64&options=0&order=5&by=2&pages=1"));
+    //$result = array_merge($result, $resSeedoff);
 
     foreach($result as $cur) {
         if (trySkip($cur))
             continue;
+        usleep(100*1000);
     
         getIds($cur['title_approx'], $cur);
+        if (!$cur['movie']) {
+            $logger->warning("could not find ids for '{$cur['title_approx']} ({$cur['year']})'");
+            continue;
+        }
+        
         $logger->info("add link: " . $cur['title_approx'] . "::" . $cur['description'] . "::" . $cur['link']);
-    
         $res = addLink($cur);
         if ($res !== 0)
             $logger->warning("link was not added: $res");
-        usleep(100*1000);
     }
     $logger->info(count($result) . " links updated");
 }
