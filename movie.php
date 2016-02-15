@@ -273,7 +273,7 @@
                         $aS = "<a target='_blank' href='".$cur['link']."'>";
                         $aE = "</a>";
                         echo "<tr>\n";
-                        echo "\t<td class='hidden-xs'><img style='width: 12px; vertical-align: baseline' src='".getImgFromLink($cur['link'])."'/> $aS".$cur['description']."$aE</td>\n";
+                        echo "\t<td><img style='width: 12px; vertical-align: baseline' src='".getImgFromLink($cur['link'])."'/> $aS".$cur['description']."$aE</td>\n";
                         echo "\t<td data-order=".$cur['size'].">~".$cur['size']."</td>\n";
                         echo "\t<td data-order='" . strtotime($cur['added']) . "' class='hidden-xs'>".date("M\&\\nb\sp;j", strtotime($cur['added_tracker']?$cur['added_tracker']:$cur['added']))."</td>\n";
                         echo "</tr>\n";
