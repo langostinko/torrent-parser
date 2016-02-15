@@ -53,7 +53,7 @@ function echoCharityForm($all = false) {
                     <input name="paymentType" value="AC" type="hidden"/>
                 <?php } ?>
                 
-                <a title='пожертвовать <?=$sum?>₽ в <?=$title?>' href="#" onclick="document.getElementById('form-charity-<?=$shopid?>').submit();">
+                <a title='пожертвовать <?=$sum?>₽ в <?=$title?>' href="#" onclick="yaCounter26593623.reachGoal('charityClick');document.getElementById('form-charity-<?=$shopid?>').submit();">
                     <img class='poster' alt='пожертвовать в <?=$title?>' src='img/charity/<?=$img?>' />
                 </a>
                 <div class='movieTitle legal'>
