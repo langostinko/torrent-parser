@@ -7,7 +7,7 @@ class ImdbInfo extends AbstractInfo {
         $sugTitle = translit_utf8($sugTitle);
         $link = "http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=" . urlencode($sugTitle);
 
-        $file = file_get_contents($link);
+        $file = file_get_contents_curl($link);
         $json = json_decode($file, true);
 
         $vector = array('title_popular','title_exact','title_approx');
@@ -30,7 +30,7 @@ class ImdbInfo extends AbstractInfo {
     static public function load($id, &$result) {
         if (!$id)
             return "could not load IMDB: imdbid is not specified";
-        $omdbapi = file_get_contents("http://www.omdbapi.com/?i=" . urlencode($id));           
+        $omdbapi = file_get_contents_curl("http://www.omdbapi.com/?i=" . urlencode($id));           
         $json = json_decode($omdbapi, true);
         if (!$json)
             return "could not get imdb description";
@@ -41,7 +41,7 @@ class ImdbInfo extends AbstractInfo {
                     $img = "img/posters/$id.jpg";
                     $realImg = dirname( __FILE__ ) . "/../../$img";
                     if ( !(file_exists($realImg) && filesize($realImg)) )
-                        file_put_contents($realImg, file_get_contents($value));
+                        file_put_contents($realImg, file_get_contents_curl($value));
                     if (file_exists($realImg) && filesize($realImg))
                         $result[$key] = $img;
                 }

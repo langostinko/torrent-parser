@@ -87,10 +87,18 @@
       <?php if (isAdmin($user['id'])) { ?>
       <div id="additionalOptions" class="hidden">
           <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <input name="onlyLegal" type="checkbox" <?php echo $user['onlyLegal']?"checked":""; ?> >
+                    легально
+                </label>
+            </div>
+          </div>
+          <div class="form-group">
             <label class="sr-only" for="maxCost">стоимость</label>
             <div class="input-group">
                 <div class="input-group-addon">стоимость ≤</div>
-                <input name="maxCost" type="number" class="form-control" style="width: 70px" id="maxDaysDif" placeholder="0" min=0 max=1000 step=50 value='<?php echo $user['maxCost']; ?>'>
+                <input name="maxCost" type="number" class="form-control" style="width: 70px" id="maxCost" placeholder="0" min=0 max=1000 step=50 value='<?php echo $user['maxCost']; ?>'>
             </div>
           </div>
       </div>

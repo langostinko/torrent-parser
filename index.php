@@ -33,6 +33,8 @@
                         "quality"=>(int)!empty($_POST['quality']),
                         "translateQuality"=>(int)$_POST['translateQuality'],
                         "sortType" => (int)$_POST['sortType'],
+                        "onlyLegal"=>(int)!empty($_POST['onlyLegal']),
+                        "maxCost" => (int)$_POST['maxCost'],
                         )
                 );
                 //Login();

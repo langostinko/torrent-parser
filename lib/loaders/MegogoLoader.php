@@ -47,7 +47,7 @@ class MegogoLoader extends AbstractLoader {
             $priceReq .= $megogoId . "n";
 		}
 		
-		$prices = file_get_contents($priceReq);
+		$prices = file_get_contents_curl($priceReq);
 		if (!$prices) {
 		    $this->logger->warning("failed to get prices");
 		    return;

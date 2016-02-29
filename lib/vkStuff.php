@@ -1,11 +1,13 @@
 <?php
+    require_once __DIR__."/RollingCurl.php";
+
     $VKserverToken = "";
     
     function getVKServerToken() {
         $data = array('client_id' => \pass\VK::$client_id,
                       'client_secret' => \pass\VK::$client_secret,
                       'grant_type' => 'client_credentials');
-        $result = file_get_contents("https://oauth.vk.com/access_token?".http_build_query($data));
+        $result = file_get_contents_curl("https://oauth.vk.com/access_token?".http_build_query($data));
         $result = json_decode($result, true);
         return $result['access_token'];
     }
@@ -14,7 +16,7 @@
         $data = array('user_ids'=>$vkid,
                       'fields'=>'photo_100',
                       'access_token'=>$token);
-        $result = file_get_contents("https://api.vk.com/method/users.get?".http_build_query($data));
+        $result = file_get_contents_curl("https://api.vk.com/method/users.get?".http_build_query($data));
         $result = json_decode($result, true);
         if (array_key_exists('response', $result)) {
             $result = $result["response"][0];
@@ -34,7 +36,7 @@
                       'message'=>$message,
                       'access_token'=>$VKserverToken,
                       'client_secret' => \pass\VK::$client_secret);
-        $result = file_get_contents("https://api.vk.com/method/secure.sendNotification?".http_build_query($data));
+        $result = file_get_contents_curl("https://api.vk.com/method/secure.sendNotification?".http_build_query($data));
         return $result;
     }
     
@@ -43,7 +45,7 @@
         $data = array('group_id' => 87710543,
                       'v' => 5.33,
                       'access_token'=>$token);
-        $result = file_get_contents("https://api.vk.com/method/photos.getWallUploadServer?".http_build_query($data));
+        $result = file_get_contents_curl("https://api.vk.com/method/photos.getWallUploadServer?".http_build_query($data));
         $result = json_decode($result, true);
         if (array_key_exists('error', $result))
             return print_r($result, true);
@@ -72,7 +74,7 @@
                       'hash' => $result['hash'],
                       'v' => 5.33,
                       'access_token'=>$token);
-        $result = file_get_contents("https://api.vk.com/method/photos.saveWallPhoto?".http_build_query($data));
+        $result = file_get_contents_curl("https://api.vk.com/method/photos.saveWallPhoto?".http_build_query($data));
         return $result;
     }
     
@@ -83,7 +85,9 @@
                           'client_secret' => \pass\VK::$client_secret,
                           'code'=>$_GET['code'],
                           'redirect_uri'=>\pass\VK::$redirect_uri);
-            $result = @file_get_contents("https://oauth.vk.com/access_token?".http_build_query($data));
+            //$rc = new RollingCurl(null);
+            $result = @file_get_contents_curl("https://oauth.vk.com/access_token?".http_build_query($data));
+            echo "<!--" . $result . "-->";
             $result = json_decode($result, true);
             if (@array_key_exists('access_token', $result)) {
                 $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM users WHERE vkid=" . $result['user_id']);

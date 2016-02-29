@@ -96,6 +96,10 @@ function calcTotalSeedLeech(&$movies, $user) {
 
         @$movies[(int)$row['movieId']]['totalSeed'] += $row['seed'];
         @$movies[(int)$row['movieId']]['totalLeech'] += $row['leech'];
+        if ($row['type'] == 0 && $user['onlyLegal'])
+            continue;
+        if ($row['type'] == 1 && $row['size'] > $user['maxCost'])
+            continue;
         $movies[(int)$row['movieId']]['userTake'] = true;
         
         if (qualityToRool($row['quality']) > @$movies[(int)$row['movieId']]['quality']) {

@@ -117,7 +117,7 @@ class KinopoiskInfo extends AbstractInfo {
         $realImg = dirname( __FILE__ ) . "/../../$img";
         $url = "http:" . $html->find('img[class=film-meta__image]',0)->src . "_2";
         if ( !(file_exists($realImg) && filesize($realImg) > 4000) )
-            file_put_contents($realImg, file_get_contents($url));
+            file_put_contents($realImg, file_get_contents_curl($url));
         if (file_exists($realImg) &&    filesize($realImg) > 4000)
             $result['poster'] = $img;            
 

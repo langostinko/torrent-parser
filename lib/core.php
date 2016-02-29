@@ -1,4 +1,19 @@
 <?php
+    function file_get_contents_curl($url) {
+        $ch = curl_init();
+    
+        curl_setopt($ch, CURLOPT_AUTOREFERER, TRUE);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);       
+    
+        $data = curl_exec($ch);
+        curl_close($ch);
+    
+        return $data;
+    }
+
     function getImgFromLink($link) {
         $prefix = "img/trackers";
         if (strpos($link, RUTORROOT) !== false)
@@ -80,7 +95,7 @@
         $title = translit_utf8($title);
         $link = "http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=" . urlencode($title);
 
-        $file = file_get_contents($link);
+        $file = file_get_contents_curl($link);
         $json = json_decode($file, true);
 
         $vector = array('title_popular','title_exact','title_approx');
@@ -347,7 +362,7 @@
         $realImg = dirname( __FILE__ ) . "/../$img";
         $url = "http://st.kp.yandex.net/images/film_iphone/iphone360_$kpid.jpg";
         if ( !(file_exists($realImg) && filesize($realImg) > 4000) )
-            file_put_contents($realImg, file_get_contents($url));
+            file_put_contents($realImg, file_get_contents_curl($url));
         if (file_exists($realImg) && filesize($realImg) > 4000)
             $desc['PosterRu'] = $img;            
         
@@ -355,7 +370,7 @@
     }
 
     function getIMDBDesc($imdbid, &$desc) {
-        $omdbapi = file_get_contents("http://www.omdbapi.com/?i=" . urlencode($imdbid));           
+        $omdbapi = file_get_contents_curl("http://www.omdbapi.com/?i=" . urlencode($imdbid));           
         $json = json_decode($omdbapi, true);
         if ($json && array_key_exists("Title", $json)) {
             $img = "img/posters/$imdbid.jpg";
@@ -364,7 +379,7 @@
                 $url = $json['Poster'];
                 unset($json['Poster']);
                 if ( !(file_exists($realImg) && filesize($realImg)) )
-                    file_put_contents($realImg, file_get_contents($url));
+                    file_put_contents($realImg, file_get_contents_curl($url));
                 if (file_exists($realImg) && filesize($realImg))
                     $json['Poster'] = $img;
             } else
