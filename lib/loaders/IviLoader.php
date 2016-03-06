@@ -36,23 +36,36 @@ class IviLoader extends AbstractLoader {
                 $movie["title"] = $row["title"];
                 $movie["year"] = $row["year"];
                 $movie["size"] = 0;
-                if (in_array("SVOD", $row["content_paid_types"])) {
-                    $movie["description"] = "IVI+ (подписка)";
-                    $movie["size"] = 399;
-                }
-                if (in_array("EST", $row["content_paid_types"]))
-                    $movie["size"] = 299;
-                if (in_array("TVOD", $row["content_paid_types"]))
-                    $movie["size"] = 199;
-                $movie["description"] = "IVI";
-                $movie["description"] .= " : " . $movie["title"] . " (" . $movie["year"] . ")";
-
                 $movie['quality'] = "WEB";
                 $movie['translateQuality'] = "ЛИЦЕНЗИЯ";
                 $movie['type'] = 1;
                 $movie['seed'] = $movie['leech'] = 0;
-                if (!trySkip($movie))
-                    $this->result[] = $movie;
+                $costLink = "https://api.ivi.ru/mobileapi/billing/v1/purchase/content/options/?app_version=870&session=f3359fa8169254457_1460382423-EqsdiLvfoZoeS0UvAnRQw&id=".$row['id'];
+                $costRes = file_get_contents_curl($costLink) . "\n";
+                if ($costRes)
+                    $costRes = json_decode($costRes, true);
+                if (array_key_exists('result', $costRes) && array_key_exists('purchase_options', $costRes['result'])) {
+                    if (count($costRes['result']['purchase_options'])) {
+                        foreach($costRes['result']['purchase_options'] as $option) {
+        		            $added = &$this->result[];
+        		            $added = $movie;
+                            $added["description"] = "IVI " . $option['product_title'];
+        		            $added["size"] = $option['price'];
+        		            $added["link"].="?type=" . $option['product_identifier'];
+                            if (trySkip($added))
+                                array_pop($this->result);
+                        }
+                    } else {
+    		            $added = &$this->result[];
+    		            $added = $movie;
+                        $added["description"] = "IVI";
+    		            $added["size"] = $option['price'];
+    		            $added["link"].="?type=free";
+                        if (trySkip($added))
+                            array_pop($this->result);
+                    }
+                } else
+                    $this->logger->warning("no cost for IVI movie " . $row['id']);
             }
         } else 
             $this->logger->warning("no result for IVI collection " . $this->listId);
