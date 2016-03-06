@@ -87,7 +87,6 @@
                           'redirect_uri'=>\pass\VK::$redirect_uri);
             //$rc = new RollingCurl(null);
             $result = @file_get_contents_curl("https://oauth.vk.com/access_token?".http_build_query($data));
-            echo "<!--" . $result . "-->";
             $result = json_decode($result, true);
             if (@array_key_exists('access_token', $result)) {
                 $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM users WHERE vkid=" . $result['user_id']);
@@ -98,14 +97,14 @@
 
                 $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM users WHERE vkid=" . $result['user_id']);
                 $user = mysqli_fetch_assoc($sqlresult);
-                if (!$user['login']) {
+                if (!$user['login'])
                     $user['login'] = getVKName($result['user_id'], $result['access_token']);
-                }
                 $_SESSION['user'] = $user;
                 $_SESSION['expires'] = $expires;
                 $_SESSION['showSettings'] = true;
                 header("Location: http://".$_SERVER[HTTP_HOST]);
-            }
+            } else 
+                echo "<!--".print_r($result, true)."-->";
             return 0;
         }        
     }

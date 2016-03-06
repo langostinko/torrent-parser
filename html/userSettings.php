@@ -74,17 +74,14 @@
             </select>
         </div>
       </div>
-      <?php if (isAdmin($user['id'])) { ?>
       <button class="btn btn-default" title="больше параметров" onclick="$('#additionalOptions').toggleClass('hidden');event.preventDefault();">
             <span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span>
       </button>
-      <?php } ?>
-    
+
       <button type="submit" class="btn btn-primary" title="обновить">
             <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
       </button>
       
-      <?php if (isAdmin($user['id'])) { ?>
       <div id="additionalOptions" class="hidden">
           <div class="form-group">
             <div class="checkbox">
@@ -98,12 +95,11 @@
             <label class="sr-only" for="maxCost">стоимость</label>
             <div class="input-group">
                 <div class="input-group-addon">стоимость ≤</div>
-                <input name="maxCost" type="number" class="form-control" style="width: 70px" id="maxCost" placeholder="0" min=0 max=1000 step=50 value='<?php echo $user['maxCost']; ?>'>
+                <input name="maxCost" type="number" class="form-control" style="width: 70px" id="maxCost" placeholder="0" min=0 max=1000 step=25 value='<?php echo $user['maxCost']; ?>'>
             </div>
           </div>
       </div>
-      <?php } ?>
-      
+
       <?php if (!$login) { ?>
         <span class="help-block" style="text-align: center; margin-bottom: 0">Войдите, чтобы сохранить настройки и получить возможность удалять просмотренные/неинтересные фильмы</span>
       <?php } ?>

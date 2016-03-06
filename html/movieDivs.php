@@ -1,5 +1,5 @@
 <?php
-    include "html/charity.php";
+    //include "html/charity.php";
 
     // this requires global $keys
     $cnt = 0;
