@@ -20,7 +20,7 @@
             return "$prefix/rutor.ico";
         if (strpos($link, "seedoff") !== false)
             return "$prefix/seedoff.ico";
-        if (strpos($link, "nnm-club") !== false)
+        if (strpos($link, NNMROOT) !== false)
             return "$prefix/nnm-club.ico";
         if (strpos($link, "ivi.ru") !== false)
             return "$prefix/ivi.png";

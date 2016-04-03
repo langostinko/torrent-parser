@@ -9,10 +9,7 @@
     define("LOGDIR", __DIR__."/../logs/");
 
     define("RUTORROOT", "http://super-tor.net");
-    //define("RUTORROOT", "http://zerkalo-rutor.org");
-    //define("RUTORROOT", "http://new-rutor.org");
-    //define("RUTORROOT", "http://rutor.org");
-
+    define("NNMROOT", "http://nnmclub.to");
     define("PIRATEROOT", "https://thepiratebay.plus");
 
     define("PROXY", "111.161.126.101:80");

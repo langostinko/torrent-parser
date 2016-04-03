@@ -20,7 +20,7 @@ class NNMLoader extends AbstractLoader {
         if (!$res)
             return false;
 
-        $movie['link'] = "http://nnm-club.me/forum/" . $res->href;
+        $movie['link'] = NNMROOT . "/forum/" . $res->href;
         if (trySkip($movie))
             return false;
         

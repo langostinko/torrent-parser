@@ -67,7 +67,7 @@ function updateLinks(){
     
     RollingCurl::$rc = new RollingCurl("main_callback");
     // the window size determines how many simultaneous requests to allow.  
-    RollingCurl::$rc->window_size = 5;
+    RollingCurl::$rc->window_size = 3;
 
     //List of tracker loaders
     $loaders = array();
@@ -110,12 +110,12 @@ function updateLinks(){
         "sds" => -1,
         "nm" => "",
         "pn" => "");
-    $loaders[] = new NNMLoader("http://nnm-club.me/forum/tracker.php", $NNMData);
+    $loaders[] = new NNMLoader(NNMROOT . "/forum/tracker.php", $NNMData);
     $NNMData["f[0]"] = 218;
-    $loaders[] = new NNMLoader("http://nnm-club.me/forum/tracker.php", $NNMData);
+    $loaders[] = new NNMLoader(NNMROOT . "/forum/tracker.php", $NNMData);
     $NNMData["f[0]"] = 217;
     $NNMData["f[1]"] = 954;
-    $loaders[] = new NNMLoader("http://nnm-club.me/forum/tracker.php", $NNMData);
+    $loaders[] = new NNMLoader(NNMROOT . "/forum/tracker.php", $NNMData);
 
     /*$pirateMain = PIRATEROOT;
     $loaders[] = new PirateLoader("$pirateMain/browse/201/0/7");
