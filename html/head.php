@@ -32,16 +32,6 @@
     <script type="text/javascript" charset="utf-8" src="js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" charset="utf-8" src="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.js"></script>
    
-    <?php if (isAdmin($user['id'])) {?>
-    <!-- VK -->
-    <script src="//vk.com/js/api/openapi.js" type="text/javascript"></script>
-    <script type="text/javascript">
-      VK.init({
-        apiId: 4586424
-      });
-    </script>
-    <?php } ?>
-   
     <!-- Custom styles for this template -->
     <link href="css/template.css" rel="stylesheet">
 

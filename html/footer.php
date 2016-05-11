@@ -28,3 +28,14 @@
 </script>
 <noscript><div><img src="//mc.yandex.ru/watch/26593623" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
+
+<?php if (isAdmin($user['id'])) {?>
+<!-- VK -->
+<script src="//vk.com/js/api/openapi.js" type="text/javascript"></script>
+<script type="text/javascript">
+  VK.init({
+    apiId: 4586424
+  });
+</script>
+<?php } ?>
+   
