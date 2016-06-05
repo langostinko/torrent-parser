@@ -40,7 +40,7 @@ class IviLoader extends AbstractLoader {
                 $movie['translateQuality'] = "ЛИЦЕНЗИЯ";
                 $movie['type'] = 1;
                 $movie['seed'] = $movie['leech'] = 0;
-                $costLink = "https://api.ivi.ru/mobileapi/billing/v1/purchase/content/options/?app_version=870&session=f3359fa8169254457_1460382423-EqsdiLvfoZoeS0UvAnRQw&id=".$row['id'];
+                $costLink = "https://api.ivi.ru/mobileapi/billing/v1/purchase/content/options/?app_version=870&session=c60b59a9285461594_1472565792bHAc-0X4a4cuBXC76ejHvQ&id=".$row['id'];
                 $costRes = file_get_contents_curl($costLink) . "\n";
                 if ($costRes)
                     $costRes = json_decode($costRes, true);

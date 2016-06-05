@@ -83,8 +83,8 @@ class RollingCurl {
 		CURLOPT_SSL_VERIFYPEER => 0,
         CURLOPT_RETURNTRANSFER => 1,
         CURLOPT_FOLLOWLOCATION => 1,
-        CURLOPT_CONNECTTIMEOUT => 30,
-        CURLOPT_TIMEOUT => 30,
+        CURLOPT_CONNECTTIMEOUT => 60,
+        CURLOPT_TIMEOUT => 60,
 	);
 	
     /**
