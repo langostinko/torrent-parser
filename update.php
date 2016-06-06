@@ -6,6 +6,7 @@ include_once __DIR__."/lib/loaders/PirateLoader.php";
 include_once __DIR__."/lib/loaders/IviLoader.php";
 include_once __DIR__."/lib/loaders/MegogoLoader.php";
 include_once __DIR__."/lib/loaders/GooglePlayLoader.php";
+include_once __DIR__."/lib/loaders/ITunesLoader.php";
 include_once __DIR__."/lib/loaders/libSeedoff.php";
 require_once __DIR__."/lib/RollingCurl.php";
 
@@ -137,6 +138,8 @@ function updateLinks(){
     $loaders[] = new GooglePlayLoader("https://play.google.com/store/movies/category/4/collection/movers_shakers?hl=ru");
     $loaders[] = new GooglePlayLoader("https://play.google.com/store/movies/category/6/collection/movers_shakers?hl=ru");
     $loaders[] = new GooglePlayLoader("https://play.google.com/store/movies/category/10/collection/movers_shakers?hl=ru");
+    
+    $loaders[] = new ITunesLoader("http://www.apple.com/ru/itunes/charts/movies/");
 
     foreach ($loaders as $loader) {
         $loader->setLogger($logger);

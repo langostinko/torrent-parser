@@ -28,6 +28,8 @@
             return "$prefix/megogo.png";
         if (strpos($link, "play.google.com") !== false)
             return "$prefix/google_play.png";
+        if (strpos($link, "itunes.apple.com") !== false)
+            return "$prefix/itunes.png";
         return "$prefix/torrent.ico";
     }
 

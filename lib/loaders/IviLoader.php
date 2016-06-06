@@ -2,7 +2,6 @@
 include_once(__DIR__."/AbstractLoader.php");
 include_once(__DIR__.'/../defines.php');
 include_once(__DIR__.'/../lib.php');
-include_once(__DIR__.'/../simple_html_dom.php');
 
 class IviLoader extends AbstractLoader {
 
