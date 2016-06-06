@@ -165,7 +165,7 @@ function updateLinks(){
     
         getIds($cur['title_approx'], $cur);
         if (!$cur['movie']) {
-            $logger->warning("could not find ids for '{$cur['title_approx']} ({$cur['year']})'");
+            $logger->warning("could not find ids for '{$cur['title_approx']} ({$cur['year']}) : {$cur['link']}'");
             continue;
         }
         
