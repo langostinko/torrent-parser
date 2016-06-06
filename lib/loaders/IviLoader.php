@@ -18,8 +18,39 @@ class IviLoader extends AbstractLoader {
         $this->to = $to;
     }
     
+    function getIviCostCallback($response, $info, $request) {
+        $msg = $info['http_code'] . " :: " . $info['url'] . " fetched in " . $info['total_time'];
+        if ($info['http_code'] != 200) {
+            $this->logger->warning($msg);
+            return;
+        }
+        $movie = $request->cookie['movie'];
+        $costRes = json_decode($response, true);
+        if (array_key_exists('result', $costRes) && array_key_exists('purchase_options', $costRes['result'])) {
+            if (count($costRes['result']['purchase_options'])) {
+                foreach($costRes['result']['purchase_options'] as $option) {
+		            $added = &$this->result[];
+		            $added = $movie;
+                    $added["description"] = "IVI " . $option['product_title'];
+		            $added["size"] = $option['price'];
+		            $added["link"].="?type=" . $option['product_identifier'];
+                    if (trySkip($added))
+                        array_pop($this->result);
+                }
+            } else {
+	            $added = &$this->result[];
+	            $added = $movie;
+                $added["description"] = "IVI";
+	            $added["size"] = $option['price'];
+	            $added["link"].="?type=free";
+                if (trySkip($added))
+                    array_pop($this->result);
+            }
+        } else
+            $this->logger->warning("no cost for IVI movie " . $row['id']);
+    }
+    
     function getIviCallback($response, $info) {
-        //some code
         $msg = $info['http_code'] . " :: " . $info['url'] . " fetched in " . $info['total_time'];
         if ($info['http_code'] != 200) {
             $this->logger->warning($msg);
@@ -41,58 +72,10 @@ class IviLoader extends AbstractLoader {
                 $movie['type'] = 1;
                 $movie['seed'] = $movie['leech'] = 0;
                 $costLink = "https://api.ivi.ru/mobileapi/billing/v1/purchase/content/options/?app_version=870&session=c60b59a9285461594_1472565792bHAc-0X4a4cuBXC76ejHvQ&id=".$row['id'];
-                $costRes = file_get_contents_curl($costLink) . "\n";
-                if ($costRes)
-                    $costRes = json_decode($costRes, true);
-                if (array_key_exists('result', $costRes) && array_key_exists('purchase_options', $costRes['result'])) {
-                    if (count($costRes['result']['purchase_options'])) {
-                        foreach($costRes['result']['purchase_options'] as $option) {
-        		            $added = &$this->result[];
-        		            $added = $movie;
-                            $added["description"] = "IVI " . $option['product_title'];
-        		            $added["size"] = $option['price'];
-        		            $added["link"].="?type=" . $option['product_identifier'];
-                            if (trySkip($added))
-                                array_pop($this->result);
-                        }
-                    } else {
-    		            $added = &$this->result[];
-    		            $added = $movie;
-                        $added["description"] = "IVI";
-    		            $added["size"] = $option['price'];
-    		            $added["link"].="?type=free";
-                        if (trySkip($added))
-                            array_pop($this->result);
-                    }
-                } else
-                    $this->logger->warning("no cost for IVI movie " . $row['id']);
+                \RollingCurl::$rc->get($costLink, null, null, array("callback"=>array($this, "getIviCostCallback"), "movie"=>$movie) );
             }
         } else 
             $this->logger->warning("no result for IVI collection " . $this->listId);
-        /*
-		$html = str_get_html($response);
-		if (!$html) {
-		    $this->logger->warning("failed to convert DOM");
-		    return;
-		}
-
-        $ul = $html->find('ul[class=gallery]', 0);
-        if ($ul)
-            foreach($ul->find('li') as $li) {
-                $movie = array();
-                $movie['link'] = "http://www.ivi.ru" . $li->find('a', 0)->href;
-                $movie['title_approx'] = $li->find("span[class=title]", 0)->plaintext;
-                $free = (strpos($li->class, 'blockbuster') === false);
-                $movie['size'] = $free ? 0 : 299;
-                
-                $movie['description'] = "IVI";
-                $movie['quality'] = "WEB";
-                $movie['translateQuality'] = "ЛИЦЕНЗИЯ";
-                $movie['type'] = 1;
-                $this->result[] = $movie;
-    		}*/
-
-		$this->logger->info(count($this->result) . " new links found");
     }
 
     function load() {
