@@ -24,9 +24,9 @@
         $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT title, description FROM `movies` WHERE `movies`.id in (SELECT movieId FROM links) ORDER BY sum_peers DESC LIMIT 40");
         $vars = array();
         $rows = array();
-        while ($row = mysqli_fetch_assoc($sqlresult)) {
-            $rows[] = json_decode($row['description'], true);
-        }
+        while ($row = mysqli_fetch_assoc($sqlresult))
+            if ($row['description'])
+                $rows[] = json_decode($row['description'], true);
         foreach ($rows as $desc)
             if (array_key_exists('жанр', $desc)) {
                 $genres = explode(", ", $desc['жанр']);
