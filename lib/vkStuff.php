@@ -57,7 +57,7 @@
         $desc = json_decode($row['description'], true);
         $imgSrc = array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster'];
         $file_name_with_full_path = realpath($imgSrc);
-        $post = array('photo'=>'@'.$file_name_with_full_path);
+        $post = array('photo'=>new CURLFile($file_name_with_full_path));
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL,$target_url);
         curl_setopt($ch, CURLOPT_POST,1);
