@@ -38,7 +38,6 @@ class MegogoLoader extends AbstractLoader {
             $movie['link'] = $a->href;
             $movie['year'] = (int)trim($li->find('p[class=voi__info]', 0)->plaintext);
             $movie['title'] = $movie['title_approx'] = trim($a->plaintext);
-
             $movie['quality'] = "WEB";
             $movie['translateQuality'] = "ЛИЦЕНЗИЯ";
             $movie['seed'] = $movie['leech'] = 0;
@@ -61,42 +60,25 @@ class MegogoLoader extends AbstractLoader {
 		foreach($prices["data"] as $key=>$price) 
 		    if (array_key_exists($key, $movies)) {
 		        $movie = $movies[$key];
-		        if (array_key_exists("price", $price['svod'])) {
-		            $added = &$this->result[];
-		            $added = $movie;
-                    $added["description"] = "MEGOGO (подписка) : " . $movie["title"] . " (" . $movie["year"] . ")";
-		            $added["size"] = $price['svod']["price"];
-		            $added["link"].="?type=svod";
-                    if (trySkip($added))
-                        array_pop($this->result);
-		        }
-		        if (array_key_exists("price", $price['tvod'])) {
-		            $added = &$this->result[];
-		            $added = $movie;
-                    $added["description"] = "MEGOGO (аренда) : " . $movie["title"] . " (" . $movie["year"] . ")";
-		            $added["size"] = $price['tvod']["price"];
-		            $added["link"].="?type=tvod";
-                    if (trySkip($added))
-                        array_pop($this->result);
-		        }
-		        if (array_key_exists("price", $price['dtr'])) {
-		            $added = &$this->result[];
-		            $added = $movie;
-                    $added["description"] = "MEGOGO (аренда) : " . $movie["title"] . " (" . $movie["year"] . ")";
-		            $added["size"] = $price['dtr']["price"];
-		            $added["link"].="?type=dtr";
-                    if (trySkip($added))
-                        array_pop($this->result);
-		        }
-		        if (array_key_exists("price", $price['dto'])) {
-		            $added = &$this->result[];
-		            $added = $movie;
-                    $added["description"] = "MEGOGO : " . $movie["title"] . " (" . $movie["year"] . ")";
-		            $added["size"] = $price['dto']["price"];
-		            $added["link"].="?type=dto";
-                    if (trySkip($added))
-                        array_pop($this->result);
-		        }
+                $movie["size"] = 1<<10;
+                $priceTypes = array(
+                    "svod"=>"sub",
+                    "tvod"=>"rent_sd",
+                    "dtr"=>"rent_sd",
+                    "dto"=>"buy_sd",
+                    );
+                $movie['description'] = array(
+                    "title" => $movie["title"] . " (" . $movie["year"] . ")",
+                    "options" => array()
+                );
+		        foreach($priceTypes as $priceKey=>$priceVal)
+    		        if (array_key_exists("price", $price[$priceKey])) {
+    		            $movie["size"] = min($movie["size"], (int)$price[$priceKey]["price"]);
+                        $movie['description']['options'][$priceVal] = (int)$price[$priceKey]["price"];
+    		        }
+                $movie['description'] = json_encode($movie['description']);
+                if (!trySkip($movie))
+                    $this->result[] = $movie;
     		}
 
 		$this->logger->info(count($this->result) . " new links found");

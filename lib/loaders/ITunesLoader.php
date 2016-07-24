@@ -27,28 +27,29 @@ class ITunesLoader extends AbstractLoader {
         $movie["title_approx"] = $costRes["trackName"];
         $movie["title"] = $costRes["trackName"];
         $movie["year"] = substr($costRes["releaseDate"], 0, 4);
-        $movie["size"] = 0;
+        $movie["size"] = 1<<10;
         $movie['quality'] = "WEB";
         $movie['translateQuality'] = "ЛИЦЕНЗИЯ";
         $movie['type'] = 1;
         $movie['seed'] = $movie['leech'] = 0;
         $priceTypes = array(
-            "trackPrice"=>"",
-            "trackRentalPrice"=>" (аренда)",
-            "trackHdPrice"=>" HD",
-            "trackHdRentalPrice"=>" HD (аренда)"
+            "trackPrice"=>"buy_sd",
+            "trackRentalPrice"=>"rent_sd",
+            "trackHdPrice"=>"buy_hd",
+            "trackHdRentalPrice"=>"rent_hd"
             );
-        foreach($priceTypes as $pKey=>$pVal) {
+        $movie['description'] = array(
+            "title" => $movie["title"] . " (" . $movie["year"] . ")",
+            "options" => array()
+        );
+        foreach($priceTypes as $pKey=>$pVal)
             if (array_key_exists($pKey, $costRes)) {
-                $added = &$this->result[];
-                $added = $movie;
-                $added["description"] = "iTunes" . $pVal . " : " . $movie["title"] . " (" . $movie["year"] . ")";
-                $added["size"] = (int)$costRes[$pKey];
-                $added["link"].="?type=$pKey";
-                if (trySkip($added))
-                    array_pop($this->result);
+                $movie["size"] = min($movie["size"], (int)$costRes[$pKey]);
+                $movie['description']['options'][$priceTypes[$pKey]] = (int)$costRes[$pKey];
             }
-        }
+        $movie['description'] = json_encode($movie['description']);
+        if (!trySkip($movie))
+            $this->result[] = $movie;
     }
     
     function getITunesCallback($response, $info) {

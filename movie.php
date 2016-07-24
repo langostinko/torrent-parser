@@ -82,7 +82,7 @@
                 searching: false,
                 paging: false,
                 ordering: true,
-                order: [[ 1, "asc" ]],
+                order: [[2, "asc" ], [3, "asc"]],
                 autoWidth: true,
                 info: false
             });
@@ -227,7 +227,7 @@
                         //owner_id: 19309348,
                         owner_id: -87710543,
                         from_group: 1,
-                        message: "<?=$title;?>\n\n" + 
+                        message: "<?=$title;?>\n" + 
                                 "качество: <?=$bestQuality['quality']?> <?=$bestQuality['translateQuality']?>\n" + 
                                 "премьера: <?=date("j M Y",$movie['Release'])?>\n" + 
                                 "Кинопоиск: <?=@$desc['kinopoiskRating']?>\n" + 
@@ -264,7 +264,12 @@
             <table id='legalTable' class='table table-striped table-hover bg-success' cellspacing="0" width="100%">
                 <thead>
                     <th>легальный просмотр</th>
-                    <th>цена (beta)</th>
+                    <th>аренда:</th>
+                    <th>SD</th>
+                    <th>HD</th>
+                    <th>покупка:</th>
+                    <th>SD</th>
+                    <th>HD</th>
                     <th class='hidden-xs'>дата</th>
                 </thead>
                 <tbody>
@@ -272,9 +277,25 @@
                     foreach($legals as $cur) {
                         $aS = "<a target='_blank' href='".$cur['link']."'>";
                         $aE = "</a>";
+                        $desc = json_decode($cur['description'], true);
+                        $inf = 1<<20;
                         echo "<tr>\n";
-                        echo "\t<td><img style='width: 12px; vertical-align: baseline' src='".getImgFromLink($cur['link'])."'/> $aS".$cur['description']."$aE</td>\n";
-                        echo "\t<td data-order=".$cur['size'].">~".$cur['size']."</td>\n";
+                        echo "\t<td><img style='width: 12px; vertical-align: baseline' src='".getImgFromLink($cur['link'])."'/> $aS".$desc['title']."$aE</td>\n";
+                        echo "\t<td></td>\n";
+                        if (array_key_exists('free', $desc['options']))
+                            echo "\t<td data-order=0>0<sup>*с рекламой</sup></td>\n";
+                        else
+                            echo "\t<td data-order=".($desc['options']['rent_sd']??$inf).">".$desc['options']['rent_sd']."</td>\n";
+                        echo "\t<td data-order=".($desc['options']['rent_hd']??$inf).">".$desc['options']['rent_hd']."</td>\n";
+                        echo "\t<td></td>\n";
+                        if (array_key_exists('sub_trial', $desc['options']))
+                            echo "\t<td data-order=".($desc['options']['sub_trial']??$inf).">".$desc['options']['sub_trial']."<sup>*триал</sup></td>\n";
+                        else
+                            echo "\t<td data-order=".($desc['options']['buy_sd']??$inf).">".$desc['options']['buy_sd']."</td>\n";
+                        if (array_key_exists('sub', $desc['options']))
+                            echo "\t<td data-order=".($desc['options']['sub']??$inf).">".$desc['options']['sub']."<sup>*подписка</sup></td>\n";
+                        else
+                            echo "\t<td data-order=".($desc['options']['buy_hd']??$inf).">".$desc['options']['buy_hd']."</td>\n";
                         echo "\t<td data-order='" . strtotime($cur['added']) . "' class='hidden-xs'>".date("M\&\\nb\sp;j", strtotime($cur['added_tracker']?$cur['added_tracker']:$cur['added']))."</td>\n";
                         echo "</tr>\n";
                     }

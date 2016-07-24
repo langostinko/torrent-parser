@@ -8,8 +8,7 @@
         $desc = $movie['description'];
         $movieTitle = htmlspecialchars(array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']);
         $popup = (array_key_exists("titleRu", $desc)?$desc['titleRu']:$desc['Title']) 
-                . " (".$movie['totalSeed']."↑ ".$movie['totalLeech']."↓"
-                . (array_key_exists("price", $movie)?(" ".$movie['price']."₽"):"").")";
+                . " (".$movie['totalSeed']."↑ ".$movie['totalLeech']."↓)";
         ?>
         <div class='movie moviePos<?php echo $movie['id'];?>'>
             <a title="<?=$popup?>" target='_blank' href="movie.php?id=<?php echo $movie['id']; ?>">
@@ -27,12 +26,17 @@
                     </div>
                 </div>
             </a>
-            <div class='movieTitle <?php  if (array_key_exists("price", $movie) && $movie['price']==0) echo " legal" ?>'>
+            <div class='movieTitle <?php  if (array_key_exists("price", $movie) && $movie['price']['price']==0) echo " legal" ?>'>
                 <?php echo $movieTitle; ?>
                 <div class='movieQuality'>
                     <span class="glyphicon glyphicon-facetime-video"></span> <?php echo $movie['qualityStr']; ?>
-                    <?php if ($movie['translateQualityStr']) { ?>
-                    <span class="glyphicon glyphicon-volume-up"></span> <?php echo $movie['translateQualityStr'];/*translateQualityToStr($movie['translateQuality']);*/ ?>
+                    <?php if (array_key_exists("price", $movie)) { ?>
+                        <img style='width: 10px; vertical-align: baseline' src='<?php echo $movie['price']['img']?>'/>
+                        <?php echo $movie['price']['price']."₽"; ?>
+                    <?php } else {?>
+                        <?php if ($movie['translateQualityStr']) { ?>
+                        <span class="glyphicon glyphicon-volume-up"></span> <?php echo $movie['translateQualityStr'];/*translateQualityToStr($movie['translateQuality']);*/ ?>
+                        <?php } ?>
                     <?php } ?>
                 </div>
             </div>

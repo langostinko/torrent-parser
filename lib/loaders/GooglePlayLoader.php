@@ -37,7 +37,10 @@ class GooglePlayLoader extends AbstractLoader {
             $movie['title'] = $movie['title_approx'] = $a->title;
             //$movie['year'] = $currentYear;
             $movie['size'] = (int)($row->find('span[class=display-price]',0)->plaintext);
-            $movie["description"] = "Google Play : " . $movie["title"];
+            $movie["description"] = json_encode(array(
+                "title" => $movie["title"],
+                "options" => array("rent_sd" => $movie['size']),
+                ));
             $movie['quality'] = "WEB";
             $movie['translateQuality'] = "ЛИЦЕНЗИЯ";
             $movie['type'] = 1;

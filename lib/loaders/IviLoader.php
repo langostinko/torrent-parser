@@ -24,27 +24,38 @@ class IviLoader extends AbstractLoader {
             return;
         }
         $movie = $request->cookie['movie'];
+        $movie["size"] = 1<<10;
+        $priceTypes = array(
+            "temporal:subscription::"=>"sub",
+            "temporal:subscription::1"=>"sub_trial",
+            "temporal:content:SD:"=>"rent_sd",
+            "temporal:content:HD:"=>"rent_hd",
+            "eternal:content:SD:"=>"buy_sd",
+            "eternal:content:HD:"=>"buy_hd",
+            );
+        $movie['description'] = array(
+            "title" => $movie["title"] . " (" . $movie["year"] . ")",
+            "options" => array()
+        );
         $costRes = json_decode($response, true);
         if (array_key_exists('result', $costRes) && array_key_exists('purchase_options', $costRes['result'])) {
             if (count($costRes['result']['purchase_options'])) {
                 foreach($costRes['result']['purchase_options'] as $option) {
-		            $added = &$this->result[];
-		            $added = $movie;
-                    $added["description"] = "IVI " . $option['product_title'];
-		            $added["size"] = $option['price'];
-		            $added["link"].="?type=" . $option['product_identifier'];
-                    if (trySkip($added))
-                        array_pop($this->result);
+                    if (!$option['trial'])
+    		            $movie["size"] = min($movie["size"], (int)$option['price']);
+		            $key = $option['ownership_type'] . ':' . $option['object_type'] . ':' . $option['quality'] . ':' . $option['trial'];
+		            if (array_key_exists($key, $priceTypes))
+                        $movie['description']['options'][$priceTypes[$key]] = (int)$option['price'];
+                    else
+                        $this->logger->error("unknown IVI price key : " . $key);
                 }
             } else {
-	            $added = &$this->result[];
-	            $added = $movie;
-                $added["description"] = "IVI";
-	            $added["size"] = $option['price'];
-	            $added["link"].="?type=free";
-                if (trySkip($added))
-                    array_pop($this->result);
+	            $movie["size"] = 0;
+                $movie['description']['options']['free'] = 0;
             }
+            $movie['description'] = json_encode($movie['description']);
+            if (!trySkip($movie))
+                $this->result[] = $movie;
         } else
             $this->logger->warning("no cost for IVI movie " . $row['id']);
     }
@@ -65,7 +76,6 @@ class IviLoader extends AbstractLoader {
                 $movie["title_approx"] = $row["orig_title"]?$row["orig_title"]:$row["title"];
                 $movie["title"] = $row["title"];
                 $movie["year"] = $row["year"];
-                $movie["size"] = 0;
                 $movie['quality'] = "WEB";
                 $movie['translateQuality'] = "ЛИЦЕНЗИЯ";
                 $movie['type'] = 1;
