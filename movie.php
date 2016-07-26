@@ -19,41 +19,40 @@
     $legals = false;
     $bestQuality = array('quality'=>"CAMRIP", 'translateQuality'=>"ORIGINAL");
 
-    if ($movieId != -1) {
-        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies WHERE id = $movieId");
-        $movie = mysqli_fetch_assoc($sqlresult);
-        if (!$movie) {
-            header('HTTP/1.0 404 Not Found');
-            echo "Not Found";
-            exit();
-        }
-        $desc = json_decode($movie['description'], true);
-
-        $movie['Release'] = strtotime($desc['Released']);
-        
-        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT movieId FROM userignore WHERE userId = $userId AND movieId = $movieId ORDER BY id DESC");
-        $ignore = (bool)mysqli_fetch_assoc($sqlresult);
-
-        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE movieId = $movieId AND type=0 ORDER BY seed DESC LIMIT 500");
-        while ($row = mysqli_fetch_assoc($sqlresult)) {
-            if (qualityToRool($row['quality']) > qualityToRool($bestQuality['quality'])
-            || (qualityToRool($row['quality']) == qualityToRool($bestQuality['quality']) && translateQualityToRool($row['translateQuality']) > translateQualityToRool($bestQuality['translateQuality']) ) ) {
-                $bestQuality['quality'] = $row['quality'];
-                $bestQuality['translateQuality'] = $row['translateQuality'];
-            }
-            $torrents[] = $row;
-        }
-
-        $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE movieId = $movieId AND type=1 LIMIT 500");
-        while ($row = mysqli_fetch_assoc($sqlresult)) {
-            if (qualityToRool($row['quality']) > qualityToRool($bestQuality['quality'])
-            || (qualityToRool($row['quality']) == qualityToRool($bestQuality['quality']) && translateQualityToRool($row['translateQuality']) > translateQualityToRool($bestQuality['translateQuality']) ) ) {
-                $bestQuality['quality'] = $row['quality'];
-                $bestQuality['translateQuality'] = $row['translateQuality'];
-            }
-            $legals[] = $row;
-        }
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies WHERE id = $movieId");
+    $movie = mysqli_fetch_assoc($sqlresult);
+    if (!$movie) {
+        header('HTTP/1.0 404 Not Found');
+        echo "Not Found";
+        exit();
     }
+    $desc = json_decode($movie['description'], true);
+
+    $movie['Release'] = strtotime($desc['Released']);
+    
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT movieId FROM userignore WHERE userId = $userId AND movieId = $movieId ORDER BY id DESC");
+    $ignore = (bool)mysqli_fetch_assoc($sqlresult);
+
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE movieId = $movieId AND type=0 ORDER BY seed DESC LIMIT 500");
+    while ($row = mysqli_fetch_assoc($sqlresult)) {
+        if (qualityToRool($row['quality']) > qualityToRool($bestQuality['quality'])
+        || (qualityToRool($row['quality']) == qualityToRool($bestQuality['quality']) && translateQualityToRool($row['translateQuality']) > translateQualityToRool($bestQuality['translateQuality']) ) ) {
+            $bestQuality['quality'] = $row['quality'];
+            $bestQuality['translateQuality'] = $row['translateQuality'];
+        }
+        $torrents[] = $row;
+    }
+
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE movieId = $movieId AND type=1 LIMIT 500");
+    while ($row = mysqli_fetch_assoc($sqlresult)) {
+        if (qualityToRool($row['quality']) > qualityToRool($bestQuality['quality'])
+        || (qualityToRool($row['quality']) == qualityToRool($bestQuality['quality']) && translateQualityToRool($row['translateQuality']) > translateQualityToRool($bestQuality['translateQuality']) ) ) {
+            $bestQuality['quality'] = $row['quality'];
+            $bestQuality['translateQuality'] = $row['translateQuality'];
+        }
+        $legals[] = $row;
+    }
+
     $bestQuality['quality'] = mb_strtolower($bestQuality['quality'], "UTF-8");
     $bestQuality['translateQuality'] = mb_strtolower($bestQuality['translateQuality'], "UTF-8");
 
