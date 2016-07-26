@@ -17,13 +17,13 @@
             <a title="импорт из КиноПоиска" href="kp.php" ><img style="height:30px" alt="импорт из КиноПоиска" src="img/kp_64.png"/></a>
             <a title="поддержать" href="charity.php" ><img style="height:30px" alt="поддержать" src="img/dn_64.png"/></a>
         </p>
-        <form class="navbar-form navbar-left hidden-xs">
+        <form class="navbar-form navbar-left hidden-xs hidden-sm">
           <div class="form-group">
           <?php
             $vars = getRandomList();
             $placeholder = $vars[array_rand($vars)];
           ?>
-            <input id="search" type="text" class="form-control typeahead" placeholder="поиск: <?=$placeholder?>">
+            <input style="width: 250px" type="text" class="typeahead form-control" placeholder="поиск: <?=$placeholder?>">
           </div>
         </form>
     <?php if ($login) { ?>

@@ -10,6 +10,8 @@ body {
     text-align: center;
 }
 
+.twitter-typeahead, .tt-hint, .tt-input, .tt-menu { width: 100% }
+
 .navbar-inverse .navbar-brand {
     font-size: 28px;
     line-height: 30px;
