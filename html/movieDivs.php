@@ -1,6 +1,4 @@
 <?php
-    //include "html/charity.php";
-
     // this requires global $keys
     $cnt = 0;
     foreach($keys as $key=>$movieSorted) {

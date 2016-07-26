@@ -12,10 +12,10 @@
     </div>
     <div class="navbar-collapse collapse">
         <p class="navbar-text" style="margin: 10px 15px">
-            <a title="мы на Пикабу" href="http://pikabu.ru/profile/freshs" target='_blank' ><img style="height:30px" alt="мы на Пикабу" src="img/pk_64.png"/></a>
-            <a title="мы в ВК" href="https://vk.com/freshswagru" target='_blank' ><img style="height:30px" alt="мы в ВК" src="img/vk_64.png"/></a>
-            <a title="импорт из КиноПоиска" href="kp.php" ><img style="height:30px" alt="импорт из КиноПоиска" src="img/kp_64.png"/></a>
-            <a title="поддержать" href="charity.php" ><img style="height:30px" alt="поддержать" src="img/dn_64.png"/></a>
+            <a title="мы на Пикабу" href="http://pikabu.ru/profile/freshs" target='_blank'><img style="height:30px" alt="мы на Пикабу" src="img/pk_64.png"/></a>
+            <a title="мы в ВК" href="https://vk.com/freshswagru" target='_blank'><img style="height:30px" alt="мы в ВК" src="img/vk_64.png"/></a>
+            <a title="импорт из КиноПоиска" href="kp.php"><img style="height:30px" alt="импорт из КиноПоиска" src="img/kp_64.png"/></a>
+            <a title="поддержать" href="http://yasobe.ru/na/freshswag" target='_blank'><img style="height:30px" alt="поддержать" src="img/dn_64.png"/></a>
         </p>
         <form class="navbar-form navbar-left hidden-xs hidden-sm">
           <div class="form-group">
