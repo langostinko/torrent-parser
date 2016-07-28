@@ -76,7 +76,7 @@
     <div id='main' class="container-fluid">
         <?php if (!$user['kpID']) { ?>
             <p>
-                укажите в фильтре Kinopoisk ID для импорта списка Ваших фильмов из http://www.kinopoisk.ru/user/{ВАШ_KINOPOISK_ID}/movies/
+                укажите в фильтре Kinopoisk ID для импорта списка Ваших фильмов из <?=KINOPOISKROOT?>/user/{ВАШ_KINOPOISK_ID}/movies/
             </p>
             <p style="font-size: 14px">
                 импортируются максимум 200 фильмов <br/>

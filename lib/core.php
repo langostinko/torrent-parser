@@ -124,7 +124,7 @@
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HEADER, 1);
         curl_setopt($ch, CURLOPT_ENCODING, 'gzip,deflate,sdch');
-        curl_setopt($ch, CURLOPT_REFERER, 'http://www.kinopoisk.ru/');
+        curl_setopt($ch, CURLOPT_REFERER, KINOPOISKROOT);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safari/537.36');
         $response = curl_exec($ch);
         curl_close($ch);
@@ -133,7 +133,7 @@
     }
     
     function getKinopoiskMoviesList($userId) {
-        $link = "http://www.kinopoisk.ru/user/$userId/movies/list/perpage/200/";
+        $link = KINOPOISKROOT."/user/$userId/movies/list/perpage/200/";
         $response = getKinopoiskLink($link);
         
         include_once(__DIR__.'/simple_html_dom.php');
@@ -154,7 +154,7 @@
 
     function searchKinopoisk($title, &$movie){
         $title = translit_utf8($title);
-        $link = "http://www.kinopoisk.ru/index.php?first=no&what=&kp_query=".urlencode($title);
+        $link = KINOPOISKROOT."/index.php?first=no&what=&kp_query=".urlencode($title);
         $response = getKinopoiskLink($link);
 
         //search for HTTP 302
@@ -311,19 +311,15 @@
         return 0;
     }
     
-    function getKinopoiskRating($kinopoiskId) {
-        $kinopoiskId = (int)$kinopoiskId;
-        $xml = simplexml_load_file("http://rating.kinopoisk.ru/$kinopoiskId.xml");
-        return (string) $xml->kp_rating;
-    }
-    
     function getKinopoiskDesc($kpid, &$desc) {
-        $response = getKinopoiskLink("http://www.kinopoisk.ru/film/".urlencode($kpid));
+        $response = getKinopoiskLink(KINOPOISKROOT."/film/".urlencode($kpid));
         if (!$response)
             return false;
 
         include_once(__DIR__.'/simple_html_dom.php');
         $html = str_get_html($response);
+        if (!$html || !$html->find('table[class=info]',0))
+            return false;
 
         foreach($html->find('table[class=info]',0)->find("tr") as $row) {
             $key = trim(iconv('windows-1251', 'UTF-8', $row->find('td',0)->plaintext), "., ");

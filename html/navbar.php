@@ -23,7 +23,7 @@
             $vars = getRandomList();
             $placeholder = $vars[array_rand($vars)];
           ?>
-            <input style="width: 250px" type="text" class="typeahead form-control" placeholder="поиск: <?=$placeholder?>">
+            <input id="search" style="width: 250px" type="text" class="typeahead form-control" placeholder="поиск: <?=$placeholder?>">
           </div>
         </form>
     <?php if ($login) { ?>

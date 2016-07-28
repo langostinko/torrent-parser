@@ -158,7 +158,7 @@
                 <tr itemtype="http://schema.org/AggregateRating" itemscope itemprop="aggregateRating">
                     <td>КиноПоиск</td>
                     <td>
-                    <a itemprop="ratingValue" title="открыть на КиноПоиске" target='_blank' href='<?php echo "http://www.kinopoisk.ru/film/".$desc['kinopoiskId'];?>/'>
+                    <a itemprop="ratingValue" title="открыть на КиноПоиске" target='_blank' href='<?php echo KINOPOISKROOT."/film/".$desc['kinopoiskId'];?>/'>
                         <?php echo @$desc['kinopoiskRating']; ?>
                     </a>
                     <meta itemprop="bestRating" content="10"/>

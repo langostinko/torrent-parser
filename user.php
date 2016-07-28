@@ -73,7 +73,7 @@
                 $poster = $desc && array_key_exists('Poster', $desc) ? $desc['Poster'] : "";
                 echo "<tr class='movieTr" . $cur['id'] . "'>\n";
                 echo "\t<td><a target='_blank' href='"
-                    .(array_key_exists('kinopoiskId', $desc)?("http://www.kinopoisk.ru/film/".$desc['kinopoiskId']):("http://www.imdb.com/title/".$cur['imdbid']))
+                    .(array_key_exists('kinopoiskId', $desc)?(KINOPOISKROOT."/film/".$desc['kinopoiskId']):("http://www.imdb.com/title/".$cur['imdbid']))
                     ."/'><div class='fullDiv'>"
                     .(array_key_exists('titleRu',$desc)?($desc['titleRu']." (".$cur['title'].")"):$cur['title'])
                     ."</div></a></td>\n";

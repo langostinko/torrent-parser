@@ -8,11 +8,13 @@
     define("FRESHLINKSDAYS", 21);
     define("LOGDIR", __DIR__."/../logs/");
 
-    define("RUTORROOT", "http://super-tor.net");
+    define("RUTORROOT", "http://top-tor.org");
     define("NNMROOT", "http://nnmclub.to");
     define("PIRATEROOT", "https://thepiratebay.plus");
+    define("KINOPOISKROOT", "https://www.kinopoisk.ru");
 
-    define("PROXY", "111.161.126.101:80");
+    define("PROXY", "117.135.250.88:80");
+    //define("PROXY", "111.161.126.101:80");
     //define("PROXY", "113.255.61.57:80");
     //define("PROXY", "183.207.229.200:80");
     //define("PROXY", null);

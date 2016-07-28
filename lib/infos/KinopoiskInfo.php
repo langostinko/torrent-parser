@@ -14,7 +14,7 @@ class KinopoiskInfo extends AbstractInfo {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HEADER, 1);
         curl_setopt($ch, CURLOPT_ENCODING, 'gzip,deflate,sdch');
-        curl_setopt($ch, CURLOPT_REFERER, 'http://www.kinopoisk.ru/');
+        curl_setopt($ch, CURLOPT_REFERER, KINOPOISKROOT);
         curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safari/537.36');
         $response = curl_exec($ch);
         curl_close($ch);
@@ -22,7 +22,7 @@ class KinopoiskInfo extends AbstractInfo {
     }
 
     static public function suggest($sugTitle, $sugYear, &$result) {
-        $link = "http://www.kinopoisk.ru/search/films/?text=".urlencode($sugTitle);
+        $link = KINOPOISKROOT."/search/films/?text=".urlencode($sugTitle);
         $response = KinopoiskInfo::getLink($link);
         
         $html = str_get_html($response);
@@ -67,7 +67,7 @@ class KinopoiskInfo extends AbstractInfo {
         $id = (int)$id;
         if (!$id)
             return "could not load Kinopoisk: kpid is not specified";
-        $response = KinopoiskInfo::getLink("http://www.kinopoisk.ru/film/$id/details/");
+        $response = KinopoiskInfo::getLink(KINOPOISKROOT."/film/$id/details/");
 
         $html = str_get_html($response);
         if (!$html)
