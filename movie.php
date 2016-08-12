@@ -81,7 +81,7 @@
                 searching: false,
                 paging: false,
                 ordering: true,
-                order: [[2, "asc" ], [3, "asc"]],
+                order: [[2, "asc" ], [3, "asc"], [5, "asc"], [6, "asc"]],
                 autoWidth: true,
                 info: false
             });
@@ -101,10 +101,10 @@
 
         // Search for a specified string.
         function search() {
-          var q = '<?php echo html_entity_decode($title); ?>" <?=$desc['Year']?>';
+          var q = "<?=html_entity_decode($title)?> <?=$desc['Year']?> трейлер";
           gapi.client.setApiKey('AIzaSyBHs2qdWW-24RMwG9IZdtjFh2dxJKFlIi4');
           var request = gapi.client.youtube.search.list({
-            q: q + " трейлер",
+            q: q,
             part: 'id'
           });
           request.execute(function(response) {
