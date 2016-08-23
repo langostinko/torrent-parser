@@ -5,7 +5,7 @@
     define("UPDATEMOVIESEVERYDAYS", 3);
     define("DELETELINKSAFTERDAYS", 7);
     define("ADDLINKSPASTDAYS", 180);
-    define("FRESHLINKSDAYS", 21);
+    define("FRESHLINKSDAYS", 14);
     define("LOGDIR", __DIR__."/../logs/");
 
     define("RUTORROOT", "http://top-tor.org");
