@@ -8,7 +8,7 @@
     define("FRESHLINKSDAYS", 14);
     define("LOGDIR", __DIR__."/../logs/");
 
-    define("RUTORROOT", "http://fast-bit.org");
+    define("RUTORROOT", "http://ru-free-tor.org");
     define("NNMROOT", "http://nnmclub.to");
     define("PIRATEROOT", "https://thepiratebay.plus");
     define("KINOPOISKROOT", "https://www.kinopoisk.ru");

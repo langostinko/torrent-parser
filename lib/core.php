@@ -186,14 +186,16 @@
                 $id = false;
 
             if ($id) {
-                $name = $pName->find('a',0)->plaintext;
+                $name = iconv('windows-1251', 'UTF-8', $pName->find('a',0)->plaintext);
+                if (strpos($name, "(сериал)") !== false) //skip series
+                    continue;
                 $year = $pName->find('span',0)->plaintext;
                 $rating = @$row->find('div[class=rating]',0)->plaintext;
 
                 $needYear = array_key_exists('year', $movie) ? (int)$movie['year'] : $year;
                 if (abs($year - $needYear) <= 2) {
                     $movie['movie']['kpid'] = $id;
-                    $movie['movie']['titleRu'] = iconv('windows-1251', 'UTF-8', $name);
+                    $movie['movie']['titleRu'] = $name;
                     $movie['movie']['yearRu'] = $year;
                     return;
                 }
