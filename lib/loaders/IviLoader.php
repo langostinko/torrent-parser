@@ -57,7 +57,7 @@ class IviLoader extends AbstractLoader {
             if (!trySkip($movie))
                 $this->result[] = $movie;
         } else
-            $this->logger->warning("no cost for IVI movie " . $row['id']);
+            $this->logger->warning("no cost for IVI movie " . $row['id'] . "; response : '" . $response . "'");
     }
     
     function getIviCallback($response, $info) {
@@ -80,7 +80,7 @@ class IviLoader extends AbstractLoader {
                 $movie['translateQuality'] = "ЛИЦЕНЗИЯ";
                 $movie['type'] = 1;
                 $movie['seed'] = $movie['leech'] = 0;
-                $costLink = "https://api.ivi.ru/mobileapi/billing/v1/purchase/content/options/?app_version=870&session=c60b59a9285461594_1472565792bHAc-0X4a4cuBXC76ejHvQ&id=".$row['id'];
+                $costLink = "https://api.ivi.ru/mobileapi/billing/v1/purchase/content/options/?app_version=870&session=2e84af4c302333766_14743130232rjyszE22strHTmB7eqMwA&id=".$row['id'];
                 \RollingCurl::$rc->get($costLink, null, null, array("callback"=>array($this, "getIviCostCallback"), "movie"=>$movie) );
             }
         } else 
