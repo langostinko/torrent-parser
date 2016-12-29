@@ -80,7 +80,7 @@ class IviLoader extends AbstractLoader {
                 $movie['translateQuality'] = "ЛИЦЕНЗИЯ";
                 $movie['type'] = 1;
                 $movie['seed'] = $movie['leech'] = 0;
-                $costLink = "https://api.ivi.ru/mobileapi/billing/v1/purchase/content/options/?app_version=870&session=2e84af4c302333766_14743130232rjyszE22strHTmB7eqMwA&id=".$row['id'];
+                $costLink = "https://api.ivi.ru/mobileapi/billing/v1/purchase/content/options/?app_version=870&session=f1d4008e435869635_1494007686dHAA891zUyiA6RtJOJIUHA&id=".$row['id'];
                 \RollingCurl::$rc->get($costLink, null, null, array("callback"=>array($this, "getIviCostCallback"), "movie"=>$movie) );
             }
         } else 

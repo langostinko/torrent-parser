@@ -314,7 +314,7 @@
     }
     
     function getKinopoiskDesc($kpid, &$desc) {
-        $response = getKinopoiskLink(KINOPOISKROOT."/film/".urlencode($kpid));
+        $response = getKinopoiskLink(KINOPOISKROOT."/film/".urlencode($kpid)."/");
         if (!$response)
             return false;
 
