@@ -83,8 +83,14 @@ class RollingCurl {
 		CURLOPT_SSL_VERIFYPEER => 0,
         CURLOPT_RETURNTRANSFER => 1,
         CURLOPT_FOLLOWLOCATION => 1,
-        CURLOPT_CONNECTTIMEOUT => 60,
-        CURLOPT_TIMEOUT => 60,
+        CURLOPT_AUTOREFERER => 1,
+        CURLOPT_CONNECTTIMEOUT => 20,
+        CURLOPT_TIMEOUT => 20,
+        CURLOPT_ENCODING => "",
+        // CURLOPT_COOKIESESSION => true,
+        // CURLOPT_COOKIEFILE => "rolling_cookies.txt",
+        // CURLOPT_COOKIEJAR => "rolling_cookies.txt",
+        // CURLOPT_USERAGENT => "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36",
 	);
 	
     /**

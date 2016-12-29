@@ -166,7 +166,7 @@
             $id = false;
         if ($id) {
             $movie['movie']['kpid'] = $id;
-            return;
+            return true;
         }
 
         include_once(__DIR__.'/simple_html_dom.php');
@@ -197,7 +197,7 @@
                     $movie['movie']['kpid'] = $id;
                     $movie['movie']['titleRu'] = $name;
                     $movie['movie']['yearRu'] = $year;
-                    return;
+                    return true;
                 }
             }
 
