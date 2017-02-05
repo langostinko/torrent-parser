@@ -302,7 +302,7 @@
             return "scheduled update";
 
         foreach ($idTypes as $idName)
-            if (array_key_exists($idName, $movie) && !$row[$idName])
+            if (array_key_exists($idName, $movie) && $movie[$idName] && !$row[$idName])
                 return "no $idName";
 
         $json = json_decode($row['description'], true);
