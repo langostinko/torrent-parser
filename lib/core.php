@@ -119,17 +119,27 @@
     }
 
     function getKinopoiskLink($link) {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $link);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HEADER, 1);
-        curl_setopt($ch, CURLOPT_ENCODING, 'gzip,deflate,sdch');
-        curl_setopt($ch, CURLOPT_REFERER, KINOPOISKROOT);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safari/537.36');
-        $response = curl_exec($ch);
-        curl_close($ch);
+        global $logger;
+        $response = "";
+        $proxy = false;
+        do {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $link);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_HEADER, 1);
+            curl_setopt($ch, CURLOPT_ENCODING, 'gzip,deflate,sdch');
+            curl_setopt($ch, CURLOPT_REFERER, KINOPOISKROOT);
+            curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safari/537.36');
+            if ($proxy) {
+                curl_setopt($ch, CURLOPT_PROXY, $proxy);
+                $logger->info("trying $link with proxy $proxy");
+            }
+            $response = curl_exec($ch);
+            if (!$response)
+                $proxy = ProxyFinder::findProxy($link, $proxy);
+            curl_close($ch);
+        } while (!$response && $proxy);
         return $response;
-
     }
     
     function getKinopoiskMoviesList($userId) {
@@ -290,6 +300,10 @@
             return "row not found in mysql cache";
         if (!$fresh)
             return "scheduled update";
+
+        foreach ($idTypes as $idName)
+            if (array_key_exists($idName, $movie) && !$row[$idName])
+                return "no $idName";
 
         $json = json_decode($row['description'], true);
         if (!$json)
