@@ -101,11 +101,12 @@
 
         // Search for a specified string.
         function search() {
-          var q = "<?=html_entity_decode($title)?> <?=$desc['Year']?> трейлер";
           gapi.client.setApiKey('AIzaSyBHs2qdWW-24RMwG9IZdtjFh2dxJKFlIi4');
           var request = gapi.client.youtube.search.list({
-            q: q,
-            part: 'id'
+            q: "<?=html_entity_decode($title)?> <?=$desc['Year']?> трейлер",
+            part: 'id',
+            type: 'video',
+            publishedAfter: "<?=date(DateTime::RFC3339, $movie['Release'] - 3600*24*365)?>"
           });
           request.execute(function(response) {
             var videoId = response.items[0].id.videoId;
