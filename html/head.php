@@ -7,11 +7,11 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="<?php echo @$metaDescription?$metaDescription:"Новые фильмы на торрентах"?>">
+    <meta name="description" content="<?php echo @$metaDescription?$metaDescription:" в сети"?>">
     <meta name="author" content="">
     <link rel="icon" href="img/icon2.png">
 
-    <title><?php echo @$metaTitle?$metaTitle:"Новые фильмы на торрентах";?></title>
+    <title><?php echo @$metaTitle?$metaTitle:"Свежие фильмы в сети";?></title>
     
 
     <!-- Bootstrap core JavaScript
@@ -42,3 +42,10 @@
     <![endif]-->
 
 </head>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-3608835739344764",
+    enable_page_level_ads: true
+  });
+</script>

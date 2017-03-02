@@ -67,7 +67,7 @@
     $title = array_key_exists("titleRu",$desc) ? $desc['titleRu'] : $desc['Title'];
     $metaDescription = $bestQuality['quality'] . ", перевод: " . $bestQuality['translateQuality'] . ", Кинопоиск: " . @$desc['kinopoiskRating'] . ", премьера: " . date("j M Y",$movie['Release']);
     $imgSrc = array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster'];
-    @$metaTitle .= "$title - свежие торренты";
+    @$metaTitle .= "$title";
     include "html/head.php";
 ?>
 

@@ -164,6 +164,7 @@
 
     function searchKinopoisk($title, &$movie){
         $title = translit_utf8($title);
+        $title = str_replace("'s", "", $title);
         $link = KINOPOISKROOT."/index.php?first=no&what=&kp_query=".urlencode($title);
         $response = getKinopoiskLink($link);
 

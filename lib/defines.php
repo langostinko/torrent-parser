@@ -13,6 +13,6 @@
     define("PIRATEROOT", "https://thepiratebay.plus");
     define("KINOPOISKROOT", "https://www.kinopoisk.ru");
 
-    $BANNED = array(1288, 518, 1421, 662, 1499, 1598, 373, 1225, 2503, 2718, 2840, 2769, 3148, 2769, 2192, 4163, 4205, 4724, 4881, 4276, 4583);
+    $BANNED = array(1288, 518, 1421, 662, 1499, 1598, 373, 1225, 2503, 2718, 2840, 2769, 3148, 2769, 2192, 4163, 4205, 4724, 4881, 4276, 4583, 5576);
     $logger = new Katzgrau\KLogger\Logger(LOGDIR);
 ?>
