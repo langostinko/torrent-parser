@@ -228,8 +228,8 @@
                         owner_id: -87710543,
                         from_group: 1,
                         message: "<?=$title;?>\n" + 
-                                "качество: <?=$bestQuality['quality']?> <?=$bestQuality['translateQuality']?>\n" + 
-                                "премьера: <?=date("j M Y",$movie['Release'])?>\n" + 
+//                                "качество: <?=$bestQuality['quality']?> <?=$bestQuality['translateQuality']?>\n" + 
+//                                "премьера: <?=date("j M Y",$movie['Release'])?>\n" + 
                                 "Кинопоиск: <?=@$desc['kinopoiskRating']?>\n" + 
                                 "жанр: <?=array_key_exists("жанр", $desc)?$desc['жанр']:@$desc['Genre']?>\n" + 
                         //        "режиссер: <?=array_key_exists("режиссер", $desc)?$desc['режиссер']:@$desc['Director']?>\n" + 
@@ -312,7 +312,7 @@
                 <thead>
                     <th>качество</th>
                     <th>перевод</th>
-                    <th class='hidden-xs'>скачать торрент</th>
+                    <th class='hidden-xs'>ссылка</th>
                     <th>размер</th>
                     <th>сиды</th>
                     <th class='hidden-xs'>личеры</th>
