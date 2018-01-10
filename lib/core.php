@@ -95,27 +95,20 @@
 
     function searchIMDB($title, &$movie){
         $title = translit_utf8($title);
-        $link = "http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=" . urlencode($title);
+        $link = "http://www.omdbapi.com/?apikey=726aea6&type=movie&t=" . urlencode($title);
+        if (array_key_exists('year', $movie)) {
+            $link .= '&y=' . $movie['year'];
+        }
 
         $file = file_get_contents_curl($link);
         $json = json_decode($file, true);
-
-        $vector = array('title_popular','title_exact','title_approx');
-        $curDif = 2;
-        foreach($vector as $type)
-            if ($json and array_key_exists($type, $json))
-                foreach ($json[$type] as $cur) {
-                    $curYear = (int)substr($cur['description'],0,4);
-                    $needYear = array_key_exists('year', $movie) ? (int)$movie['year'] : $curYear;
-                    if (abs($curYear - $needYear) < $curDif) {
-                        $movie['movie']['imdbid'] = $cur['id'];
-                        $movie['movie']['title'] = html_entity_decode($cur['title'], ENT_QUOTES, "UTF-8");
-                        //$movie['movie']['description'] = html_entity_decode($cur['description'], ENT_QUOTES, "UTF-8");
-                        $movie['movie']['year'] = $curYear;
-                        $curDif = abs($curYear - $needYear);
-                    }
-                }
-        return ($curDif < 2);
+        if (array_key_exists('Title', $json)) {
+            $movie['movie']['imdbid'] = $json['imdbID'];
+            $movie['movie']['title'] = $json['Title'];
+            print_r($movie);
+            return true;
+        }
+        return false;
     }
 
     function getKinopoiskLink($link) {
@@ -386,7 +379,7 @@
     }
 
     function getIMDBDesc($imdbid, &$desc) {
-        $omdbapi = file_get_contents_curl("http://www.omdbapi.com/?i=" . urlencode($imdbid));           
+        $omdbapi = file_get_contents_curl("http://www.omdbapi.com/?apikey=726aea6&i=" . urlencode($imdbid));
         $json = json_decode($omdbapi, true);
         if ($json && array_key_exists("Title", $json)) {
             $img = "img/posters/$imdbid.jpg";

@@ -6,7 +6,7 @@ class ProxyFinder {
     static private function getProxyList() {
         static $list = null;
         if (!$list)
-            $list = array("109.167.200.84:65309", "212.220.1.15:1080", "34.201.226.99:8080", "172.245.161.229:1080", "74.201.86.22:80");
+            $list = array("213.239.211.247:3128");
         return $list;
     }
     
@@ -22,11 +22,14 @@ class ProxyFinder {
     }
     
     static public function findProxy($url, $curProxy) {
+        global $logger;
         $host = parse_url($url)['host'];
         if (!array_key_exists($host, ProxyFinder::$cache))
             ProxyFinder::$cache[$host] = ProxyFinder::getNextProxy(null);
         if (ProxyFinder::$cache[$host] && $curProxy == ProxyFinder::$cache[$host])
             ProxyFinder::$cache[$host] = ProxyFinder::getNextProxy($curProxy);
+        if (!ProxyFinder::$cache[$host])
+            $logger->warning("no proxy for " . $url);
         return ProxyFinder::$cache[$host];
     }
 }
