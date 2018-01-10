@@ -105,7 +105,6 @@
         if (array_key_exists('Title', $json)) {
             $movie['movie']['imdbid'] = $json['imdbID'];
             $movie['movie']['title'] = $json['Title'];
-            print_r($movie);
             return true;
         }
         return false;
@@ -128,6 +127,10 @@
                 $logger->info("trying $link with proxy $proxy");
             }
             $response = curl_exec($ch);
+            $info = curl_getinfo($ch);
+            if ($info['http_code'] != 200) {
+                $response = false;
+            }
             if (!$response)
                 $proxy = ProxyFinder::findProxy($link, $proxy);
             curl_close($ch);
@@ -183,7 +186,7 @@
 
             $link = $pName->find('a',0)->href;
             $id = array();
-            $res = preg_match_all('/\/film\/(\d+)\//isu', $link, $id);
+            $res = preg_match_all('/\/film\/([^\/]+)\//isu', $link, $id);
             if ($id && count($id[0]))
                 $id = $id[1][0];
             else 
