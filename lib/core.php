@@ -105,6 +105,18 @@
         if (array_key_exists('Title', $json)) {
             $movie['movie']['imdbid'] = $json['imdbID'];
             $movie['movie']['title'] = $json['Title'];
+            $img = "img/posters/".$json['imdbID'].".jpg";
+            $realImg = dirname( __FILE__ ) . "/../$img";
+            if (array_key_exists('Poster', $json) && $json['Poster'] != 'N/A') {
+                $url = $json['Poster'];
+                unset($json['Poster']);
+                if ( !(file_exists($realImg) && filesize($realImg)) )
+                    file_put_contents($realImg, file_get_contents_curl($url));
+                if (file_exists($realImg) && filesize($realImg))
+                    $json['Poster'] = $img;
+            } else
+                unset($json['Poster']);
+            $movie['description'] = array_key_exists('description', $movie) ? array_merge($movie['description'], $json) : $json;
             return true;
         }
         return false;
