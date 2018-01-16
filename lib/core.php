@@ -140,7 +140,7 @@
             }
             $response = curl_exec($ch);
             $info = curl_getinfo($ch);
-            if ($info['http_code'] != 200 || strpos(@$info['redirect_url'], 'showcaptcha') !== false) {
+            if ($info['http_code'] != 200 && strpos(@$info['redirect_url'], 'showcaptcha') !== false) {
                 $response = false;
             }
             if (!$response)
