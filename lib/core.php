@@ -205,14 +205,14 @@
                 $id = false;
 
             if ($id) {
-                $name = iconv('windows-1251', 'UTF-8', $pName->find('a',0)->plaintext);
+                $name = html_entity_decode(iconv('windows-1251', 'UTF-8', $pName->find('a',0)->plaintext));
                 if (strpos($name, "(сериал)") !== false) //skip series
                     continue;
                 $year = $pName->find('span',0)->plaintext;
                 $desc = array(
                     'kinopoiskId' => $id,
                     'titleRu' => $name,
-                    'Year' => $name,
+                    'Year' => $year,
                     'kinopoiskRating' => @$row->find('div[class=rating]',0)->plaintext,
                 );
 
