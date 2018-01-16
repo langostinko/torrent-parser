@@ -143,7 +143,6 @@
             if ($info['http_code'] != 200 || strpos(@$info['redirect_url'], 'showcaptcha') !== false) {
                 $response = false;
             }
-            print_r($info);
             if (!$response)
                 $proxy = ProxyFinder::findProxy($link, $proxy);
             curl_close($ch);
