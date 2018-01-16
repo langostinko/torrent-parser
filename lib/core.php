@@ -140,9 +140,10 @@
             }
             $response = curl_exec($ch);
             $info = curl_getinfo($ch);
-            if ($info['http_code'] != 200 && $info['http_code'] != 302) {
+            if ($info['http_code'] != 200 || strpos(@$info['redirect_url'], 'showcaptcha') !== false) {
                 $response = false;
             }
+            print_r($info);
             if (!$response)
                 $proxy = ProxyFinder::findProxy($link, $proxy);
             curl_close($ch);
@@ -449,9 +450,10 @@
             }
         if (!$row)
             $row['description'] = "{}";
-        $movie['description'] = array_merge(json_decode($row['description'], true), $movie['description']);
-        if (!$movie['description'])
+        if (!@$movie['description']) {
             $movie['description'] = array();
+        }
+        $movie['description'] = array_merge(json_decode($row['description'], true), $movie['description']);
 
         $q = "UPDATE movies SET updated=now()";            
 
