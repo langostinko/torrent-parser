@@ -116,7 +116,7 @@
                     $json['Poster'] = $img;
             } else
                 unset($json['Poster']);
-            $movie['description'] = array_key_exists('description', $movie) ? array_merge($movie['description'], $json) : $json;
+            $movie['movie']['description'] = array_key_exists('description', $movie['movie']) ? array_merge($movie['movie']['description'], $json) : $json;
             return true;
         }
         return false;
@@ -140,7 +140,7 @@
             }
             $response = curl_exec($ch);
             $info = curl_getinfo($ch);
-            if ($info['http_code'] != 200) {
+            if ($info['http_code'] != 200 && $info['http_code'] != 302) {
                 $response = false;
             }
             if (!$response)
@@ -162,7 +162,7 @@
         $result = array();
         foreach($html->find('li[class=item]') as $row) {
             $movieId = array();
-            $res = preg_match_all('/film_(\d+)/isu', $row->id, $movieId);
+            $res = preg_match_all('/film_([^\/]+)/isu', $row->id, $movieId);
             if ($movieId && count($movieId[0]))
                 array_push($result, (int)$movieId[1][0]);
         }
@@ -178,7 +178,7 @@
 
         //search for HTTP 302
         $id = array();
-        $res = preg_match_all('/Location: \/film\/(\d+)\//isu', $response, $id);
+        $res = preg_match_all('/Location: \/film\/([^\/]+)\//isu', $response, $id);
         if ($id && count($id[0]))
             $id = $id[1][0];
         else 
@@ -209,13 +209,19 @@
                 if (strpos($name, "(сериал)") !== false) //skip series
                     continue;
                 $year = $pName->find('span',0)->plaintext;
-                $rating = @$row->find('div[class=rating]',0)->plaintext;
+                $desc = array(
+                    'kinopoiskId' => $id,
+                    'titleRu' => $name,
+                    'Year' => $name,
+                    'kinopoiskRating' => @$row->find('div[class=rating]',0)->plaintext,
+                );
 
                 $needYear = array_key_exists('year', $movie) ? (int)$movie['year'] : $year;
                 if (abs($year - $needYear) <= 2) {
                     $movie['movie']['kpid'] = $id;
                     $movie['movie']['titleRu'] = $name;
                     $movie['movie']['yearRu'] = $year;
+                    $movie['movie']['description'] = array_key_exists('description', $movie['movie']) ? array_merge($movie['movie']['description'], $desc) : $desc;
                     return true;
                 }
             }
@@ -442,8 +448,8 @@
                 }
             }
         if (!$row)
-            $row['description'] = "";
-        $movie['description'] = json_decode($row['description'], true);
+            $row['description'] = "{}";
+        $movie['description'] = array_merge(json_decode($row['description'], true), $movie['description']);
         if (!$movie['description'])
             $movie['description'] = array();
 
@@ -454,7 +460,7 @@
 
         if (array_key_exists("imdbid", $movie) && $movie['imdbid']) {
             $q .= ", imdbid='{$movie['imdbid']}'";
-            getIMDBDesc($movie['imdbid'], $movie['description']);
+//            getIMDBDesc($movie['imdbid'], $movie['description']);
         }
 
         if (array_key_exists("kpid", $movie) && $movie['kpid']) {
