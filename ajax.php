@@ -61,7 +61,8 @@ if ($user && $login != 'wise guest' && array_key_exists('method', $_POST))
                     echo "Updating movie $movieId: kp $kpid, imdb $imdbid\n";
                     $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies WHERE id = $movieId");
                     $row = mysqli_fetch_assoc($sqlresult);
-                    $desc = array_merge(json_decode($row['description'], true), $movie['movie']['description']);
+                    $desc = json_decode($row['description'], true) ?: array();
+                    $desc = array_merge($desc, $movie['movie']['description']);
                     $desc = mysqli_real_escape_string($GLOBALS['mysqli'], json_encode($desc, JSON_UNESCAPED_UNICODE));
                     mysqli_query($GLOBALS['mysqli'], "UPDATE movies SET kpid='$kpid', imdbid='$imdbid', description='$desc' WHERE id = $movieId");
                     echo mysqli_error($GLOBALS['mysqli']);
