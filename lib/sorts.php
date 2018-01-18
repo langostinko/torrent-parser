@@ -84,9 +84,6 @@ function calcTotalSeedLeech(&$movies, $user) {
             }
         }
 
-        if (!(array_key_exists("Poster", $movies[$row['movieId']]['description']) && $movies[$row['movieId']]['description']['Poster'] != 'N/A' || array_key_exists("PosterRu", $movies[$row['movieId']]['description'])))
-            continue;
-
         if (!array_key_exists("firstOcc", $movies[(int)$row['movieId']]))
             $movies[(int)$row['movieId']]['firstOcc'] = strtotime($row['added_tracker']);
         $movies[(int)$row['movieId']]['firstOcc'] = min($movies[(int)$row['movieId']]['firstOcc'],strtotime($row['added_tracker']));

@@ -222,6 +222,17 @@
                     $movie['movie']['titleRu'] = $name;
                     $movie['movie']['yearRu'] = $year;
                     $movie['movie']['description'] = array_key_exists('description', $movie['movie']) ? array_merge($movie['movie']['description'], $desc) : $desc;
+
+                    $img = "img/posters/{$id}Ru.jpg";
+                    $realImg = dirname( __FILE__ ) . "/../$img";
+                    preg_match_all('/\d+$/isu', $id, $shortid);
+                    $shortid = @$shortid[0][0];
+                    $url = "http://st.kp.yandex.net/images/film_iphone/iphone360_$shortid.jpg";
+                    if ( !(file_exists($realImg) && filesize($realImg) > 4000) )
+                        file_put_contents($realImg, file_get_contents_curl($url));
+                    if (file_exists($realImg) && filesize($realImg) > 4000)
+                        $movie['movie']['description']['PosterRu'] = $img;
+
                     return true;
                 }
             }
