@@ -8,6 +8,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="<?php echo @$metaDescription?$metaDescription:" в сети"?>">
+    <meta property="og:description" content="<?php echo @$metaDescription?$metaDescription:" в сети"?>">
+    <meta property="og:image" content="<?=@$metaImg?>">
     <meta name="author" content="">
     <link rel="icon" href="img/icon2.png">
 

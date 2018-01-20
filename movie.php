@@ -53,8 +53,8 @@
         $legals[] = $row;
     }
 
-    $bestQuality['quality'] = mb_strtolower($bestQuality['quality'], "UTF-8");
-    $bestQuality['translateQuality'] = mb_strtolower($bestQuality['translateQuality'], "UTF-8");
+    $bestQuality['quality'] = mb_strtoupper($bestQuality['quality'], "UTF-8");
+    $bestQuality['translateQuality'] = mb_strtoupper($bestQuality['translateQuality'], "UTF-8");
 
     if ($login == 'wise guest' || $login == 'guest') {
         $userId = -1;
@@ -65,8 +65,9 @@
 <html lang="en">
 <?php
     $title = array_key_exists("titleRu",$desc) ? $desc['titleRu'] : $desc['Title'];
-    $metaDescription = $bestQuality['quality'] . ", перевод: " . $bestQuality['translateQuality'] . ", Кинопоиск: " . @$desc['kinopoiskRating'] . ", премьера: " . date("j M Y",$movie['Release']);
+    $metaDescription = $bestQuality['quality'] . ", перевод: " . $bestQuality['translateQuality'] . "\n Кинопоиск: " . @$desc['kinopoiskRating'] . "\nпремьера: " . date("j M Y",$movie['Release']);
     $imgSrc = array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster'];
+    $metaImg = $imgSrc;
     @$metaTitle .= "$title";
     include "html/head.php";
 ?>

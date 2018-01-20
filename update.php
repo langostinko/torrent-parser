@@ -208,6 +208,36 @@ function updateMovies(){
         }
 }
 
+function pushMovies(){
+    global $logger;
+    $logger->info("PUSH MOVIES");
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT id,movieId,quality,seed,leech from links");
+    $movies = array();
+    while ($row = mysqli_fetch_assoc($sqlresult)) {
+        if (qualityToRool($row['quality'])) {
+            $movies[$row['movieId']] = @$movies[$row['movieId']] + $row['seed'] + $row['leech'];
+        }
+    }
+
+    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * from pushed_movies");
+    while ($row = mysqli_fetch_assoc($sqlresult)) {
+        unset($movies[$row['movieId']]);
+    }
+
+    foreach ($movies as $id => $peers) {
+        if ($peers > 2000) {
+            $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT title from movies where id = $id");
+            $row = mysqli_fetch_assoc($sqlresult);
+            $title = $row['title'];
+            $message = "$title\nhttp://freshswag.ru/movie.php?id=$id";
+            $link = "https://api.telegram.org/bot" . \pass\Telegram::$token . "/sendMessage?chat_id=329766242&text=".urlencode($message);
+            $logger->info("PUSH to telegram: " . file_get_contents_curl($link));
+            mysqli_query($GLOBALS['mysqli'], "INSERT INTO pushed_movies (movieId) VALUES ($id)");
+            break;
+        }
+    }
+}
+
 header('Content-Type: text/plain; charset=UTF-8');
 connect();
 set_time_limit(5*60);
@@ -219,7 +249,8 @@ $time_start = microtime(true);
 updateLinks();
 deleteBanned();
 deleteOld();
-updateMovies();
+pushMovies();
+//updateMovies();
 
 $time_end = microtime(true);
 $time = $time_end - $time_start;
