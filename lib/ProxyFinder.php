@@ -6,7 +6,7 @@ class ProxyFinder {
     static private function getProxyList() {
         static $list = null;
         if (!$list)
-            $list = array("192.116.142.153:8080", "67.78.143.182:8080", "213.239.211.247:3128");
+            $list = array("190.186.242.67:53281", "173.192.21.89:8080", "67.78.143.182:8080", "173.192.21.89:80");
         return $list;
     }
     
@@ -30,7 +30,7 @@ class ProxyFinder {
             ProxyFinder::$cache[$host] = ProxyFinder::getNextProxy($curProxy);
         if (!ProxyFinder::$cache[$host]) {
             $logger->warning("no proxy for " . $url);
-            unset(ProxyFinder::$cache[$host]);
+            // unset(ProxyFinder::$cache[$host]); //RETRY other time
             return false;
         }
         return ProxyFinder::$cache[$host];

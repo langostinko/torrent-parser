@@ -122,7 +122,7 @@
         return false;
     }
 
-    function getKinopoiskLink($link) {
+    function getKinopoiskLink($link, $follow_location = 0) {
         global $logger;
         $response = "";
         $proxy = false;
@@ -131,7 +131,8 @@
             curl_setopt($ch, CURLOPT_URL, $link);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_HEADER, 1);
-            curl_setopt($ch, CURLOPT_ENCODING, 'gzip,deflate,sdch');
+            curl_setopt($ch, CURLOPT_ENCODING, 'gzip, deflate, br');
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, $follow_location);
             curl_setopt($ch, CURLOPT_REFERER, KINOPOISKROOT);
             curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.122 Safari/537.36');
             if ($proxy) {
@@ -140,8 +141,15 @@
             }
             $response = curl_exec($ch);
             $info = curl_getinfo($ch);
-            if ($info['http_code'] != 200 && strpos(@$info['redirect_url'], 'showcaptcha') !== false) {
-                $response = false;
+            print_r($info);
+            if ($info['http_code'] == 200) {
+                if (strpos(@$info['url'], 'showcaptcha') !== false) {
+                    $response = false;
+                }
+            } else {
+                if (strpos(@$info['redirect_url'], 'showcaptcha') !== false) {
+                    $reponse = false;
+                }
             }
             if (!$response)
                 $proxy = ProxyFinder::findProxy($link, $proxy);
@@ -354,7 +362,7 @@
     }
     
     function getKinopoiskDesc($kpid, &$desc) {
-        $response = getKinopoiskLink(KINOPOISKROOT."/film/".urlencode($kpid)."/");
+        $response = getKinopoiskLink(KINOPOISKROOT."/film/".urlencode($kpid)."/", true);
         if (!$response)
             return false;
 
