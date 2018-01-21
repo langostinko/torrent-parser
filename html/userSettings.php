@@ -19,13 +19,6 @@
                 <input name="minVotes" type="number" class="form-control" id="minVotes" placeholder="0" min=0 max=9000000 step=1 value='<?php echo $user['minVotes']; ?>'>
             </div>
           </div>
-          <div class="form-group">
-            <label class="sr-only" for="maxDaysDif">месяцев с премьеры</label>
-            <div class="input-group">
-                <div class="input-group-addon">месяцев с премьеры ≤</div>
-                <input name="maxDaysDif" type="number" class="form-control" style="width: 60px" id="maxDaysDif" placeholder="0" min=0 max=9000 step=1 value='<?php echo $user['maxDaysDif']; ?>'>
-            </div>
-          </div>
       <?php } else { ?>
           <div class="form-group">
             <label class="sr-only" for="kpID">Кинопоиск ID</label>
@@ -101,7 +94,7 @@
       </div>
 
       <?php if (!$login) { ?>
-        <span class="help-block" style="text-align: center; margin-bottom: 0">Войдите, чтобы сохранить настройки и получить возможность удалять просмотренные/неинтересные фильмы</span>
+        <span class="help-block" style="text-align: center; margin-bottom: 0">Войдите, чтобы сохранить настройки и удалять просмотренные/неинтересные фильмы</span>
       <?php } ?>
     </form>
 </div>

@@ -77,13 +77,6 @@ function calcTotalSeedLeech(&$movies, $user) {
         if (empty($movies[$row['movieId']]['Release']))
             $movies[$row['movieId']]['Release'] = strtotime($movies[$row['movieId']]['description']['Released']);
 
-        if (!defined("KPPAGE")) {
-            if ($user['maxDaysDif']) {
-                if ((time()-$movies[$row['movieId']]['Release'])/(30.417*24*60*60) > $user['maxDaysDif'])
-                    continue;
-            }
-        }
-
         if (!array_key_exists("firstOcc", $movies[(int)$row['movieId']]))
             $movies[(int)$row['movieId']]['firstOcc'] = strtotime($row['added_tracker']);
         $movies[(int)$row['movieId']]['firstOcc'] = min($movies[(int)$row['movieId']]['firstOcc'],strtotime($row['added_tracker']));

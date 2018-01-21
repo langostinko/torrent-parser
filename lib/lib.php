@@ -53,10 +53,6 @@
         if (array_key_exists('minRating', $settings))
             $minRating = $user['minRating'] = $settings['minRating'];
 
-        $maxDaysDif = $user['maxDaysDif'];
-        if (array_key_exists('maxDaysDif', $settings))
-            $maxDaysDif = $user['maxDaysDif'] = $settings['maxDaysDif'];
-
         $minVotes = $user['minVotes'];
         if (array_key_exists('minVotes', $settings))
             $minVotes = $user['minVotes'] = $settings['minVotes'];
@@ -71,7 +67,7 @@
         $maxCost = $user['maxCost'] = $settings['maxCost'];
         $sortType = $user['sortType'] = $settings['sortType'];
         if ($userId != 3)
-            mysqli_query($GLOBALS['mysqli'], "UPDATE users SET quality=$quality, minRating=$minRating, maxDaysDif=$maxDaysDif, onlyNewTor=$onlyNewTor, minVotes=$minVotes, translateQuality=$translateQuality, onlyLegal=$onlyLegal, maxCost=$maxCost, sortType=$sortType, kpID=$kpID WHERE id=$userId");
+            mysqli_query($GLOBALS['mysqli'], "UPDATE users SET quality=$quality, minRating=$minRating, onlyNewTor=$onlyNewTor, minVotes=$minVotes, translateQuality=$translateQuality, onlyLegal=$onlyLegal, maxCost=$maxCost, sortType=$sortType, kpID=$kpID WHERE id=$userId");
         $_SESSION["user"] = $user;
     }
 

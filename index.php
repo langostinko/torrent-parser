@@ -26,10 +26,9 @@
         switch ($_POST['method']) {
             case "setSettings":
                 setSettings($user, 
-                    array("minRating"=>(float)$_POST['minRating'], 
-                        "minVotes"=>(int)$_POST['minVotes'], 
-                        "maxDaysDif"=>(int)$_POST['maxDaysDif'], 
-                        "onlyNewTor"=>(int)!empty($_POST['onlyNewTor']), 
+                    array("minRating"=>(float)$_POST['minRating'],
+                        "minVotes"=>(int)$_POST['minVotes'],
+                        "onlyNewTor"=>(int)!empty($_POST['onlyNewTor']),
                         "quality"=>(int)!empty($_POST['quality']),
                         "translateQuality"=>(int)$_POST['translateQuality'],
                         "sortType" => (int)$_POST['sortType'],
