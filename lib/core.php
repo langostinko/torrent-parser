@@ -141,7 +141,6 @@
             }
             $response = curl_exec($ch);
             $info = curl_getinfo($ch);
-            print_r($info);
             if ($info['http_code'] == 200) {
                 if (strpos(@$info['url'], 'showcaptcha') !== false) {
                     $response = false;

@@ -230,7 +230,8 @@ function pushMovies(){
             $row = mysqli_fetch_assoc($sqlresult);
             $title = $row['title'];
             $message = "$title\nhttp://freshswag.ru/movie.php?id=$id";
-            $link = "https://api.telegram.org/bot" . \pass\Telegram::$token . "/sendMessage?chat_id=329766242&text=".urlencode($message);
+            //$link = "https://api.telegram.org/bot" . \pass\Telegram::$token . "/sendMessage?chat_id=329766242&text=".urlencode($message);
+            $link = "https://api.telegram.org/bot" . \pass\Telegram::$token . "/sendMessage?chat_id=@freshswag&text=".urlencode($message);
             $logger->info("PUSH to telegram: " . file_get_contents_curl($link));
             mysqli_query($GLOBALS['mysqli'], "INSERT INTO pushed_movies (movieId) VALUES ($id)");
             break;
