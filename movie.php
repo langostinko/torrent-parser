@@ -65,7 +65,10 @@
 <html lang="en">
 <?php
     $title = array_key_exists("titleRu",$desc) ? $desc['titleRu'] : $desc['Title'];
-    $metaDescription = $bestQuality['quality'] . ", перевод: " . $bestQuality['translateQuality'] . "\n Кинопоиск: " . @$desc['kinopoiskRating'] . "\nпремьера: " . date("j M Y",$movie['Release']);
+    $metaDescription = $bestQuality['quality'] . ", перевод: " . $bestQuality['translateQuality'];
+    $metaDescription .= @$desc['kinopoiskRating'] ? ("\nКинопоиск: " . @$desc['kinopoiskRating']) : "";
+    $metaDescription .= @$desc['imdbRating'] ? ("\nIMDB: " . @$desc['imdbRating']) : "";
+    $metaDescription .= "\nпремьера: " . date("j M Y",$movie['Release']);
     $imgSrc = array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster'];
     $metaImg = $imgSrc;
     @$metaTitle .= "$title";
