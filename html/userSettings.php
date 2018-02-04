@@ -94,8 +94,9 @@
       </div>
 
       <?php if (!$login) { ?>
-        <span class="help-block" style="text-align: center; margin-bottom: 0">Войдите, чтобы сохранить настройки и удалять просмотренные/неинтересные фильмы</span>
+        <!--span class="help-block" style="text-align: center; margin-bottom: 0">Войдите, чтобы сохранить настройки и удалять просмотренные/неинтересные фильмы</span-->
       <?php } ?>
+      <span class="help-block bg-info">Мы завели <a href="https://t.me/freshswag" target='_blank'>канал в Телеграме</a>! Туда пушатся свежие фильмы в HD.</span>
     </form>
 </div>
 </div>
