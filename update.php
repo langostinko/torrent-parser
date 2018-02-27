@@ -226,9 +226,17 @@ function pushMovies(){
 
     foreach ($movies as $id => $peers) {
         if ($peers > 2000) {
-            $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT title from movies where id = $id");
+            $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT title, description from movies where id = $id");
             $row = mysqli_fetch_assoc($sqlresult);
             $title = $row['title'];
+            $desc = json_decode($row['description'], true);
+            $rating = array_key_exists('kinopoiskRating', $desc) ? $desc['kinopoiskRating'] : 0;
+            if (!$rating) {
+                $rating = array_key_exists('imdbRating', $desc) ? $desc['imdbRating'] : 0;
+            }
+            if ((float)$rating < 6 && $peers < 4000) {
+                continue;
+            }
             $message = "$title\nhttp://freshswag.ru/movie.php?id=$id";
             //$link = "https://api.telegram.org/bot" . \pass\Telegram::$token . "/sendMessage?chat_id=329766242&text=".urlencode($message);
             $link = "https://api.telegram.org/bot" . \pass\Telegram::$token . "/sendMessage?chat_id=@freshswag&text=".urlencode($message);
