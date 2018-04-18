@@ -209,6 +209,16 @@ function updateMovies(){
 }
 
 function pushMovies(){
+    function curlCallback($response, $info, $request) {
+        global $logger;
+        $msg = $info['http_code'] . " :: " . $info['url'] . " fetched in " . $info['total_time'];
+        if ($info['http_code'] != 200) {
+            $logger->warning($msg);
+            return;
+        }
+        $logger->info($msg);
+        mysqli_query($GLOBALS['mysqli'], "INSERT INTO pushed_movies (movieId) VALUES (".$request->cookie.")");
+    }
     global $logger;
     $logger->info("PUSH MOVIES");
     $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT id,movieId,quality,seed,leech from links");
@@ -240,8 +250,10 @@ function pushMovies(){
             $message = "$title\nhttp://freshswag.ru/movie.php?id=$id";
             //$link = "https://api.telegram.org/bot" . \pass\Telegram::$token . "/sendMessage?chat_id=329766242&text=".urlencode($message);
             $link = "https://api.telegram.org/bot" . \pass\Telegram::$token . "/sendMessage?chat_id=@freshswag&text=".urlencode($message);
-            $logger->info("PUSH to telegram: " . file_get_contents_curl($link));
-            mysqli_query($GLOBALS['mysqli'], "INSERT INTO pushed_movies (movieId) VALUES ($id)");
+            $rc = new RollingCurl("curlCallback");
+            $rc->get($link, null, null, $id );
+            $rc->execute();
+            $logger->info("PUSH to telegram: " . $link);
             break;
         }
     }
