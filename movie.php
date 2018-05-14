@@ -71,7 +71,7 @@
     $metaDescription .= "\n" . @$desc['жанр']??@$desc['Genre'];
     $imgSrc = array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster'];
     $metaImg = $imgSrc;
-    @$metaTitle .= "$title";
+    @$metaTitle .= $title . " (" . $desc['Year'] .")";
     include "html/head.php";
 ?>
 

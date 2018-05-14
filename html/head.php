@@ -8,12 +8,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="<?php echo @$metaDescription?$metaDescription:" в сети"?>">
+    <meta property="og:title" content="<?php echo @$metaTitle?$metaTitle:"Свежие фильмы в сети";?>">
     <meta property="og:description" content="<?php echo @$metaDescription?$metaDescription:" в сети"?>">
-    <meta property="og:image" content="<?=@$metaImg?>">
+    <meta property="og:image" content="http://freshswag.ru/<?=@$metaImg?>">
+    <meta property="og:site_name" content="FreshSwag">
     <meta name="author" content="">
     <link rel="icon" href="img/icon2.png">
 
-    <title><?php echo @$metaTitle?$metaTitle:"Свежие фильмы в сети";?></title>
+    <title><?php echo @$metaTitle?($metaTitle . " - FreshSwag"):"Свежие фильмы в сети";?></title>
     
 
     <!-- Bootstrap core JavaScript
