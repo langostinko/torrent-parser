@@ -247,11 +247,48 @@ function pushMovies(){
             if ((float)$rating < 6 && $peers < 4000) {
                 continue;
             }
-            $message = "$title\nhttp://freshswag.ru/movie.php?id=$id";
-            //$link = "https://api.telegram.org/bot" . \pass\Telegram::$token . "/sendMessage?chat_id=329766242&text=".urlencode($message);
-            $link = "https://api.telegram.org/bot" . \pass\Telegram::$token . "/sendMessage?chat_id=@freshswag&text=".urlencode($message);
+
+            $bestQuality = array('quality'=>"CAMRIP", 'translateQuality'=>"ORIGINAL");
+            $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE movieId = $id AND type=0 ORDER BY seed DESC LIMIT 500");
+            while ($row = mysqli_fetch_assoc($sqlresult)) {
+                if (qualityToRool($row['quality']) > qualityToRool($bestQuality['quality'])
+                || (qualityToRool($row['quality']) == qualityToRool($bestQuality['quality']) && translateQualityToRool($row['translateQuality']) > translateQualityToRool($bestQuality['translateQuality']) ) ) {
+                    $bestQuality['quality'] = $row['quality'];
+                    $bestQuality['translateQuality'] = $row['translateQuality'];
+                }
+                $torrents[] = $row;
+            }
+            $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE movieId = $id AND type=1 LIMIT 500");
+            while ($row = mysqli_fetch_assoc($sqlresult)) {
+                if (qualityToRool($row['quality']) > qualityToRool($bestQuality['quality'])
+                || (qualityToRool($row['quality']) == qualityToRool($bestQuality['quality']) && translateQualityToRool($row['translateQuality']) > translateQualityToRool($bestQuality['translateQuality']) ) ) {
+                    $bestQuality['quality'] = $row['quality'];
+                    $bestQuality['translateQuality'] = $row['translateQuality'];
+                }
+                $legals[] = $row;
+            }
+            $bestQuality['quality'] = mb_strtoupper($bestQuality['quality'], "UTF-8");
+            $bestQuality['translateQuality'] = mb_strtoupper($bestQuality['translateQuality'], "UTF-8");
+
+            $message = "<b>$title</b>";
+            $message .= "\n" . $bestQuality['quality'] . (@$bestQuality['translateQuality'] ? (", перевод: " . $bestQuality['translateQuality']) : "");
+            $message .= @$desc['kinopoiskRating'] ? ("\nКинопоиск: " . sprintf("%.1f", $desc['kinopoiskRating'])) : "";
+            $message .= @$desc['imdbRating'] ? ("\nIMDB: " . sprintf("%.1f", $desc['imdbRating'])) : "";
+            $message .= "\n" . @$desc['жанр']??@$desc['Genre'];
+            $message .= @$desc['plotRu'] ? ("\n" . $desc['plotRu']) : "";
+            $message .= "\nhttp://freshswag.ru/movie.php?id=$id";
+
+            $imgSrc = "http://freshswag.ru/" . (array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster']);
+
+            //$messageLink = "https://api.telegram.org/bot" . \pass\Telegram::$token . "/sendMessage?chat_id=329766242&parse_mode=HTML&text=".urlencode($message);
+            //$photoLink = "https://api.telegram.org/bot" . \pass\Telegram::$token . "/sendPhoto?chat_id=329766242&photo=".urlencode($imgSrc);
+            $messageLink = "https://api.telegram.org/bot" . \pass\Telegram::$token . "/sendMessage?chat_id=@freshswag&parse_mode=HTML&text=".urlencode($message);
+            $photoLink = "https://api.telegram.org/bot" . \pass\Telegram::$token . "/sendPhoto?chat_id=@freshswag&photo=".urlencode($imgSrc);
             $rc = new RollingCurl("curlCallback");
-            $rc->get($link, null, null, $id );
+            $rc->get($photoLink, null, null, $id );
+            $rc->execute();
+            $rc = new RollingCurl("curlCallback");
+            $rc->get($messageLink, null, null, $id );
             $rc->execute();
             $logger->info("PUSH to telegram: " . $link);
             break;
@@ -271,7 +308,7 @@ updateLinks();
 deleteBanned();
 deleteOld();
 pushMovies();
-//updateMovies();
+updateMovies();
 
 $time_end = microtime(true);
 $time = $time_end - $time_start;
