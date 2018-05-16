@@ -6,7 +6,7 @@ class ProxyFinder {
     static private function getProxyList() {
         static $list = null;
         if (!$list)
-            $list = array("103.242.219.242:8080", "67.78.143.182:8080", "86.105.49.170:8080");
+            $list = array("145.239.92.106:3128", "103.242.219.242:8080", "67.78.143.182:8080", "86.105.49.170:8080");
         return $list;
     }
     

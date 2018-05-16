@@ -217,7 +217,12 @@ function pushMovies(){
             return;
         }
         $logger->info($msg);
-        mysqli_query($GLOBALS['mysqli'], "INSERT INTO pushed_movies (movieId) VALUES (".$request->cookie.")");
+        mysqli_query($GLOBALS['mysqli'],
+            "INSERT INTO pushed_movies (movieId, translateQuality) VALUES ("
+            .$request->cookie["id"]
+            .", '".mysqli_real_escape_string($GLOBALS['mysqli'], $request->cookie["translateQuality"])
+            ."')"
+        );
     }
     global $logger;
     $logger->info("PUSH MOVIES");
@@ -225,17 +230,22 @@ function pushMovies(){
     $movies = array();
     while ($row = mysqli_fetch_assoc($sqlresult)) {
         if (qualityToRool($row['quality'])) {
-            $movies[$row['movieId']] = @$movies[$row['movieId']] + $row['seed'] + $row['leech'];
+            $movies[$row['movieId']] = array(
+                "peers" => @$movies[$row['movieId']]['peers'] + $row['seed'] + $row['leech']
+                , "pushedTranslateQuality" => "ORIGINAL"
+            );
         }
     }
 
     $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * from pushed_movies");
     while ($row = mysqli_fetch_assoc($sqlresult)) {
-        unset($movies[$row['movieId']]);
+        if (array_key_exists($row['movieId'], $movies)) {
+            $movies[$row['movieId']]['pushedTranslateQuality'] = $row['translateQuality'];
+        }
     }
 
-    foreach ($movies as $id => $peers) {
-        if ($peers > 2000) {
+    foreach ($movies as $id => $stat) {
+        if ($stat['peers'] > 1500) {
             $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT title, description from movies where id = $id");
             $row = mysqli_fetch_assoc($sqlresult);
             $title = $row['title'];
@@ -244,7 +254,7 @@ function pushMovies(){
             if (!$rating) {
                 $rating = array_key_exists('imdbRating', $desc) ? $desc['imdbRating'] : 0;
             }
-            if ((float)$rating < 6 && $peers < 4000) {
+            if ((float)$rating < 6 && $stat['peers'] < 3000) {
                 continue;
             }
 
@@ -269,6 +279,12 @@ function pushMovies(){
             }
             $bestQuality['quality'] = mb_strtoupper($bestQuality['quality'], "UTF-8");
             $bestQuality['translateQuality'] = mb_strtoupper($bestQuality['translateQuality'], "UTF-8");
+            if (qualityToRool($bestQuality['quality']) < qualityToRool("HD")) {
+                continue;
+            }
+            if (translateQualityToRool($bestQuality['translateQuality']) <= translateQualityToRool($stat['pushedTranslateQuality'])) {
+                continue;
+            }
 
             $message = "<b>$title</b>";
             $message .= "\n" . $bestQuality['quality'] . (@$bestQuality['translateQuality'] ? (", перевод: " . $bestQuality['translateQuality']) : "");
@@ -285,10 +301,10 @@ function pushMovies(){
             $messageLink = "https://api.telegram.org/bot" . \pass\Telegram::$token . "/sendMessage?chat_id=@freshswag&parse_mode=HTML&text=".urlencode($message);
             $photoLink = "https://api.telegram.org/bot" . \pass\Telegram::$token . "/sendPhoto?chat_id=@freshswag&photo=".urlencode($imgSrc);
             $rc = new RollingCurl("curlCallback");
-            $rc->get($photoLink, null, null, $id );
+            $rc->get($photoLink, null, null, array("id" => $id, "translateQuality" => $bestQuality['translateQuality']) );
             $rc->execute();
             $rc = new RollingCurl("curlCallback");
-            $rc->get($messageLink, null, null, $id );
+            $rc->get($messageLink, null, null, array("id" => $id, "translateQuality" => $bestQuality['translateQuality']) );
             $rc->execute();
             $logger->info("PUSH to telegram: " . $link);
             break;
