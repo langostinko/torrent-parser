@@ -217,12 +217,14 @@ function pushMovies(){
             return;
         }
         $logger->info($msg);
-        mysqli_query($GLOBALS['mysqli'],
-            "INSERT INTO pushed_movies (movieId, translateQuality) VALUES ("
-            .$request->cookie["id"]
-            .", '".mysqli_real_escape_string($GLOBALS['mysqli'], $request->cookie["translateQuality"])
-            ."')"
-        );
+        if ($request->cookie && array_key_exists('id', $request->cookie)) {
+            mysqli_query($GLOBALS['mysqli'],
+                "INSERT INTO pushed_movies (movieId, translateQuality) VALUES ("
+                .$request->cookie["id"]
+                .", '".mysqli_real_escape_string($GLOBALS['mysqli'], $request->cookie["translateQuality"])
+                ."')"
+            );
+        }
     }
     global $logger;
     $logger->info("PUSH MOVIES");
@@ -240,7 +242,9 @@ function pushMovies(){
     $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * from pushed_movies");
     while ($row = mysqli_fetch_assoc($sqlresult)) {
         if (array_key_exists($row['movieId'], $movies)) {
-            $movies[$row['movieId']]['pushedTranslateQuality'] = $row['translateQuality'];
+            if (translateQualityToRool($movies[$row['movieId']]['pushedTranslateQuality']) < translateQualityToRool($row['translateQuality'])) {
+                $movies[$row['movieId']]['pushedTranslateQuality'] = $row['translateQuality'];
+            }
         }
     }
 
@@ -294,19 +298,22 @@ function pushMovies(){
             $message .= @$desc['plotRu'] ? ("\n" . $desc['plotRu']) : "";
             $message .= "\nhttp://freshswag.ru/movie.php?id=$id";
 
-            $imgSrc = "http://freshswag.ru/" . (array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster']);
+            preg_match_all('/\d+$/isu', @$desc['kinopoiskId'], $shortid);
+            $shortid = @$shortid[0][0];
+            $imgSrc = "http://st.kp.yandex.net/images/film_iphone/iphone360_$shortid.jpg";
+            //$imgSrc = "http://freshswag.ru/" . (array_key_exists("PosterRu", $desc)?$desc['PosterRu']:$desc['Poster']);
 
             //$messageLink = "https://api.telegram.org/bot" . \pass\Telegram::$token . "/sendMessage?chat_id=329766242&parse_mode=HTML&text=".urlencode($message);
             //$photoLink = "https://api.telegram.org/bot" . \pass\Telegram::$token . "/sendPhoto?chat_id=329766242&photo=".urlencode($imgSrc);
             $messageLink = "https://api.telegram.org/bot" . \pass\Telegram::$token . "/sendMessage?chat_id=@freshswag&parse_mode=HTML&text=".urlencode($message);
             $photoLink = "https://api.telegram.org/bot" . \pass\Telegram::$token . "/sendPhoto?chat_id=@freshswag&photo=".urlencode($imgSrc);
             $rc = new RollingCurl("curlCallback");
-            $rc->get($photoLink, null, null, array("id" => $id, "translateQuality" => $bestQuality['translateQuality']) );
+            $rc->get($photoLink, null, null);
             $rc->execute();
             $rc = new RollingCurl("curlCallback");
             $rc->get($messageLink, null, null, array("id" => $id, "translateQuality" => $bestQuality['translateQuality']) );
             $rc->execute();
-            $logger->info("PUSH to telegram: " . $link);
+            $logger->info("PUSH to telegram: " . $messageLink);
             break;
         }
     }

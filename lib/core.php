@@ -66,7 +66,7 @@
             array("L","L1","L2","A","ЕСАРЕВ","МАТВЕЕВ","VO","SUB")
         )) return 2;
         if (in_array($qual,
-            array("P","P2","BAIBAKO",)
+            array("P","P2","BAIBAKO","MVO","HDREZKA STUDIO")
         )) return 3;
         if (in_array($qual,
             array("ЧИСТЫЙ ЗВУК","LINE",)
@@ -257,11 +257,11 @@
         $str = str_replace(" c ", " с ", $str);
         $str = preg_replace("/3(..)/", "З$1", $str);
         $result = array();
-        $res = preg_match_all('/[\|\[] *(лицензия|чистый звук|звук с ts|Звук с CAMRip|iTunes|BaibaKo|line)[\W]/isuU', $str.' ', $result);
+        $res = preg_match_all('/[\|\[] *(лицензия|чистый звук|звук с ts|Звук с CAMRip|iTunes|BaibaKo|line|HDrezka Studio)[\W]/isuU', $str.' ', $result);
         if (!$result[0])
             $res = preg_match_all('/[\|\[].*(Есарев|Матвеев)[\W]/isuU', $str.' ', $result);
         if (!$result[0])
-            $res = preg_match_all('/[\|\[] *(l|l1|l2|p|p2|D|A|А|sub|vo)[\W]/isuU', $str.' ', $result);
+            $res = preg_match_all('/[\|\[] *(l|l1|l2|p|p2|D|A|А|sub|vo|mvo)[\W]/isuU', $str.' ', $result);
         if ($result[0])
             $movie['translateQuality'] = mb_strtoupper($result[1][0], 'UTF-8');
     }
