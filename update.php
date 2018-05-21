@@ -73,23 +73,19 @@ function updateLinks(){
     //List of tracker loaders
     $loaders = array();
     $rutorMain = RUTORROOT;
-    $loaders[] = new RutorLoader("$rutorMain/browse/0/1/0/2/");//foreign movies
-    $loaders[] = new RutorLoader("$rutorMain/browse/1/1/0/2/");
-    $loaders[] = new RutorLoader("$rutorMain/browse/2/1/0/2/");
-    $loaders[] = new RutorLoader("$rutorMain/browse/3/1/0/2/");
-    $loaders[] = new RutorLoader("$rutorMain/browse/4/1/0/2/");
-    $loaders[] = new RutorLoader("$rutorMain/browse/5/1/0/2/");
-    $loaders[] = new RutorLoader("$rutorMain/browse/6/1/0/2/");
-    $loaders[] = new RutorLoader("$rutorMain/browse/7/1/0/2/");
-    $loaders[] = new RutorLoader("$rutorMain/browse/8/1/0/2/");
-    $loaders[] = new RutorLoader("$rutorMain/browse/9/1/0/2/");
-    $loaders[] = new RutorLoader("$rutorMain/browse/10/1/0/2/");
-    $loaders[] = new RutorLoader("$rutorMain/browse/11/1/0/2/");
-    $loaders[] = new RutorLoader("$rutorMain/browse/12/1/0/2/");
-    $loaders[] = new RutorLoader("$rutorMain/browse/13/1/0/2/");
-    $loaders[] = new RutorLoader("$rutorMain/browse/0/7/0/2/");//multiplication
-    $loaders[] = new RutorLoader("$rutorMain/browse/0/5/0/2");//russian movies
-    $loaders[] = new RutorLoader("$rutorMain/browse/1/5/0/2");
+    $rutorSuffix = ";" . date("d.m.Y", time() - 3 * 30 * 24 * 3600);
+    $loaders[] = new RutorLoader("$rutorMain/browse/0/1/0/2$rutorSuffix");//foreign movies
+    $loaders[] = new RutorLoader("$rutorMain/browse/1/1/0/2$rutorSuffix");
+    $loaders[] = new RutorLoader("$rutorMain/browse/2/1/0/2$rutorSuffix");
+    $loaders[] = new RutorLoader("$rutorMain/browse/3/1/0/2$rutorSuffix");
+    $loaders[] = new RutorLoader("$rutorMain/browse/4/1/0/2$rutorSuffix");
+    $loaders[] = new RutorLoader("$rutorMain/browse/5/1/0/2$rutorSuffix");
+    $loaders[] = new RutorLoader("$rutorMain/browse/6/1/0/2$rutorSuffix");
+    $loaders[] = new RutorLoader("$rutorMain/browse/7/1/0/2$rutorSuffix");
+    $loaders[] = new RutorLoader("$rutorMain/browse/0/6/0/2$rutorSuffix");//multiplication
+    $loaders[] = new RutorLoader("$rutorMain/browse/0/7/0/2$rutorSuffix");//anime
+    $loaders[] = new RutorLoader("$rutorMain/browse/0/2/0/2$rutorSuffix");//russian movies
+    $loaders[] = new RutorLoader("$rutorMain/browse/1/2/0/2$rutorSuffix");
     
     $NNMData = array(
         "prev_sd" => 0,

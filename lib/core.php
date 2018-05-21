@@ -102,7 +102,7 @@
 
         $file = file_get_contents_curl($link);
         $json = json_decode($file, true);
-        if (array_key_exists('Title', $json)) {
+        if ($json && array_key_exists('Title', $json)) {
             $movie['movie']['imdbid'] = $json['imdbID'];
             $movie['movie']['title'] = $json['Title'];
             $img = "img/posters/".$json['imdbID'].".jpg";

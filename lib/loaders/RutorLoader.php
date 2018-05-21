@@ -59,7 +59,8 @@ class RutorLoader extends AbstractLoader {
 		}
 			
 		$curTr[0] = str_replace(
-		    array(" Янв "," Фев "," Мар "," Апр "," Май "," Июн "," Июл "," Авг "," Сен "," Окт "," Ноя "," Дек "), 
+		    //array(" Янв "," Фев "," Мар "," Апр "," Май "," Июн "," Июл "," Авг "," Сен "," Окт "," Ноя "," Дек "), 
+		    array(" Янв "," Фев "," Мар "," Апр "," Май "," Июн "," Июл "," Авг "," Сен "," Окт "," Ноя "," Дек "), 
 		    array(" Jan "," Feb "," Mar "," Apr "," May "," Jun "," Jul "," Aug "," Sep "," Oct "," Nov "," Dec "), 
 		    $curTr[0] );
 		$movie['added_tracker'] = strtotime($curTr[0]);
@@ -78,7 +79,7 @@ class RutorLoader extends AbstractLoader {
     	$movie['leech'] = (int)$preg_result[0][1];
 
 		$res = $this->processTd($html->children(1), $movie);
-            
+
 		if (!$res)
 		    return false;
 
