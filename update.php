@@ -290,10 +290,23 @@ function pushMovies(){
             $message .= "\n" . $bestQuality['quality'] . (@$bestQuality['translateQuality'] ? (", перевод: " . $bestQuality['translateQuality']) : "");
             $message .= @$desc['kinopoiskRating'] ? ("\nКинопоиск: " . sprintf("%.1f", $desc['kinopoiskRating'])) : "";
             $message .= @$desc['imdbRating'] ? ("\nIMDB: " . sprintf("%.1f", $desc['imdbRating'])) : "";
-            $message .= "\n" . @$desc['жанр']??@$desc['Genre'];
-            $message .= @$desc['plotRu'] ? ("\n" . $desc['plotRu']) : "";
-            $message .= "\nhttp://freshswag.ru/movie.php?id=$id";
 
+            $genre = @$desc['жанр']??@$desc['Genre'];
+            $genrePos = min(mb_strlen($genre), 20);
+            $genre = mb_substr($genre, 0, mb_strpos($genre, ',', $genrePos) ? mb_strpos($genre, ',', $genrePos) : NULL );
+            $message .= "\n" . $genre;
+
+            $actors = @$desc['актеры']??@$desc['Actors'];
+            $actorsPos = min(mb_strlen($actors), 30);
+            $actors = mb_substr($actors, 0, mb_strpos($actors, ',', $actorsPos) ? mb_strpos($actors, ',', $actorsPos) : NULL);
+            $message .= "\nактеры: " . $actors;
+
+            $plot = @$desc['plotRu'] ? ("\n" . $desc['plotRu']) : "";
+            $plotPos = min(mb_strlen($plot), 200);
+            $plot = mb_substr($plot, 0, mb_strpos($plot, '.', $plotPos) ? mb_strpos($plot, '.', $plotPos) : NULL);
+            $message .= "\n" . $plot;
+
+            $message .= "\nhttp://freshswag.ru/movie.php?id=$id";
             preg_match_all('/\d+$/isu', @$desc['kinopoiskId'], $shortid);
             $shortid = @$shortid[0][0];
             $imgSrc = "http://st.kp.yandex.net/images/film_iphone/iphone360_$shortid.jpg";
