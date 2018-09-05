@@ -73,7 +73,7 @@ function updateLinks(){
     //List of tracker loaders
     $loaders = array();
     $rutorMain = RUTORROOT;
-    $rutorSuffix = ";" . date("d.m.Y", time() - 3 * 30 * 24 * 3600);
+    $rutorSuffix = ";" . date("d.m.Y", time() - 6 * 30 * 24 * 3600);
     $loaders[] = new RutorLoader("$rutorMain/browse/0/1/0/2$rutorSuffix");//foreign movies
     $loaders[] = new RutorLoader("$rutorMain/browse/1/1/0/2$rutorSuffix");
     $loaders[] = new RutorLoader("$rutorMain/browse/2/1/0/2$rutorSuffix");
@@ -254,7 +254,7 @@ function pushMovies(){
             if (!$rating) {
                 $rating = array_key_exists('imdbRating', $desc) ? $desc['imdbRating'] : 0;
             }
-            if ((float)$rating < 6 && $stat['peers'] < 3000) {
+            if ((float)$rating < 6.5 && $stat['peers'] < 3000) {
                 continue;
             }
 
