@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__."/lib/lib.php";
+include_once __DIR__."/lib/loaders/FilmTorrentLoader.php";
 include_once __DIR__."/lib/loaders/RutorLoader.php";
 include_once __DIR__."/lib/loaders/NNMLoader.php";
 include_once __DIR__."/lib/loaders/PirateLoader.php";
@@ -86,7 +87,11 @@ function updateLinks(){
     $loaders[] = new RutorLoader("$rutorMain/browse/0/7/0/2$rutorSuffix");//anime
     $loaders[] = new RutorLoader("$rutorMain/browse/0/2/0/2$rutorSuffix");//russian movies
     $loaders[] = new RutorLoader("$rutorMain/browse/1/2/0/2$rutorSuffix");
-    
+
+    $loaders[] = new FilmTorrentLoader("http://filmitorrent.org");
+    $loaders[] = new FilmTorrentLoader("http://filmitorrent.org/page/2/");
+    $loaders[] = new FilmTorrentLoader("http://filmitorrent.org/page/3/");
+
     $NNMData = array(
         "prev_sd" => 0,
         "prev_a" => 0,

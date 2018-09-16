@@ -22,6 +22,8 @@
             return "$prefix/seedoff.ico";
         if (strpos($link, NNMROOT) !== false)
             return "$prefix/nnm-club.ico";
+        if (strpos($link, "filmitorrent.org") !== false)
+            return "$prefix/filmitorren.png";
         if (strpos($link, "ivi.ru") !== false)
             return "$prefix/ivi.png";
         if (strpos($link, "megogo") !== false)
