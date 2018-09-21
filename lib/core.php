@@ -42,21 +42,6 @@
         return 1;
     }
     
-    function translateQualityToStr($qual) {
-        switch ($qual) {
-            case 0:
-                return "O";
-            case 1:
-                return "TS";
-            case 2:
-                return "L";
-            case 3:
-                return "P";
-            case 4:
-                return "D";
-        }        
-    }
-    
     function translateQualityToRool($qual) {
         if (in_array($qual,
             array("ORIGINAL",)

@@ -33,7 +33,7 @@
                         <?php echo $movie['price']['price']."₽"; ?>
                     <?php } else {?>
                         <?php if ($movie['translateQualityStr']) { ?>
-                        <span class="glyphicon glyphicon-volume-up"></span> <?php echo $movie['translateQualityStr'];/*translateQualityToStr($movie['translateQuality']);*/ ?>
+                        <span class="glyphicon glyphicon-volume-up"></span> <?=$movie['translateQualityStr']?>
                         <?php } ?>
                     <?php } ?>
                 </div>
