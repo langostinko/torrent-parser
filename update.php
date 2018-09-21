@@ -153,20 +153,10 @@ function updateMovies(){
     );
     if (mysqli_errno($GLOBALS['mysqli']))
         $logger->error(mysqli_error($GLOBALS['mysqli']));
-    
-    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM `movies` WHERE `movies`.id in (SELECT movieId FROM links)");
-    while ($row = mysqli_fetch_assoc($sqlresult))
-        if ($reason = trySkipMovie($row)) {
-            $logger->info($row['title'] . ": $reason");
-            $res = addMovie($row);
-            if ($res !== 0)
-                $logger->warning($res);
-            //$logger->info(print_r($row, true));
-        }
 }
 
 function pushMovies(){
-    function curlCallback($response, $info, $request) {
+    function pushCurlCallback($response, $info, $request) {
         global $logger;
         $msg = $info['http_code'] . " :: " . $info['url'] . " fetched in " . $info['total_time'];
         if ($info['http_code'] != 200) {
@@ -277,10 +267,10 @@ function pushMovies(){
             //$photoLink = "https://api.telegram.org/bot" . \pass\Telegram::$token . "/sendPhoto?chat_id=329766242&photo=".urlencode($imgSrc);
             $messageLink = "https://api.telegram.org/bot" . \pass\Telegram::$token . "/sendMessage?chat_id=@freshswag&parse_mode=HTML&text=".urlencode($message);
             $photoLink = "https://api.telegram.org/bot" . \pass\Telegram::$token . "/sendPhoto?chat_id=@freshswag&photo=".urlencode($imgSrc);
-            $rc = new RollingCurl("curlCallback");
+            $rc = new RollingCurl("pushCurlCallback");
             $rc->get($photoLink, null, null);
             $rc->execute();
-            $rc = new RollingCurl("curlCallback");
+            $rc = new RollingCurl("pushCurlCallback");
             $rc->get($messageLink, null, null, array("id" => $id, "translateQuality" => $bestQuality['translateQuality']) );
             $rc->execute();
             $logger->info("PUSH to telegram: " . $messageLink);
@@ -300,7 +290,7 @@ $time_start = microtime(true);
 updateLinks();
 deleteOld();
 pushMovies();
-//updateMovies();
+updateMovies();
 
 $time_end = microtime(true);
 $time = $time_end - $time_start;
