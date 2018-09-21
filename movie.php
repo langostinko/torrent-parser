@@ -218,43 +218,15 @@
 
         <?php if (isAdmin($user['id'])) {?>
         <!-- VK Share -->
-        <pre id="vkResult"></pre>
+        <pre id="updateResult"></pre>
         <script type="text/javascript">
-        function postVK() {
-            $.post( "ajax.php", { method: "vkUploadPhoto", movieId: <?=$movieId?> })
-                .done(function( data ) {
-                $('#vkResult').html(data);
-                obj = JSON.parse(data);
-                VK.Api.call(
-                    'wall.post', 
-                    {
-                        //owner_id: 19309348,
-                        owner_id: -87710543,
-                        from_group: 1,
-                        message: "<?=$title;?>\n" + 
-//                                "качество: <?=$bestQuality['quality']?> <?=$bestQuality['translateQuality']?>\n" + 
-//                                "премьера: <?=date("j M Y",$movie['Release'])?>\n" + 
-                                "Кинопоиск: <?=@$desc['kinopoiskRating']?>\n" + 
-                                "жанр: <?=array_key_exists("жанр", $desc)?$desc['жанр']:@$desc['Genre']?>\n" + 
-                        //        "режиссер: <?=array_key_exists("режиссер", $desc)?$desc['режиссер']:@$desc['Director']?>\n" + 
-                        //        "актеры: <?=array_key_exists("актеры", $desc)?$desc['актеры']:@$desc['Actors']?>\n" +
-                                "<?="http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"?>",
-                        attachments:  "photo" + obj.response[0].owner_id + "_" + obj.response[0].id + ",<?="http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"?>",
-                    }, 
-                    function(r) {
-                        $('#vkResult').html(JSON.stringify(r));
-                    }
-                );
-            });
-        }
         function updateMovie() {
             $.post("ajax.php", { method: "updateMovie", imdbid: "<?=$movie['imdbid']?>", kpid: "<?=$movie['kpid']?>" })
                 .done(function(data) {
-                    $('#vkResult').html(data);
+                    $('#updateResult').html(data);
                 });
         }
         </script>
-        <input type="button" value="VK" onclick="postVK()"/>
         <input type="button" value="Update" onclick="updateMovie()"/>
         <?php } ?>
         

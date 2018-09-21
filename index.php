@@ -1,6 +1,4 @@
 <?php
-    //header('Content-Type: text/plain; charset=UTF-8');
-
     $head_time_start = microtime(true);
     
     require_once "lib/lib.php";
@@ -36,7 +34,6 @@
                         "maxCost" => (int)$_POST['maxCost'],
                         )
                 );
-                //Login();
                 break;
             default:
                 break;
