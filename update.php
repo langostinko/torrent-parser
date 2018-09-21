@@ -8,29 +8,7 @@ include_once __DIR__."/lib/loaders/IviLoader.php";
 include_once __DIR__."/lib/loaders/MegogoLoader.php";
 include_once __DIR__."/lib/loaders/GooglePlayLoader.php";
 include_once __DIR__."/lib/loaders/ITunesLoader.php";
-include_once __DIR__."/lib/loaders/libSeedoff.php";
 require_once __DIR__."/lib/RollingCurl.php";
-
-function deleteBanned() {
-    global $logger;
-    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT MIN(seed) FROM links WHERE link LIKE '%rutor.org%' AND updated > date_add(current_timestamp, interval -2 hour)");
-    $row = mysqli_fetch_assoc($sqlresult);
-    $minSeed = (int)$row['MIN(seed)'] * 2;
-    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT link FROM links WHERE link LIKE '%rutor.org%' AND updated < date_add(current_timestamp, interval -2 hour) AND seed > $minSeed");
-    $logger->info(mysqli_num_rows($sqlresult) . " old banned Rutor deleted");
-    while ($row = mysqli_fetch_assoc($sqlresult))
-        $logger->info("\t" . $row['link']);
-    mysqli_query($GLOBALS['mysqli'], "DELETE FROM links WHERE link LIKE '%rutor.org%' AND updated < date_add(current_timestamp, interval -2 hour) AND seed > $minSeed");
-
-    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT MIN(seed) FROM links WHERE link LIKE '%seedoff.net%' AND updated > date_add(current_timestamp, interval -2 hour)");
-    $row = mysqli_fetch_assoc($sqlresult);
-    $minSeed = (int)$row['MIN(seed)'] * 2;
-    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT link FROM links WHERE link LIKE '%seedoff.net%' AND updated < date_add(current_timestamp, interval -2 hour) AND seed > $minSeed");
-    $logger->info(mysqli_num_rows($sqlresult) . " old banned Seedoff deleted");
-    while ($row = mysqli_fetch_assoc($sqlresult))
-        $logger->info("\t" . $row['link']);
-    mysqli_query($GLOBALS['mysqli'], "DELETE FROM links WHERE link LIKE '%seedoff.net%' AND updated < date_add(current_timestamp, interval -2 hour) AND seed > $minSeed");
-}
 
 function deleteOld(){
     global $logger;
@@ -39,21 +17,6 @@ function deleteOld(){
     while ($row = mysqli_fetch_assoc($sqlresult))
         $logger->info("\t" . $row['link']);
     mysqli_query($GLOBALS['mysqli'], "DELETE FROM links WHERE updated < date_add(current_timestamp, interval -".DELETELINKSAFTERDAYS." day)");
-    return;
-    
-    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT movieid FROM links");
-    $actual = array();
-    while ($row = mysqli_fetch_assoc($sqlresult))
-        $actual[$row['movieid']] = 1;
-    $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM movies");
-    while ($row = mysqli_fetch_assoc($sqlresult))
-        if (!array_key_exists($row['id'], $actual)) {
-            $img = "img/posters/".$row['imdbid'].".jpg";
-            $realImg = dirname( __FILE__ ) . "/$img";
-            $logger->info("\t" . $row['title']);
-            $logger->info(unlink($realImg) ? " :: poster deleted" : " :: poster not found");
-            mysqli_query($GLOBALS['mysqli'], "DELETE FROM movies WHERE id = " . $row['id']);
-        }
 }
 
 function main_callback($response, $info, $request) {
@@ -154,13 +117,6 @@ function updateLinks(){
     foreach ($loaders as $loader) {
         $result = array_merge($result, $loader->getResult());
     }
-
-    //$resSeedoff = array();
-    //$resSeedoff = seedoff\getSeedoff();
-    //$resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=14&options=0&order=5&by=2&pages=2"));
-    //$resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=14&options=0&order=5&by=2&pages=3"));
-    //$resSeedoff = array_merge($resSeedoff, seedoff\getSeedoff("http://www.seedoff.net/index.php?page=ajax&active=0&options=0&recommend=0&sticky=0&period=0&category=64&options=0&order=5&by=2&pages=1"));
-    //$result = array_merge($result, $resSeedoff);
 
     foreach($result as $cur) {
         if (trySkip($cur))
@@ -342,7 +298,6 @@ $logger->info("update script started");
 $time_start = microtime(true);
 
 updateLinks();
-deleteBanned();
 deleteOld();
 pushMovies();
 //updateMovies();
