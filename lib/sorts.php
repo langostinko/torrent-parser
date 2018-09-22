@@ -77,9 +77,11 @@ function calcTotalSeedLeech(&$movies, $user) {
         if (empty($movies[$row['movieId']]['Release']))
             $movies[$row['movieId']]['Release'] = strtotime($movies[$row['movieId']]['description']['Released']);
 
-        if (!array_key_exists("firstOcc", $movies[(int)$row['movieId']]))
-            $movies[(int)$row['movieId']]['firstOcc'] = strtotime($row['added_tracker']);
-        $movies[(int)$row['movieId']]['firstOcc'] = min($movies[(int)$row['movieId']]['firstOcc'],strtotime($row['added_tracker']));
+        if ($row['type'] == 0) {
+            if (!array_key_exists("firstOcc", $movies[(int)$row['movieId']]))
+                $movies[(int)$row['movieId']]['firstOcc'] = strtotime($row['added_tracker']);
+            $movies[(int)$row['movieId']]['firstOcc'] = min($movies[(int)$row['movieId']]['firstOcc'],strtotime($row['added_tracker']));
+        }
 
         if ($user['onlyNewTor']) {
             $added = strtotime($row['added_tracker']?$row['added_tracker']:$row['added']);
