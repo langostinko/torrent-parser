@@ -12,6 +12,12 @@ final class CoreTests extends TestCase
         extractTranslate("Мэнди / Mandy (2018) WEB-DLRip-AVC от OlLanDGroup | BadBajo", $movie);
         $this->assertEquals("BADBAJO", $movie['translateQuality']);
 
+        extractTranslate("Ну, здравствуй, Оксана Соколова! (2018) WEB-DLRip от Generalfilm | КПК | iTunes", $movie);
+        $this->assertEquals("ITUNES", $movie['translateQuality']);
+
+        extractTranslate("Леди Бёрд / Lady Bird (2017) BDRip [H264/1080p]", $movie);
+        $this->assertEquals("", $movie['translateQuality']);
+
         extractTranslate("Не оставляй следов / Leave No Trace (2018) WEB-DLRip | LakeFilms", $movie);
         $this->assertEquals("LAKEFILMS", $movie['translateQuality']);
 

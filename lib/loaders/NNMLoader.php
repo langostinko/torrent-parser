@@ -21,9 +21,7 @@ class NNMLoader extends AbstractLoader {
             return false;
 
         $movie['link'] = NNMROOT . "/forum/" . $res->href;
-        if (trySkip($movie))
-            return false;
-        
+
         $title = html_entity_decode($res->plaintext, ENT_QUOTES, "UTF-8");
         $movie['description'] = $title;
 
@@ -43,6 +41,10 @@ class NNMLoader extends AbstractLoader {
         if ($pos > 4)
             $title = trim(substr($title, $pos));
         extractString($title, $movie);
+
+        if (trySkip($movie))
+            return false;
+
         return true;
     }
 

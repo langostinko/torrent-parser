@@ -19,9 +19,7 @@ class RutorLoader extends AbstractLoader {
         if (!$res)
             return false;
         $movie['link'] = RUTORROOT.$res->href;
-        if (trySkip($movie))
-            return false;
-        
+
         $title = html_entity_decode($res->plaintext, ENT_QUOTES, "UTF-8");
         $movie['description'] = $title;
         $pos = strrpos($title, ' / ') + 3;
@@ -43,6 +41,10 @@ class RutorLoader extends AbstractLoader {
 
         extractString($title, $movie);
         extractTranslate($title, $movie);
+
+        if (trySkip($movie))
+            return false;
+
         return true;
     }
 
