@@ -524,19 +524,25 @@
             while ($row = mysqli_fetch_assoc($sqlresult))
                 $cache[$row['md5']] = true;
         }
-        if ( array_key_exists(md5($cur['link']), $cache) && array_key_exists("seed", $cur) && array_key_exists("leech", $cur) && array_key_exists("size", $cur) ) {
+        if ( array_key_exists(md5($cur['link']), $cache)
+            && array_key_exists("seed", $cur)
+            && array_key_exists("leech", $cur)
+            && array_key_exists("size", $cur)
+            && array_key_exists("description", $cur)
+        ) {
             $seed = (int)$cur['seed'];
             $leech = (int)$cur['leech'];
             $size = (int)$cur['size'];
-            $cachedUpdate[] = array(md5($cur['link']), $seed, $leech, $size);
+            $description = mysqli_real_escape_string($GLOBALS['mysqli'], $cur['description']);
+            $cachedUpdate[] = array(md5($cur['link']), $seed, $leech, $size, $description);
             if (count($cachedUpdate) >= 10) {
-                $query = "INSERT INTO links (md5,seed,leech,size) VALUES ";
+                $query = "INSERT INTO links (md5,seed,leech,size,description) VALUES ";
                 for ($i = 0; $i < count($cachedUpdate); $i++) {
-                    $query .= "(\""  . $cachedUpdate[$i][0] . "\", " . $cachedUpdate[$i][1] . ", " . $cachedUpdate[$i][2] . ", " . $cachedUpdate[$i][3] . ")";
+                    $query .= "(\""  . $cachedUpdate[$i][0] . "\", " . $cachedUpdate[$i][1] . ", " . $cachedUpdate[$i][2] . ", " . $cachedUpdate[$i][3] . ", '" . $cachedUpdate[$i][4] . "')";
                     if ($i != count($cachedUpdate) - 1)
                         $query .= ", ";
                 }
-                $query .= " ON DUPLICATE KEY UPDATE seed=VALUES(seed),leech=VALUES(leech),size=VALUES(size),updated=now()";
+                $query .= " ON DUPLICATE KEY UPDATE seed=VALUES(seed),leech=VALUES(leech),size=VALUES(size),description=VALUES(description),updated=now()";
                 $cachedUpdate = array();
                 mysqli_query($GLOBALS['mysqli'], $query);
                 if (mysqli_errno($GLOBALS['mysqli']))

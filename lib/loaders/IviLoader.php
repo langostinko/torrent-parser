@@ -47,7 +47,7 @@ class IviLoader extends AbstractLoader {
 		            if (array_key_exists($key, $priceTypes))
                         $movie['description']['options'][$priceTypes[$key]] = (int)$option['price'];
                     else
-                        $this->logger->error("unknown IVI price key : " . $key);
+                        $this->logger->error("unknown IVI price key : " . $key . " : " . $option['price']);
                 }
             } else {
 	            $movie["size"] = 0;
