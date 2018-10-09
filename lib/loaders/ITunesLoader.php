@@ -22,6 +22,10 @@ class ITunesLoader extends AbstractLoader {
         }
         $res = json_decode($response, true);
         $costRes = $res['results'][0];
+        if (!$costRes) {
+            // not available at RU
+            return;
+        }
         $movie = array();
         $movie["link"] = "https://itunes.apple.com/ru/movie/id" . $costRes['trackId'];
         $movie["title_approx"] = $costRes["trackName"];
