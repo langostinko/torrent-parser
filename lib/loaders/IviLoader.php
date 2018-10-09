@@ -32,6 +32,8 @@ class IviLoader extends AbstractLoader {
             "temporal:content:HD:"=>"rent_hd",
             "eternal:content:SD:"=>"buy_sd",
             "eternal:content:HD:"=>"buy_hd",
+            "eternal:collection:SD:"=>"buy_collection_sd",
+            "eternal:collection:HD:"=>"buy_collection_hd",
             );
         $movie['description'] = array(
             "title" => $movie["title"] . " (" . $movie["year"] . ")",
