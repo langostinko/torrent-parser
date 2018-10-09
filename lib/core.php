@@ -267,10 +267,10 @@
         $str = str_replace("_"," ",$str);
         
         $result = array();
-        $res = preg_match_all('/\d\d\d\d/isuU', $str, $result, PREG_OFFSET_CAPTURE);
+        $res = preg_match_all('/[^\d](\d\d\d\d)[^\d$]/isuU', $str, $result, PREG_OFFSET_CAPTURE);
         $pos = strlen($str);
-        if ($result[0])
-            foreach ($result[0] as $value) 
+        if ($result[1])
+            foreach ($result[1] as $value) 
                 if ($value[0] > 1920 && $value[0] < 2050) {
                     $movie['year'] = $value[0];
                     $pos = $value[1];
