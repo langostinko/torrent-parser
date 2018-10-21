@@ -196,7 +196,7 @@ function pushMovies(){
     }
 
     foreach ($movies as $id => $stat) {
-        if ($stat['peers'] > 1500) {
+        if ($stat['peers'] > 1000) {
             $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT title, description from movies where id = $id");
             $row = mysqli_fetch_assoc($sqlresult);
             $title = $row['title'];
@@ -205,7 +205,10 @@ function pushMovies(){
             if (!$rating) {
                 $rating = array_key_exists('imdbRating', $desc) ? $desc['imdbRating'] : 0;
             }
-            if ((float)$rating < 6.5 && $stat['peers'] < 3000) {
+            if ((float)$rating < 7.0 && $stat['peers'] < 2000) {
+                continue;
+            }
+            if ((float)$rating < 6.0 && $stat['peers'] < 4000) {
                 continue;
             }
 
