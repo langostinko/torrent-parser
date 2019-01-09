@@ -32,6 +32,9 @@ final class CoreTests extends TestCase
 
         extractTranslate("Небоскрёб / Skyscraper (2018) WEB-DL 1080p | iTunes", $movie);
         $this->assertEquals("ITUNES", $movie['translateQuality']);
+        
+        extractTranslate("Птичий короб / Bird Box (2018) WEBRip 720p | Невафильм", $movie);
+        $this->assertEquals("НЕВАФИЛЬМ", $movie['translateQuality']);
     }
 
     public function testExtractString(): void

@@ -53,7 +53,7 @@
             array("L","L1","L2","A","ЕСАРЕВ","МАТВЕЕВ","VO","SUB","AVO","BADBAJO","LAKEFILMS")
         )) return 2;
         if (in_array($qual,
-            array("P","P2","BAIBAKO","MVO","HDREZKA STUDIO","JASKIER","NEWSTUDIO")
+            array("P","P2","BAIBAKO","MVO","HDREZKA STUDIO","JASKIER","NEWSTUDIO","НЕВАФИЛЬМ")
         )) return 3;
         if (in_array($qual,
             array("ЧИСТЫЙ ЗВУК","LINE",)
@@ -249,7 +249,7 @@
             $movie['translateQuality'] = mb_strtoupper($result[2][0], 'UTF-8');
             return;
         }
-        $res = preg_match_all('/(\||\[| l ).*(Есарев|Матвеев|BadBajo|Jaskier|LakeFilms|NewStudio|HDrezka Studio|BaibaKo)[\W]/isuU', $str.' ', $result);
+        $res = preg_match_all('/(\||\[| l ).*(Есарев|Матвеев|BadBajo|Jaskier|LakeFilms|NewStudio|HDrezka Studio|BaibaKo|Невафильм)[\W]/isuU', $str.' ', $result);
         if ($result[0]) {
             $movie['translateQuality'] = mb_strtoupper($result[2][0], 'UTF-8');
             return;
