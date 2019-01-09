@@ -273,11 +273,14 @@ class RollingCurl {
                 $request = $this->requests[$this->requestMap[$key]];
                 $options = $this->get_options($request);
                 //try with proxy
-                if ($info['http_code'] != 200 && $proxy = ProxyFinder::findProxy($info['url'], $options[CURLOPT_PROXY])) {
+                if (
+                    ($info['http_code'] != 200 || strpos($info['url'], 'warning.rt') !== false)
+                    && $proxy = ProxyFinder::findProxy($request->url, $options[CURLOPT_PROXY])
+                ) {
                     $options[CURLOPT_PROXY] = $proxy;
                     $request->options = $options;
                     global $logger;
-                    $logger->info("try " . $info['url'] . " with proxy: $proxy");
+                    $logger->info("try " . $request->url . " with proxy: $proxy");
                     $this->requests[] = $request;
                     $running = 1;
                 } else {
