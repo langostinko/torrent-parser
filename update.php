@@ -196,6 +196,7 @@ function pushMovies(){
     }
 
     foreach ($movies as $id => $stat) {
+        $peerThreshold = 1000;
         if ($stat['peers'] > 1000) {
             $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT title, description from movies where id = $id");
             $row = mysqli_fetch_assoc($sqlresult);
@@ -205,13 +206,17 @@ function pushMovies(){
             if (!$rating) {
                 $rating = array_key_exists('imdbRating', $desc) ? $desc['imdbRating'] : 0;
             }
-            if ((float)$rating < 7.0 && $stat['peers'] < 2000) {
-                continue;
+            if ((float)$rating < 7.0) {
+                $peerThreshold = 2000;
             }
-            if ((float)$rating < 6.0 && $stat['peers'] < 4000) {
+            if ((float)$rating < 6.0) {
+                $peerThreshold = 4000;
+            }
+            if ($stat['peers'] < $peerThreshold) {
                 continue;
             }
 
+            // get best quality
             $bestQuality = array('quality'=>"CAMRIP", 'translateQuality'=>"ORIGINAL");
             $sqlresult = mysqli_query($GLOBALS['mysqli'], "SELECT * FROM links WHERE movieId = $id AND type=0 ORDER BY seed DESC LIMIT 500");
             while ($row = mysqli_fetch_assoc($sqlresult)) {
@@ -237,6 +242,10 @@ function pushMovies(){
                 continue;
             }
             if (translateQualityToRool($bestQuality['translateQuality']) <= translateQualityToRool($stat['pushedTranslateQuality'])) {
+                continue;
+            }
+            // increase peer threshold for low quality
+            if (translateQualityToRool($bestQuality['translateQuality']) < translateQualityToRool("ITUNES") && $stat['peers'] < $peerThreshold * 2) {
                 continue;
             }
 
