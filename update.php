@@ -51,9 +51,9 @@ function updateLinks(){
     $loaders[] = new RutorLoader("$rutorMain/browse/0/2/0/2$rutorSuffix");//russian movies
     $loaders[] = new RutorLoader("$rutorMain/browse/1/2/0/2$rutorSuffix");
 
-    $loaders[] = new FilmTorrentLoader("http://filmitorrent.org");
-    $loaders[] = new FilmTorrentLoader("http://filmitorrent.org/page/2/");
-    $loaders[] = new FilmTorrentLoader("http://filmitorrent.org/page/3/");
+    $loaders[] = new FilmTorrentLoader("http://filmitorrent.net");
+    $loaders[] = new FilmTorrentLoader("http://filmitorrent.net/page/2/");
+    $loaders[] = new FilmTorrentLoader("http://filmitorrent.net/page/3/");
 
     $NNMData = array(
         "prev_sd" => 0,
