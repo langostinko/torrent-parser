@@ -50,7 +50,7 @@
             array("ЗВУК С TS","ЗВУК С CAMRIP",)
         )) return 1;
         if (in_array($qual,
-            array("L","L1","L2","A","ЕСАРЕВ","МАТВЕЕВ","VO","SUB","AVO","BADBAJO","LAKEFILMS")
+            array("L","L1","L2","A","А","ЕСАРЕВ","МАТВЕЕВ","VO","SUB","AVO","BADBAJO","LAKEFILMS")
         )) return 2;
         if (in_array($qual,
             array("P","P2","BAIBAKO","MVO","HDREZKA STUDIO","JASKIER","NEWSTUDIO","НЕВАФИЛЬМ")
