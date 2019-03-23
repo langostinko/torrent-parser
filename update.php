@@ -206,12 +206,7 @@ function pushMovies(){
             if (!$rating) {
                 $rating = array_key_exists('imdbRating', $desc) ? $desc['imdbRating'] : 0;
             }
-            if ((float)$rating < 7.0) {
-                $peerThreshold = 2000;
-            }
-            if ((float)$rating < 6.0) {
-                $peerThreshold = 4000;
-            }
+            $peerThreshold = 13000 - 1500 * (float)$rating;
             if ($stat['peers'] < $peerThreshold) {
                 continue;
             }
@@ -269,7 +264,7 @@ function pushMovies(){
             $plot = mb_substr($plot, 0, mb_strpos($plot, '.', $plotPos) ? mb_strpos($plot, '.', $plotPos) : NULL);
             $message .= "\n" . $plot;
 
-            $message .= "\nhttp://freshswag.ru/movie.php?id=$id";
+            $message .= "\nhttps://freshswag.ru/movie.php?id=$id";
             preg_match_all('/\d+$/isu', @$desc['kinopoiskId'], $shortid);
             $shortid = @$shortid[0][0];
             $imgSrc = "http://st.kp.yandex.net/images/film_iphone/iphone360_$shortid.jpg";
