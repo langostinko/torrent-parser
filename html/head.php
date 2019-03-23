@@ -5,6 +5,7 @@
 
 <head>
     <meta charset="utf-8">
+<meta name="yandex-verification" content="73d6ea848b4cb0d7" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="<?php echo @$metaDescription?$metaDescription:" в сети"?>">

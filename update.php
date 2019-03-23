@@ -93,9 +93,9 @@ function updateLinks(){
     $loaders[] = new IviLoader(1982); //movie-new
     $loaders[] = new IviLoader(1983); //animation-new
     
-    $loaders[] = new MegogoLoader("http://megogo.net/ru/premiere/page_1?ajax=true");
-    $loaders[] = new MegogoLoader("http://megogo.net/ru/premiere/page_2?ajax=true");
-    $loaders[] = new MegogoLoader("http://megogo.net/ru/premiere/page_3?ajax=true");
+    //$loaders[] = new MegogoLoader("http://megogo.net/ru/premiere/page_1?ajax=true");
+    //$loaders[] = new MegogoLoader("http://megogo.net/ru/premiere/page_2?ajax=true");
+    //$loaders[] = new MegogoLoader("http://megogo.net/ru/premiere/page_3?ajax=true");
     
     $loaders[] = new GooglePlayLoader("https://play.google.com/store/movies/top?hl=ru");
     $loaders[] = new GooglePlayLoader("https://play.google.com/store/movies/category/1/collection/movers_shakers?hl=ru");
@@ -103,7 +103,7 @@ function updateLinks(){
     $loaders[] = new GooglePlayLoader("https://play.google.com/store/movies/category/6/collection/movers_shakers?hl=ru");
     $loaders[] = new GooglePlayLoader("https://play.google.com/store/movies/category/10/collection/movers_shakers?hl=ru");
     
-    $loaders[] = new ITunesLoader("http://www.apple.com/ru/itunes/charts/movies/");
+    //$loaders[] = new ITunesLoader("http://www.apple.com/ru/itunes/charts/movies/");
 
     foreach ($loaders as $loader) {
         $loader->setLogger($logger);
