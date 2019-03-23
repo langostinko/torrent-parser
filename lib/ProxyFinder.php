@@ -2,23 +2,15 @@
 
 class ProxyFinder {
     private static $cache = array();
-    
-    static private function getProxyList() {
-        static $list = null;
-        if (!$list)
-            $list = array("187.188.46.172:53455", "190.16.179.24:50399", "206.255.247.50:45379", "193.106.192.149:53281");
-        return $list;
+    private static $list = null;
+
+    static public function setProxyList($list) {
+        ProxyFinder::$list = $list;
+        ProxyFinder::$cache = array();
     }
     
-    static private function getNextProxy($proxy) {
-        $list = ProxyFinder::getProxyList();
-        if (!$proxy)
-            $i = 0;
-        else
-            $i = array_search($proxy, $list) + 1;
-        if ($i >= count($list))
-            return false;
-        return $list[$i];
+    static public function getCache() {
+        return ProxyFinder::$cache;
     }
     
     static public function findProxy($url, $curProxy) {
@@ -35,6 +27,24 @@ class ProxyFinder {
         }
         return ProxyFinder::$cache[$host];
     }
+
+    static private function getProxyList() {
+        if (!ProxyFinder::$list)
+            ProxyFinder::$list = array("170.81.35.26:36681","14.140.193.90:8080","118.27.20.17:3128","187.16.4.108:8080","14.140.193.89:8080","68.183.99.243:80","142.93.24.225:80");
+        return ProxyFinder::$list;
+    }
+
+    static private function getNextProxy($proxy) {
+        $list = ProxyFinder::getProxyList();
+        if (!$proxy)
+            $i = 0;
+        else
+            $i = array_search($proxy, $list) + 1;
+        if ($i >= count($list))
+            return false;
+        return $list[$i];
+    }
+
 }
 
 ?>
