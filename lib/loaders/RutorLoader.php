@@ -59,7 +59,7 @@ class RutorLoader extends AbstractLoader {
 		    $curTr[3] = $curTr[2];
 		    $curTr[2] = 0;
 		}
-			
+
 		$curTr[0] = str_replace(
 		    //array(" Янв "," Фев "," Мар "," Апр "," Май "," Июн "," Июл "," Авг "," Сен "," Окт "," Ноя "," Дек "), 
 		    array(" Янв "," Фев "," Мар "," Апр "," Май "," Июн "," Июл "," Авг "," Сен "," Окт "," Ноя "," Дек "), 
@@ -105,7 +105,7 @@ class RutorLoader extends AbstractLoader {
 
 		foreach($html->find('tr') as $row) {
 		    $curTr = $row->find('td');
-			if (count($curTr) == 5 || count($curTr) == 4) 
+			if (count($curTr) == 5 || count($curTr) == 4)
 			    $this->processTr($row);
 		}
 		

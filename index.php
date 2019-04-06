@@ -42,9 +42,9 @@
 
     $movies = array();
 
-    $q = "SELECT * FROM `movies` WHERE `movies`.id in (SELECT movieId FROM links) AND NOT `movies`.id in (SELECT movieId FROM userignore WHERE userId=$userId)";
+    $q = "SELECT * FROM `movies` WHERE `movies`.id in (SELECT movieId FROM links WHERE seed > 0) AND NOT `movies`.id in (SELECT movieId FROM userignore WHERE userId=$userId)";
     $sqlresult = mysqli_query($GLOBALS['mysqli'], $q);
-    
+
     while ($row = mysqli_fetch_assoc($sqlresult))
         $movies[(int)$row['id']] = $row;
 
