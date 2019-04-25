@@ -199,7 +199,7 @@
                 $id = false;
 
             if ($id) {
-                $name = html_entity_decode(iconv('windows-1251', 'UTF-8', $pName->find('a',0)->plaintext));
+                $name = html_entity_decode($pName->find('a',0)->plaintext);
                 if (strpos($name, "(сериал)") !== false) //skip series
                     continue;
                 $year = $pName->find('span',0)->plaintext;
@@ -367,8 +367,8 @@
             return false;
 
         foreach($html->find('table[class=info]',0)->find("tr") as $row) {
-            $key = trim(iconv('windows-1251', 'UTF-8', $row->find('td',0)->plaintext), "., ");
-            $value = trim(iconv('windows-1251', 'UTF-8', $row->find('td',1)->plaintext), "., ");
+            $key = trim($row->find('td',0)->plaintext, "., ");
+            $value = trim($row->find('td',1)->plaintext, "., ");
             $value = html_entity_decode($value);
             $value = preg_replace('!\s+!', ' ', $value);
             $key = str_replace(array("год"), array("Year"), $key);
@@ -378,27 +378,27 @@
             $desc['жанр'] = trim(str_replace("слова", "", $desc['жанр']),",. ");
 
         $desc['kinopoiskId'] = $kpid;
-        $desc['titleRu'] = html_entity_decode(trim(iconv('windows-1251', 'UTF-8', $html->find('h1[class=moviename-big]',0)->plaintext), "., "), ENT_QUOTES, "UTF-8");
-        $desc['plotRu'] = html_entity_decode(iconv('windows-1251', 'UTF-8', $html->find('div[itemprop=description]',0)->plaintext), ENT_QUOTES, "UTF-8");
-        $desc['kinopoiskRating'] = iconv('windows-1251', 'UTF-8', $html->find('span[class=rating_ball]',0)->plaintext);
+        $desc['titleRu'] = html_entity_decode(trim($html->find('h1[class=moviename-big]',0)->plaintext, "., "), ENT_QUOTES, "UTF-8");
+        $desc['plotRu'] = html_entity_decode($html->find('div[itemprop=description]',0)->plaintext, ENT_QUOTES, "UTF-8");
+        $desc['kinopoiskRating'] = $html->find('span[class=rating_ball]',0)->plaintext;
         
         $desc['Released'] = $desc['Year']."0101";
         $dvd = $html->find('div[data-ical-type=dvd]',0);
         if ($dvd)
-            $desc['Released'] = $desc['ReleaseDVD'] = iconv('windows-1251', 'UTF-8', $dvd->getAttribute("data-date-premier-start-link"));
+            $desc['Released'] = $desc['ReleaseDVD'] = $dvd->getAttribute("data-date-premier-start-link");
             
         $prem = $html->find('div[data-ical-type=world]',0);
         if (!$prem)
             $prem = $html->find('div[data-ical-type=rus]',0);
         if ($prem)
-            $desc['Released'] = iconv('windows-1251', 'UTF-8', $prem->getAttribute("data-date-premier-start-link"));
+            $desc['Released'] = $prem->getAttribute("data-date-premier-start-link");
             
         $act = $html->find('div[id=actorList]',0);
         if ($act && $act->find('ul',0)) {
             $act = $act->find('ul',0);
             $desc['актеры'] = "";
             foreach ($act->find('li[itemprop=actors]') as $actor)
-                $desc['актеры'] .= iconv('windows-1251', 'UTF-8', $actor->plaintext) . ", ";
+                $desc['актеры'] .= $actor->plaintext . ", ";
             $desc['актеры'] = trim($desc['актеры'], "., ");
         }
 
