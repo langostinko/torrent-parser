@@ -12,118 +12,132 @@
         //print_r($response);
     }
 
-    $proxy_str = '202.166.205.78  58431   
-  Nepal Kathmandu
-1860 мс
+    $proxy_str = '103.42.213.176	8080	
+  Hong Kong Central
+800 мс
 
-HTTP    Высокая 1 минута
-145.239.169.44  1080    
-  France
-680 мс
+HTTP	Высокая	1 минута
+139.59.61.229	3128	
+  India Bengaluru
+800 мс
 
-HTTP    Высокая 1 минута
-54.37.6.196 3128    
-  United Kingdom
-380 мс
+HTTP	Высокая	1 минута
+139.59.64.9	3128	
+  India Bengaluru
+1440 мс
 
-HTTPS   Высокая 1 минута
-178.128.174.206 3128    
-  United Kingdom London
-260 мс
-
-HTTP    Высокая 1 минута
-91.221.109.138  3128    
-  Russian Federation
-120 мс
-
-HTTPS   Высокая 1 минута
-85.28.88.155    3128    
-  Belgium Saint-Josse-ten-Noode
-480 мс
-
-HTTPS   Высокая 1 минута
-54.251.38.138   8080    
-  Singapore Singapore
-1800 мс
-
-HTTP    Высокая 1 минута
-138.197.157.32  8080    
-  Canada Toronto
+HTTP	Высокая	1 минута
+186.120.238.120	8081	
+  Dominican Republic "Santo Domingo Este"
 980 мс
 
-HTTP    Высокая 1 минута
-109.70.201.2    53517   
-  Italy Como
-2660 мс
+HTTP	Низкая	1 минута
+150.246.237.92	3128	
+  Japan Himeji
+600 мс
 
-HTTP    Высокая 2 минуты
-122.201.112.114 80  
-  Australia Sydney
-1380 мс
+HTTP, HTTPS	Нет	1 минута
+199.21.96.47	80	
+  United States
+200 мс
 
-HTTP    Средняя 2 минуты
-188.166.170.113 3128    
-  United Kingdom London
-4540 мс
+HTTP	Нет	1 минута
+199.21.97.220	80	
+  United States "San Jose"
+220 мс
 
-HTTP    Высокая 2 минуты
-89.39.108.202   47283   
-  Poland
-3000 мс
-
-HTTP    Высокая 2 минуты
-67.205.146.29   3128    
+HTTP	Нет	1 минута
+157.230.232.130	80	
   United States "North Bergen"
-520 мс
+540 мс
 
-HTTP    Высокая 2 минуты
-119.81.71.27    80  
-  Singapore Singapore
-760 мс
+HTTP	Средняя	1 минута
+142.93.96.177	8080	
+  Germany "Frankfurt am Main"
+220 мс
 
-HTTP, HTTPS Высокая 2 минуты
-37.59.35.174    1080    
-  France
-640 мс
+HTTP	Средняя	1 минута
 
-HTTP    Высокая 2 минуты
-159.8.114.37    80  
-  France Clichy
-240 мс
+139.59.62.255	8080	
+  India Bengaluru
+1360 мс
 
-HTTP, HTTPS Высокая 2 минуты
-45.33.31.25 80  
-  United States Dallas
-3640 мс
-
-HTTP    Высокая 2 минуты
-194.67.37.90    3128    
+HTTP	Высокая	1 минута
+46.235.71.241	8080	
   Russian Federation Moscow
-120 мс
+1220 мс
 
-HTTP    Высокая 2 минуты
-198.211.103.89  80  
+HTTP	Высокая	1 минута
+199.21.96.16	80	
+  United States
+200 мс
+
+HTTP	Нет	1 минута
+82.196.11.105	3128	
+  Netherlands Amsterdam
+520 мс
+
+HTTP	Высокая	1 минута
+199.21.98.12	80	
+  United States
+200 мс
+
+HTTP	Нет	1 минута
+110.164.58.106	8082	
+  Thailand Bangkok
+1140 мс
+
+HTTP	Нет	1 минута
+157.230.149.54	80	
+  United States "Santa Clara"
+820 мс
+
+HTTP	Средняя	1 минута
+47.74.15.236	3128	
+  Japan Tokyo
+1100 мс
+
+HTTPS	Высокая	1 минута
+157.230.210.133	8080	
   United States "North Bergen"
+440 мс
+
+HTTP	Средняя	1 минута
+192.166.219.46	3128	
+  Poland
+260 мс
+
+HTTP, HTTPS	Нет	1 минута
+
+163.172.153.70	8080	
+  France
+260 мс
+
+HTTP	Высокая	1 минута
+199.21.96.83	80	
+  United States
+160 мс
+
+HTTP	Нет	1 минута
+199.21.99.35	80	
+  United States
+220 мс
+
+HTTP	Нет	1 минута
+199.21.99.27	80	
+  United States
+200 мс
+
+HTTP	Нет	1 минута
+138.201.193.196	8080	
+  Germany
 520 мс
 
-HTTP    Средняя 2 минуты
-157.230.236.97  80  
-  United States "New York"
-520 мс
+HTTP, HTTPS	Средняя	2 минуты
 
-HTTP    Средняя 2 минуты
-91.221.109.136  3128    
-  Russian Federation
-140 мс
+';
 
-HTTPS   Высокая 2 минуты
-34.244.2.233    8123    
-  Ireland Dublin
-340 мс
-
-HTTP    Высокая 2 минуты';
-
-    preg_match_all('/(\d+\.\d+\.\d+\.\d+) +(\d+)/', $proxy_str, $matches);
+    preg_match_all('/(\d+\.\d+\.\d+\.\d+)\s+(\d+)/', $proxy_str, $matches);
     $proxy_list = array();
     for ($i = 0; $i < count($matches[1]); ++$i) {
         $proxy_list[] = $matches[1][$i] . ":" . $matches[2][$i];

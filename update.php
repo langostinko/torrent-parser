@@ -296,7 +296,7 @@ $time_start = microtime(true);
 
 updateLinks();
 deleteOld();
-pushMovies();
+//pushMovies();
 updateMovies();
 
 $time_end = microtime(true);
