@@ -34,6 +34,10 @@ class NNMLoader extends AbstractLoader {
         }
 
         extractTranslate($title, $movie);
+        if ($movie['translateQuality'] == "") {
+            $movie['translateQuality'] = "UNKNOWN"; // treat empty as UNKNOWN for nnm
+        }
+
         $pos = strpos($title, '[');
         if ($pos !== FALSE)
             $title = trim(substr($title, 0, $pos));

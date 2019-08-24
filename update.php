@@ -206,7 +206,7 @@ function pushMovies(){
             if (!$rating) {
                 $rating = array_key_exists('imdbRating', $desc) ? $desc['imdbRating'] : 0;
             }
-            $peerThreshold = 13000 - 1500 * (float)$rating;
+            $peerThreshold = 3 * (13000 - 1500 * (float)$rating) / 4;
             if ($stat['peers'] < $peerThreshold) {
                 continue;
             }
