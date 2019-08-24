@@ -31,7 +31,7 @@ class ITunesLoader extends AbstractLoader {
         $movie["title_approx"] = $costRes["trackName"];
         $movie["title"] = $costRes["trackName"];
         $movie["year"] = substr($costRes["releaseDate"], 0, 4);
-        $movie["size"] = 1<<10;
+        $movie["size"] = 1<<20;
         $movie['quality'] = "WEB";
         $movie['translateQuality'] = "ЛИЦЕНЗИЯ";
         $movie['type'] = 1;
@@ -52,7 +52,7 @@ class ITunesLoader extends AbstractLoader {
                 $movie['description']['options'][$priceTypes[$pKey]] = (int)$costRes[$pKey];
             }
         $movie['description'] = json_encode($movie['description']);
-        if (!trySkip($movie))
+        if ($movie["size"] != 1<<20 && !trySkip($movie))
             $this->result[] = $movie;
     }
     
