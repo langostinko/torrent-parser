@@ -70,15 +70,16 @@ class ITunesLoader extends AbstractLoader {
 		    return;
 		}
 
-        $act = $html->find('section[class=section movies chart-grid]',0);
-        if ($act)
-            foreach ($act->find("li") as $row) {
+        $section = $html->find('section[class=section movies chart-grid]',0);
+        if ($section) {
+            foreach ($section->find("li") as $row) {
                 $link = $row->find('a', 0)->href;
                 preg_match("/\/id(\d+)/", $link, $matches);
                 $id = $matches[1];
                 $costLink = "https://itunes.apple.com/lookup?country=RU&id=$id";
                 \RollingCurl::$rc->get($costLink, null, null, array("callback"=>array($this, "getITunesCostCallback")) );
             }
+        }
     }
 
     function load() {

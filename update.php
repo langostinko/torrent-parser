@@ -103,7 +103,7 @@ function updateLinks(){
     $loaders[] = new GooglePlayLoader("https://play.google.com/store/movies/category/6/collection/movers_shakers?hl=ru");
     $loaders[] = new GooglePlayLoader("https://play.google.com/store/movies/category/10/collection/movers_shakers?hl=ru");
     
-    //$loaders[] = new ITunesLoader("http://www.apple.com/ru/itunes/charts/movies/");
+    $loaders[] = new ITunesLoader("http://www.apple.com/ru/itunes/charts/movies/");
 
     foreach ($loaders as $loader) {
         $loader->setLogger($logger);
@@ -111,7 +111,7 @@ function updateLinks(){
     }
 
     RollingCurl::$rc->execute();
-    
+
     //result array with torrent infos
     $result = array();
     foreach ($loaders as $loader) {
