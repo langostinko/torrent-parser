@@ -50,7 +50,7 @@
             array("ЗВУК С TS","ЗВУК С CAMRIP",)
         )) return 1;
         if (in_array($qual,
-            array("L","L1","L2","A","А","ЕСАРЕВ","МАТВЕЕВ","VO","SUB","AVO","BADBAJO","LAKEFILMS")
+            array("L","L1","L2","A","А","ЕСАРЕВ","МАТВЕЕВ","VO","SUB","AVO","BADBAJO","LAKEFILMS","MALLORN")
         )) return 2;
         if (in_array($qual,
             array("P","P2","BAIBAKO","MVO","HDREZKA STUDIO","JASKIER","NEWSTUDIO","НЕВАФИЛЬМ", "СВ СТУДИЯ", "СВ-СТУДИЯ", "CВ СТУДИЯ",)
@@ -249,7 +249,7 @@
             $movie['translateQuality'] = mb_strtoupper($result[2][0], 'UTF-8');
             return;
         }
-        $res = preg_match_all('/(\||\[| l ).*(Есарев|Матвеев|BadBajo|Jaskier|LakeFilms|NewStudio|HDrezka Studio|BaibaKo|Невафильм|СВ Студия|СВ-Студия|CВ Студия)[\W]/isuU', $str.' ', $result);
+        $res = preg_match_all('/(\||\[| l ).*(Есарев|Матвеев|BadBajo|Jaskier|LakeFilms|NewStudio|HDrezka Studio|BaibaKo|Невафильм|СВ Студия|СВ-Студия|CВ Студия|Mallorn)[\W]/isuU', $str.' ', $result);
         if ($result[0]) {
             $movie['translateQuality'] = mb_strtoupper($result[2][0], 'UTF-8');
             return;

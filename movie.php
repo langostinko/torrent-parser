@@ -11,7 +11,7 @@
     
     $movieId = array_key_exists('id', $_GET) ? (int)$_GET['id'] : -1;
     $user_country = geoip_country_name_by_name($_SERVER['REMOTE_ADDR']);
-    $ban = ($user_country == 'Russian Federation') && in_array($movieId, $BANNED);
+    $ban = in_array($movieId, $BANNED); // we also could check ($user_country == 'Russian Federation')
     $movie = false;
     $desc = false;
     $ignore = false;
@@ -283,7 +283,7 @@
 
             <?php if ($ban) { ?>
                 <b>Ссылки на торренты недоступны в Вашей стране (<?=$user_country.":".$_SERVER['REMOTE_ADDR']?>) по просьбе правообладателя</b>
-            <?php } ?>
+            <?php } else { ?>
             <table id='torrentTable' class='table table-striped table-hover' cellspacing="0" width="100%">
                 <thead>
                     <th>качество</th>
@@ -315,6 +315,7 @@
                 ?>
                 </tbody>
             </table>
+            <?php } ?>
         </div>
         <div style="clear:both"></div>
     <?php } else

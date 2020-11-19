@@ -98,10 +98,10 @@ function updateLinks(){
     //$loaders[] = new MegogoLoader("http://megogo.net/ru/premiere/page_3?ajax=true");
     
     $loaders[] = new GooglePlayLoader("https://play.google.com/store/movies/top?hl=ru");
-    $loaders[] = new GooglePlayLoader("https://play.google.com/store/movies/category/1/collection/movers_shakers?hl=ru");
-    $loaders[] = new GooglePlayLoader("https://play.google.com/store/movies/category/4/collection/movers_shakers?hl=ru");
-    $loaders[] = new GooglePlayLoader("https://play.google.com/store/movies/category/6/collection/movers_shakers?hl=ru");
-    $loaders[] = new GooglePlayLoader("https://play.google.com/store/movies/category/10/collection/movers_shakers?hl=ru");
+    //$loaders[] = new GooglePlayLoader("https://play.google.com/store/movies/category/1/collection/movers_shakers?hl=ru");
+    //$loaders[] = new GooglePlayLoader("https://play.google.com/store/movies/category/4/collection/movers_shakers?hl=ru");
+    //$loaders[] = new GooglePlayLoader("https://play.google.com/store/movies/category/6/collection/movers_shakers?hl=ru");
+    //$loaders[] = new GooglePlayLoader("https://play.google.com/store/movies/category/10/collection/movers_shakers?hl=ru");
     
     $loaders[] = new ITunesLoader("http://www.apple.com/ru/itunes/charts/movies/");
 
