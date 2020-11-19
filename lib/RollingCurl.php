@@ -274,7 +274,7 @@ class RollingCurl {
                 $options = $this->get_options($request);
                 //try with proxy
                 if (
-                    ($info['http_code'] != 200 || strpos($info['url'], 'warning.rt') !== false)
+                    ($info['http_code'] != 200 || strpos($info['url'], 'showcaptcha') !== false || strpos($info['url'], 'blocked.php') !== false)
                     && $proxy = ProxyFinder::findProxy($request->url, $options[CURLOPT_PROXY])
                 ) {
                     $options[CURLOPT_PROXY] = $proxy;
