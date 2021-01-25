@@ -29,13 +29,11 @@ class GooglePlayLoader extends AbstractLoader {
 		    return;
 		}
 
-        //$currentYear = date("Y");
         foreach ($html->find("div[class=card no-rationale tall-cover movies small]") as $row) {
             $movie = array();
             $a = $row->find('a[class=title]', 0);
             $movie['link'] = "https://play.google.com" . $a->href;
             $movie['title'] = $movie['title_approx'] = $a->title;
-            //$movie['year'] = $currentYear;
             $movie['size'] = (int)($row->find('span[class=display-price]',0)->plaintext);
             $movie["description"] = json_encode(array(
                 "title" => $movie["title"],
