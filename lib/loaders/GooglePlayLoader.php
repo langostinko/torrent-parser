@@ -15,7 +15,6 @@ class GooglePlayLoader extends AbstractLoader {
     }
     
     function getGooglePlayCallback($response, $info) {
-        //some code
         $msg = $info['http_code'] . " :: " . $info['url'] . " fetched in " . $info['total_time'];
         if ($info['http_code'] != 200) {
             $this->logger->warning($msg);
