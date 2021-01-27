@@ -5,7 +5,6 @@ include_once(__DIR__.'/../lib.php');
 
 class IviLoader extends AbstractLoader {
 
-    private $result;
     private $listId;
     private $from;
     private $to;

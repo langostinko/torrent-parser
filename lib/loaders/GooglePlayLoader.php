@@ -6,7 +6,6 @@ include_once(__DIR__.'/../simple_html_dom.php');
 
 class GooglePlayLoader extends AbstractLoader {
 
-    private $result;
     private $link;
     
     function __construct($link) {

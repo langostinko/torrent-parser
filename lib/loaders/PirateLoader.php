@@ -5,7 +5,6 @@ include_once(__DIR__.'/../simple_html_dom.php');
 
 class PirateLoader extends AbstractLoader {
     
-    public $result;
     private $link;
     
     function __construct($link) {

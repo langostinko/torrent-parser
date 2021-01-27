@@ -5,7 +5,6 @@ include_once(__DIR__.'/../simple_html_dom.php');
 
 class NNMLoader extends AbstractLoader {
 
-    private $result;
     private $link;
     private $data;
     
