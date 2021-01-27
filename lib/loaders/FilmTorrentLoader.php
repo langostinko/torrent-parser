@@ -78,9 +78,5 @@ class FilmTorrentLoader extends AbstractLoader {
         \RollingCurl::$rc->get($this->link, null, null, array("callback"=>array($this, "getFilmTorrentCallback")) );
     }
 
-    function getResult() {
-        return (array)($this->result);
-    }
-
 }
 ?>

@@ -87,9 +87,6 @@ class ITunesLoader extends AbstractLoader {
         \RollingCurl::$rc->get($this->link, null, null, array("callback"=>array($this, "getITunesCallback")) );
     }
 
-    function getResult() {
-        return (array)($this->result);
-    }
 
 }
 ?>

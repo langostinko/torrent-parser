@@ -55,9 +55,5 @@ class GooglePlayLoader extends AbstractLoader {
         \RollingCurl::$rc->get($this->link, null, null, array("callback"=>array($this, "getGooglePlayCallback")) );
     }
 
-    function getResult() {
-        return (array)($this->result);
-    }
-
 }
 ?>

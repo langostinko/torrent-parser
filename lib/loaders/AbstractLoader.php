@@ -8,5 +8,9 @@ abstract class AbstractLoader
     public function setLogger($logger) {
         $this->logger = $logger;
     }
+    
+     function getResult() {
+        return (array)($this->result);
+    }
 }
 ?>

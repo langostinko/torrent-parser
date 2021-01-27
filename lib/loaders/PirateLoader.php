@@ -103,9 +103,5 @@ class PirateLoader extends AbstractLoader {
         \RollingCurl::$rc->get($this->link, null, null, array("callback"=>array($this, "getPirateCallback"), "cnt"=>$cnt) );
     }
 
-    function getResult() {
-        return (array)($this->result);
-    }
-    
 }
 ?>

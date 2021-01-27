@@ -90,9 +90,5 @@ class MegogoLoader extends AbstractLoader {
         \RollingCurl::$rc->get($this->link, null, null, array("callback"=>array($this, "getMegogoCallback")) );
     }
 
-    function getResult() {
-        return (array)($this->result);
-    }
-
 }
 ?>

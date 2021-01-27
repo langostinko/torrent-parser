@@ -106,9 +106,5 @@ class IviLoader extends AbstractLoader {
         \RollingCurl::$rc->get($link, null, null, array("callback"=>array($this, "getIviCallback")) );
     }
 
-    function getResult() {
-        return (array)($this->result);
-    }
-
 }
 ?>

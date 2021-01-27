@@ -118,9 +118,5 @@ class RutorLoader extends AbstractLoader {
         \RollingCurl::$rc->get($this->link, null, null, array("callback"=>array($this, "getRutorCallback")) );
     }
 
-    function getResult() {
-        return (array)($this->result);
-    }
-
 }
 ?>

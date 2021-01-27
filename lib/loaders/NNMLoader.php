@@ -109,9 +109,5 @@ class NNMLoader extends AbstractLoader {
         \RollingCurl::$rc->post($this->link, $this->data, null, null, array("callback"=>array($this, "callback")) );
     }
 
-    function getResult() {
-        return (array)($this->result);
-    }
-
 }
 ?>
