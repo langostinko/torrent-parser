@@ -1,6 +1,5 @@
 <?php
 include_once(__DIR__."/AbstractLoader.php");
-include_once(__DIR__.'/../lib.php');
 include_once(__DIR__.'/../simple_html_dom.php');
 
 class NNMLoader extends AbstractLoader {
@@ -44,9 +43,6 @@ class NNMLoader extends AbstractLoader {
         if ($pos > 4)
             $title = trim(substr($title, $pos));
         extractString($title, $movie);
-
-        if (trySkip($movie))
-            return false;
 
         return true;
     }

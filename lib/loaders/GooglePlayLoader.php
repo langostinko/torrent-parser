@@ -1,7 +1,6 @@
 <?php
 include_once(__DIR__."/AbstractLoader.php");
 include_once(__DIR__.'/../defines.php');
-include_once(__DIR__.'/../lib.php');
 include_once(__DIR__.'/../simple_html_dom.php');
 
 class GooglePlayLoader extends AbstractLoader {
@@ -41,8 +40,7 @@ class GooglePlayLoader extends AbstractLoader {
             $movie['translateQuality'] = "ЛИЦЕНЗИЯ";
             $movie['type'] = 1;
             $movie['seed'] = $movie['leech'] = 0;
-            if (!trySkip($movie))
-                $this->result[] = $movie;
+            $this->result[] = $movie;
         }
 
 		$this->logger->info(count($this->result) . " new links found");

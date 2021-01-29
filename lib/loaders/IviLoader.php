@@ -1,7 +1,6 @@
 <?php
 include_once(__DIR__."/AbstractLoader.php");
 include_once(__DIR__.'/../defines.php');
-include_once(__DIR__.'/../lib.php');
 
 class IviLoader extends AbstractLoader {
 
@@ -55,8 +54,7 @@ class IviLoader extends AbstractLoader {
                 $movie['description']['options']['free'] = 0;
             }
             $movie['description'] = json_encode($movie['description']);
-            if (!trySkip($movie))
-                $this->result[] = $movie;
+            $this->result[] = $movie;
         } else
             $this->logger->warning("no cost for IVI movie " . $row['id'] . "; response : '" . $response . "'");
     }

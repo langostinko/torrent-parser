@@ -1,7 +1,6 @@
 <?php
 include_once(__DIR__."/AbstractLoader.php");
 include_once(__DIR__.'/../defines.php');
-include_once(__DIR__.'/../lib.php');
 include_once(__DIR__.'/../simple_html_dom.php');
 
 class ITunesLoader extends AbstractLoader {
@@ -51,7 +50,7 @@ class ITunesLoader extends AbstractLoader {
                 $movie['description']['options'][$priceTypes[$pKey]] = (int)$costRes[$pKey];
             }
         $movie['description'] = json_encode($movie['description']);
-        if ($movie["size"] != 1<<20 && !trySkip($movie))
+        if ($movie["size"] != 1<<20)
             $this->result[] = $movie;
     }
     

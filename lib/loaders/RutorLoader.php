@@ -1,7 +1,6 @@
 <?php
 include_once(__DIR__."/AbstractLoader.php");
 include_once(__DIR__.'/../defines.php');
-include_once(__DIR__.'/../lib.php');
 include_once(__DIR__.'/../simple_html_dom.php');
 
 class RutorLoader extends AbstractLoader {
@@ -40,9 +39,6 @@ class RutorLoader extends AbstractLoader {
 
         extractString($title, $movie);
         extractTranslate($title, $movie);
-
-        if (trySkip($movie))
-            return false;
 
         return true;
     }

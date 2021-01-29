@@ -1,7 +1,6 @@
 <?php
 include_once(__DIR__."/AbstractLoader.php");
 include_once(__DIR__.'/../defines.php');
-include_once(__DIR__.'/../lib.php');
 include_once(__DIR__.'/../simple_html_dom.php');
 
 class MegogoLoader extends AbstractLoader {
@@ -76,8 +75,7 @@ class MegogoLoader extends AbstractLoader {
                         $movie['description']['options'][$priceVal] = (int)$price[$priceKey]["price"];
     		        }
                 $movie['description'] = json_encode($movie['description']);
-                if (!trySkip($movie))
-                    $this->result[] = $movie;
+                $this->result[] = $movie;
     		}
 
 		$this->logger->info(count($this->result) . " new links found");

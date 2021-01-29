@@ -1,7 +1,6 @@
 <?php
 include_once(__DIR__."/AbstractLoader.php");
 include_once(__DIR__.'/../defines.php');
-include_once(__DIR__.'/../lib.php');
 include_once(__DIR__.'/../simple_html_dom.php');
 
 class FilmTorrentLoader extends AbstractLoader {
@@ -47,8 +46,7 @@ class FilmTorrentLoader extends AbstractLoader {
         	$movie['leech'] = (int)$row->find("td", 4)->plaintext;
             $movie['link'] = $info['url'] . "?it=" . $movie['size'] . $movie['quality'];
             $movie['description'] = $title;
-            if (!trySkip($movie))
-                $this->result[] = $movie;
+            $this->result[] = $movie;
         }
     }
 

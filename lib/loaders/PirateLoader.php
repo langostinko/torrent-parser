@@ -1,6 +1,5 @@
 <?php
 include_once(__DIR__."/AbstractLoader.php");
-include_once(__DIR__.'/../lib.php');
 include_once(__DIR__.'/../simple_html_dom.php');
 
 class PirateLoader extends AbstractLoader {
@@ -35,9 +34,6 @@ class PirateLoader extends AbstractLoader {
             return false;
         $link = PIRATEROOT.$res->href;
         $movie['link'] = $link;
-        if (trySkip($movie)) {
-            return false;
-        }
 
         $movie['description'] = html_entity_decode($res->plaintext, ENT_QUOTES, "UTF-8");
         extractString($res->plaintext, $movie);
