@@ -25,13 +25,14 @@ class GooglePlayLoader extends AbstractLoader {
 		    $this->logger->warning("failed to convert DOM");
 		    return;
 		}
-
-        foreach ($html->find("div[class=card no-rationale tall-cover movies small]") as $row) {
+        foreach ($html->find("div[class=ImZGtf mpg5gc]") as $row) {
             $movie = array();
-            $a = $row->find('a[class=title]', 0);
+            $div = $row->find("div[class=b8cIId ReQCgd Q9MA7b]", 0);
+            $a = $div->find("a", 0);
+            $div_title = $div->find("div", 0);
             $movie['link'] = "https://play.google.com" . $a->href;
-            $movie['title'] = $movie['title_approx'] = $a->title;
-            $movie['size'] = (int)($row->find('span[class=display-price]',0)->plaintext);
+            $movie['title'] = $movie['title_approx'] = $div_title->title;
+            $movie['size'] = (float)(str_replace(',', '.',$row->find("span[class=VfPpfd ZdBevf i5DZme]",0)->plaintext));
             $movie["description"] = json_encode(array(
                 "title" => $movie["title"],
                 "options" => array("rent_sd" => $movie['size']),
